@@ -14,7 +14,7 @@ Status: all four components built for the US regime. See
 | `grammar.py` | The type system rules compile into — ranges, shifts, exceptions |
 | `parse_102.py` | Compiles 19 CFR 102.20 into that grammar |
 | `build_corpus.py` | Emits the versioned corpus |
-| `resolve.py` | Applies the corpus to a good and cites what it used |
+| `resolve.py` | Walks 102.11, applies the corpus, and cites what it used |
 | `validate.py` | Scores the corpus against CBP's own rulings |
 
 ## The corpus
@@ -60,6 +60,31 @@ useful and inflates it for nothing.
 >>> r.trace[0].checks[0].detail
 'in a different subheading from 8708.29'
 ```
+
+102.20 is one step of a hierarchy, and the resolver walks it in order:
+
+| Step | Basis | Needs |
+|---|---|---|
+| 102.11(a)(1) | `wholly_obtained` | `wholly_obtained=True` |
+| 102.11(a)(2) | `exclusively_domestic` | every material's `country` |
+| 102.11(a)(3) | `tariff_shift` | the classifications |
+| 102.13 | `tariff_shift_de_minimis` | material values and `good_value` |
+| 102.11(b)–(d) | — | essential character: named, not decided |
+
+`102.17` is applied where an `operation` is given: repacking, dismantling, mere
+dilution, a change in end-use, or a GRI 2(a) collection of parts is not
+origin-conferring however the codes fall.
+
+```python
+>>> from originshift.resolve import Material
+>>> r = resolve(good="8708.29", inputs=[Material("8708.95", value=3.0)],
+...             country="VN", good_value=100.0)
+>>> r.basis, r.reason
+('tariff_shift_de_minimis', 'disregarded under 102.13 at 3.0% of the value of the good')
+```
+
+Materials of unstated origin are treated as foreign. Assuming otherwise would
+hand out origin on missing information.
 
 Three outcomes and no others:
 

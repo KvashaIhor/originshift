@@ -16,6 +16,52 @@ from .grammar import Alternative, CodeRange, LEVEL_DIGITS, Rule, digits
 Status = Literal["resolved", "unresolved", "ambiguous"]
 Outcome = Literal["shifted", "not_shifted", "excluded", "needs_judgement"]
 
+#: 102.17. A material is not treated as having undergone the change merely
+#: because one of these was done to it, however the codes fall.
+NON_QUALIFYING = {
+    "change_in_end_use": "a change in end-use (102.17(a))",
+    "dismantling": "dismantling or disassembly (102.17(b))",
+    "simple_packing": "simple packing, repacking or retail packaging (102.17(c))",
+    "mere_dilution": "mere dilution with water or another substance (102.17(d))",
+    "gri_2a_collection": (
+        "collecting parts that are classifiable as the assembled good under "
+        "GRI 2(a), without more than minor processing (102.17(e))"
+    ),
+}
+
+Operation = Literal[
+    "change_in_end_use",
+    "dismantling",
+    "simple_packing",
+    "mere_dilution",
+    "gri_2a_collection",
+]
+
+#: 102.13(b) withholds the de minimis allowance from goods of these chapters.
+NO_DE_MINIMIS_CHAPTERS = {"01", "02", "03", "04", "07", "08", "11", "12", "15", "17", "20"}
+
+#: 102.13(a): 7 percent of the value of the good, or 10 percent for Chapter 22.
+DE_MINIMIS = 0.07
+DE_MINIMIS_CHAPTER_22 = 0.10
+
+
+@dataclass
+class Material:
+    """A material incorporated into the good.
+
+    `country` is where the material is from; left unset it is treated as foreign,
+    which is the conservative reading — a material cannot be assumed domestic.
+    `value` is needed only for the 102.13 de minimis allowance.
+    """
+
+    code: str
+    country: str | None = None
+    value: float | None = None
+
+    @classmethod
+    def of(cls, item: "str | Material") -> "Material":
+        return item if isinstance(item, Material) else cls(code=item)
+
 
 @dataclass
 class Check:
@@ -41,6 +87,8 @@ class Finding:
 class OriginResult:
     status: Status
     origin: str | None = None
+    #: Which rule carried the answer: wholly_obtained, exclusively_domestic,
+    #: tariff_shift, or tariff_shift_de_minimis.
     basis: str | None = None
     rule_id: str | None = None
     rule_text: str | None = None
@@ -160,23 +208,149 @@ def _evaluate(rule: Rule, alt: Alternative, good: str, materials: list[str]) -> 
     return Finding(rule.rule_id, alt.text, satisfied, checks, unverifiable)
 
 
+def _de_minimis_limit(good: str) -> float | None:
+    """The 102.13 allowance for a good, or None where 102.13(b) withholds it."""
+    chapter = digits(good)[:2]
+    if chapter in NO_DE_MINIMIS_CHAPTERS:
+        return None
+    return DE_MINIMIS_CHAPTER_22 if chapter == "22" else DE_MINIMIS
+
+
+def _failing(finding: Finding) -> list[str]:
+    return [c.material for c in finding.checks if c.outcome in ("not_shifted", "excluded")]
+
+
+def _de_minimis(
+    finding: Finding,
+    good: str,
+    materials: dict[str, Material],
+    good_value: float | None,
+) -> tuple[bool | None, str]:
+    """Apply 102.13 to the materials that failed the shift.
+
+    Returns whether the allowance carries the good, and what is missing if that
+    cannot be said. A material disregarded under 102.13 does not have to shift.
+    """
+    limit = _de_minimis_limit(good)
+    if limit is None:
+        return False, (
+            f"102.13(b) withholds the de minimis allowance from goods of "
+            f"chapter {digits(good)[:2]}"
+        )
+
+    failed = _failing(finding)
+    values = [materials[m].value for m in failed if m in materials]
+    if good_value is None or any(v is None for v in values) or not values:
+        return None, (
+            f"the value of {', '.join(failed)} as a share of the value of the "
+            f"good — under 102.13 they are disregarded at no more than "
+            f"{limit:.0%}, and the shift would then be met"
+        )
+
+    share = sum(v for v in values if v is not None) / good_value
+    if share <= limit:
+        return True, f"disregarded under 102.13 at {share:.1%} of the value of the good"
+    return False, (
+        f"{', '.join(failed)} come to {share:.1%} of the value of the good, "
+        f"above the {limit:.0%} allowed by 102.13"
+    )
+
+
+def _next_paragraph(good: str) -> str:
+    """What 102.11 turns to once paragraph (a) has not produced an answer."""
+    return (
+        "102.11(b): the country of origin of the single material that imparts "
+        "the essential character to the good. That is a judgement about the "
+        "goods, not their codes, so it is outside what this corpus can settle"
+    )
+
+
 def resolve(
     good: str,
-    inputs: list[str],
+    inputs: list[str] | list[Material],
     country: str,
+    *,
+    good_value: float | None = None,
+    wholly_obtained: bool = False,
+    operation: Operation | None = None,
     regime: str = "US",
     corpus: Corpus | None = None,
 ) -> OriginResult:
     """Decide whether `country` confers origin on `good`, and cite the rule.
 
-    `good` and `inputs` are HS codes under the corpus's nomenclature vintage.
+    Walks 102.11 in order. Paragraph (a) is answerable from classifications:
+    (a)(1) wholly obtained, (a)(2) produced exclusively from domestic materials,
+    (a)(3) every foreign material undergoes the change set out in 102.20, with
+    the 102.13 de minimis allowance applied to any that do not. Paragraphs (b)
+    to (d) turn on essential character, which is a judgement about the goods
+    themselves, so the resolver names them and stops.
+
+    Naming an `operation` from 102.17 defeats (a)(3) however the codes fall: a
+    material does not undergo the change merely by being repacked or dismantled.
+
+    `good` and `inputs` are HS codes under the corpus's nomenclature vintage;
+    an input may instead be a `Material` carrying its country and value.
     `country` is where the operation happened.
     """
     corpus = corpus or Corpus.load()
     if regime != corpus.regime:
         raise ValueError(f"corpus is regime {corpus.regime}, not {regime}")
 
+    materials = [Material.of(m) for m in inputs]
+    by_code = {m.code: m for m in materials}
     base = OriginResult(status="unresolved", vintage=corpus.vintage)
+
+    # 102.11(a)(1)
+    if wholly_obtained:
+        return OriginResult(
+            status="resolved",
+            origin=country,
+            basis="wholly_obtained",
+            rule_id="102.11(a)(1)",
+            rule_text="The good is wholly obtained or produced.",
+            satisfied=True,
+            vintage=corpus.vintage,
+        )
+
+    # 102.11(a)(2). A material of unstated origin cannot be assumed domestic.
+    foreign = [m for m in materials if m.country is None or m.country != country]
+    if materials and not foreign:
+        return OriginResult(
+            status="resolved",
+            origin=country,
+            basis="exclusively_domestic",
+            rule_id="102.11(a)(2)",
+            rule_text="The good is produced exclusively from domestic materials.",
+            satisfied=True,
+            vintage=corpus.vintage,
+        )
+
+    # 102.17, which (a)(3) picks up through "all other applicable requirements".
+    if operation is not None:
+        if operation not in NON_QUALIFYING:
+            raise ValueError(
+                f"unknown operation {operation!r}; expected one of "
+                + ", ".join(sorted(NON_QUALIFYING))
+            )
+        return OriginResult(
+            status="unresolved",
+            basis="tariff_shift",
+            rule_id="102.17",
+            rule_text=(
+                "A foreign material shall not be considered to have undergone an "
+                "applicable change in tariff classification specified in § 102.20 "
+                "… merely by reason of "
+                + NON_QUALIFYING[operation]
+            ),
+            satisfied=False,
+            reason="non_qualifying_operation",
+            needed=(
+                f"102.17 rules out {NON_QUALIFYING[operation]} as conferring "
+                f"origin, whatever the classifications. Next is "
+                + _next_paragraph(good)
+            ),
+            vintage=corpus.vintage,
+        )
 
     candidates = corpus.candidates(good)
     if not candidates:
@@ -192,16 +366,19 @@ def resolve(
         base.needed = f"a rule covering {good} — {why}"
         return base
 
-    if not inputs:
+    if not materials:
         base.reason = "no_input_materials_given"
         base.needed = (
-            "the HS codes of the non-originating materials; with none, origin "
-            "turns on 102.11(a)(1)-(2), which this corpus does not cover"
+            "the HS codes of the materials; with none, origin turns on "
+            "102.11(a)(1)-(2), which need a fact about production rather than "
+            "a classification"
         )
         return base
 
-    findings = [_evaluate(rule, alt, good, inputs) for rule, alt in candidates]
+    codes = [m.code for m in foreign]
+    findings = [_evaluate(rule, alt, good, codes) for rule, alt in candidates]
 
+    # 102.11(a)(3)
     met = [f for f in findings if f.satisfied is True]
     if met:
         by_rule = {f.rule_id for f in met}
@@ -229,15 +406,15 @@ def resolve(
             trace=findings,
         )
 
+    # An alternative that cannot be settled leaves (a)(3) open: the shift has
+    # not failed yet, so neither 102.13 nor 102.11(b) is reached.
     undecided = [f for f in findings if f.satisfied is None]
     if undecided:
         first = undecided[0]
         needed = (
             first.unverifiable[0]
             if first.unverifiable
-            else next(
-                c.detail for c in first.checks if c.outcome == "needs_judgement"
-            )
+            else next(c.detail for c in first.checks if c.outcome == "needs_judgement")
         )
         return OriginResult(
             status="unresolved",
@@ -251,10 +428,35 @@ def resolve(
             trace=findings,
         )
 
+    # Every alternative has definitely failed. 102.13 disregards the materials
+    # that failed if they are small enough, which can still carry the good.
+    near = [f for f in findings if f.satisfied is False and _failing(f)]
+    closest = min(near, key=lambda f: len(_failing(f))) if near else None
+    de_minimis_note = ""
+    if closest is not None:
+        carried, detail = _de_minimis(closest, good, by_code, good_value)
+        if carried:
+            return OriginResult(
+                status="resolved",
+                origin=country,
+                basis="tariff_shift_de_minimis",
+                rule_id=closest.rule_id,
+                rule_text=closest.rule_text,
+                satisfied=True,
+                reason=detail,
+                vintage=corpus.vintage,
+                trace=findings,
+            )
+        # The shift itself is settled either way, so the finding stands and the
+        # de minimis route is named rather than swallowing the answer.
+        de_minimis_note = f" Unless {detail}." if carried is None else f" {detail.capitalize()}."
+
+    # Paragraph (a) has not produced an answer, so 102.11(b) applies next.
     first = findings[0]
     blocking = next(
         (c for c in first.checks if c.outcome in ("not_shifted", "excluded")), None
     )
+    why = f"material {blocking.material} {blocking.detail}. " if blocking else ""
     return OriginResult(
         status="unresolved",
         basis="tariff_shift",
@@ -262,12 +464,10 @@ def resolve(
         rule_text=first.rule_text,
         satisfied=False,
         reason="shift_not_satisfied",
-        needed=(
-            f"material {blocking.material} {blocking.detail}; origin does not fall "
-            f"to {country} under this rule, and 102.11(b)-(d) would apply next"
-            if blocking
-            else "the rule is not satisfied"
-        ),
+        needed=f"{why}Origin does not fall to {country} under 102.11(a)."
+        + de_minimis_note
+        + " Next is "
+        + _next_paragraph(good),
         vintage=corpus.vintage,
         trace=findings,
     )
