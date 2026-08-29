@@ -10,8 +10,13 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Literal
 
+from typing import TYPE_CHECKING
+
 from .corpus import Corpus
 from .grammar import Alternative, CodeRange, LEVEL_DIGITS, Rule, digits
+
+if TYPE_CHECKING:
+    from .textile import TextileFacts
 
 Status = Literal["resolved", "unresolved", "ambiguous"]
 Outcome = Literal["shifted", "not_shifted", "excluded", "needs_judgement"]
@@ -57,6 +62,8 @@ class Material:
     code: str
     country: str | None = None
     value: float | None = None
+    #: Only for 102.13(c), the textile de minimis, which is by weight.
+    weight: float | None = None
 
     @classmethod
     def of(cls, item: "str | Material") -> "Material":
@@ -314,6 +321,8 @@ def resolve(
     wholly_obtained: bool = False,
     is_set: bool = False,
     operation: Operation | None = None,
+    good_weight: float | None = None,
+    textile: "TextileFacts | None" = None,
     regime: str = "US",
     corpus: Corpus | None = None,
 ) -> OriginResult:
@@ -347,6 +356,23 @@ def resolve(
     materials = [Material.of(m) for m in inputs]
     by_code = {m.code: m for m in materials}
     base = OriginResult(status="unresolved", vintage=corpus.vintage)
+
+    # 102.11 governs goods "other than textile and apparel products covered by
+    # § 102.21", so a covered good takes 102.21(c) instead. Citing 102.11 for a
+    # hat or a seat belt would cite a provision that excludes it.
+    if corpus.reaches(good):
+        from .textile import TextileFacts, resolve_textile
+
+        return resolve_textile(
+            good,
+            materials,
+            country,
+            corpus=corpus,
+            facts=textile or TextileFacts(),
+            good_weight=good_weight,
+            wholly_obtained=wholly_obtained,
+            operation=operation,
+        )
 
     # 102.11(a)(1)
     if wholly_obtained:

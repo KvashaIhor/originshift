@@ -35,6 +35,7 @@ reasoning turned out to be wrong.
 | `ingest.py` | Brings in rules from sources that cannot be fetched and parsed |
 | `build_corpus.py` | Emits the versioned corpus |
 | `resolve.py` | Walks 102.11, applies the corpus, and cites what it used |
+| `textile.py` | The 102.21(c) hierarchy, for textile and apparel products |
 | `bom.py` | Walks a bill of materials, determining origin at each node |
 | `cli.py` | `originshift` — single lookups and batch CSV |
 | `validate.py` | Scores the corpus against CBP's own rulings |
@@ -112,7 +113,13 @@ useful and inflates it for nothing.
 'in a different subheading from 8708.29'
 ```
 
-102.20 is one step of a hierarchy, and the resolver walks it in order:
+**Which hierarchy applies is decided first.** 102.11 governs goods *"other than
+textile and apparel products covered by § 102.21"*, so a covered good — which
+includes hats, umbrellas and car seat belts, not just chapters 50–63 — takes
+102.21(c) instead. Citing 102.11 for one of those would cite a provision that
+excludes it.
+
+### Goods under 102.20 — the 102.11 hierarchy
 
 | Step | Basis | Needs |
 |---|---|---|
@@ -122,6 +129,22 @@ useful and inflates it for nothing.
 | 102.13 | `tariff_shift_de_minimis` | material values and `good_value` |
 | 102.11(b)(1) | `essential_character` | the materials' countries |
 | 102.11(b)(2), (c), (d) | — | commingled stock, sets, minor processing: named, not decided |
+
+### Textile and apparel goods — the 102.21(c) hierarchy
+
+| Step | Basis | Needs |
+|---|---|---|
+| 102.21(c)(1) | `wholly_obtained` | `wholly_obtained=True` |
+| 102.21(c)(2) | `tariff_shift` | the classifications |
+| 102.13(c) | `tariff_shift_de_minimis` | material **weights** and `good_weight` — 7% of weight, not value |
+| 102.21(c)(3)(i) | `knit_to_shape` | `TextileFacts(knit_to_shape_in=…)` |
+| 102.21(c)(3)(ii) | `wholly_assembled` | `TextileFacts(wholly_assembled_in=…)`, and the good not one of the headings (c)(3)(ii) excepts |
+| 102.21(c)(4) | `most_important_process` | `TextileFacts(most_important_process_in=…)` |
+| 102.21(c)(5) | `last_important_process` | `TextileFacts(last_important_process_in=…)` |
+
+Only the first two steps turn on codes. The rest turn on **where an operation
+happened**, which is why textiles abstain so often — and the abstention names
+which step it is waiting on.
 
 **102.11(b) is more decidable than it looks.** Essential character sounds like a
 judgement, but 102.18(b)(1) confines the candidates to materials sitting in a

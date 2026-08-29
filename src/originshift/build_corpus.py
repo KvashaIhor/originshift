@@ -159,6 +159,14 @@ def build(which: str = "102.20", issue_date: str | None = None) -> dict:
                 Counter(a.unparsed_reason for a in alts if a.unparsed_reason)
             ),
         },
+        "covers": (
+            [str(r) for r in parse_102_21.covered_goods(snap.text)[0]]
+            if which == "102.21"
+            else []
+        ),
+        "covers_notes": (
+            parse_102_21.covered_goods(snap.text)[1] if which == "102.21" else []
+        ),
         "anomalies": anomalies(rules) + UNINCORPORATED.get(spec["authority"].replace("19 CFR ", ""), []),
         "rules": [r.to_dict() for r in rules],
     }

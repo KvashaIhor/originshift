@@ -89,9 +89,21 @@ class Corpus:
     source_issue_date: str
     rules: list[Rule]
     name: str = "19-CFR-102.20"
+    #: The goods this part reaches. 102.21 states its own coverage at
+    #: 102.21(b)(5); which hierarchy applies to a good turns on it.
+    covers: list[CodeRange] = field(default_factory=list)
     #: Rules brought in from somewhere other than the primary source, keyed by
     #: rule_id. A consumer can always ask which answers rest on one.
     overlaid: dict[str, dict] = field(default_factory=dict)
+
+    def reaches(self, code: str) -> bool:
+        """Is this good one the part governs?
+
+        102.11 applies to goods "other than textile and apparel products covered
+        by 102.21", so answering a hat under 102.11 would cite a provision that
+        excludes it.
+        """
+        return any(r.contains(code) for r in self.covers)
 
     def provenance_of(self, rule_id: str) -> dict | None:
         """How a rule got here, where it did not come from the primary source."""
@@ -120,6 +132,7 @@ class Corpus:
             source_issue_date=d["source_issue_date"],
             rules=rules,
             name=d.get("corpus", "19-CFR-102.20"),
+            covers=[_range(x) for x in d.get("covers", [])],
         )
 
     @classmethod

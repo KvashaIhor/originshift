@@ -25,6 +25,53 @@
    "descriptive_source": 14
   }
  },
+ "covers": [
+  "50",
+  "51",
+  "52",
+  "53",
+  "54",
+  "55",
+  "56",
+  "57",
+  "58",
+  "59",
+  "60",
+  "61",
+  "62",
+  "63",
+  "3005.90",
+  "3921.12.15",
+  "3921.13.15",
+  "3921.90.2550",
+  "4202.12.40-4202.12.89",
+  "4202.22.40-4202.22.89",
+  "4202.32.40-4202.32.99",
+  "4202.92.04-4202.92.08",
+  "4202.92.15-4202.92.33",
+  "4202.92.60-4202.92.97",
+  "6405.20.60",
+  "6406.10.77",
+  "6406.10.90",
+  "6406.90.15",
+  "6501",
+  "6502",
+  "6504",
+  "6505.00",
+  "6601.10-6601.99",
+  "7019.13.15",
+  "7019.13.28",
+  "7019.61-7019.90",
+  "8708.21",
+  "8804",
+  "9113.90.40",
+  "9404.90",
+  "9612.10.9010",
+  "9619.00.21-9619.00.79"
+ ],
+ "covers_notes": [
+  "6505.00: except for hair-nets of subheading 6505.00"
+ ],
  "anomalies": [
   {
    "kind": "missing_from_source",
@@ -723,7 +770,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5007"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) A change from greige fabric of heading 5007 to finished fabric of heading 5007 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": null,
@@ -1194,7 +1247,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5208-5212"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) A change from greige fabric of heading 5208 through 5212 to finished fabric of heading 5208 through 5212 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": null,
@@ -1460,7 +1519,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5309-5311"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) A change from greige fabric of heading 5309 through 5311 to finished fabric of heading 5309 through 5311 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": null,
@@ -1565,7 +1630,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5407-5408"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) A change from greige fabric of heading 5407 through 5408 to finished fabric of heading 5407 through 5408 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": null,
@@ -1858,7 +1929,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5512-5516"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) A change from greige fabric of heading 5512 through 5516 to finished fabric of heading 5512 through 5516 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": null,
@@ -2006,7 +2083,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5602-5603"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of heading 5602 through 5603 to finished fabric of heading 5602 through 5603 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -2332,7 +2415,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5608"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1)(a) Except for netting of wool or of fine animal hair, a change from greige netting of heading 5608 to finished netting of heading 5608 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": "the good is not netting of wool or of fine animal hair",
@@ -2428,7 +2517,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5609"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) If of continuous filaments, including strips, the country of origin of a good classifiable under heading 5609 is the country, territory, or insular possession in which those filaments, including strips, were extruded.",
      "residual": false,
      "condition": "of continuous filaments, including strips",
@@ -2439,7 +2534,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5609"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(2) If of staple fibers, the country of origin of a good classifiable under heading 5609 is the country, territory, or insular possession in which those fibers were spun into yarns.",
      "residual": false,
      "condition": "of staple fibers",
@@ -2509,7 +2610,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5801-5803"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of heading 5801 through 5803 to finished fabric of heading 5801 through 5803 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -2575,7 +2682,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5804.10"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of subheading 5804.10 to finished fabric of subheading 5804.10 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -2635,7 +2748,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5804.21-5804.30"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for lace of wool or of fine animal hair, a change from greige lace of subheading 5804.21 through 5804.30 to finished lace of subheading 5804.21 through 5804.30 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": "the good is not lace of wool or of fine animal hair",
@@ -2747,7 +2866,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5806"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of heading 5806 to finished fabric of heading 5806 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -2813,7 +2938,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5807"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "The country of origin of a good classifiable under heading 5807 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process.",
      "residual": false,
      "condition": null,
@@ -3119,7 +3250,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5810.10"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "The country of origin of goods of subheading 5810.10 is the single country, territory, or insular possession in which the embroidery was performed.",
      "residual": false,
      "condition": null,
@@ -3144,7 +3281,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5810.91-5810.99"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) For embroidered fabric, the country of origin is the country, territory, or insular possession in which the fabric was produced by a fabric-making process.",
      "residual": false,
      "condition": "the good is embroidered fabric",
@@ -3155,7 +3298,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5810.91-5810.99"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(2) For embroidered badges, emblems, insignia, and the like, comprised of multiple components, the country of origin is the place of assembly, provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession.",
      "residual": false,
      "condition": "the good is embroidered badges, emblems, insignia, and the like, comprised of multiple components",
@@ -3225,7 +3374,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5811"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "The country of origin of a good classifiable under heading 5811 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process.",
      "residual": false,
      "condition": null,
@@ -3250,7 +3405,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5901-5903"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of heading 5901 through 5903 to finished fabric of heading 5901 through 5903 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -3352,7 +3513,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5904"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(2) For all other goods, the country of origin of the good will be determined by application of § 102.21(c)(4) or, if the country of origin cannot be determined under that section, by application of § 102.21(c)(5).",
      "residual": false,
      "condition": "the good is all other goods",
@@ -3377,7 +3544,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5905"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for wall coverings consisting of textile fabric of wool or of fine animal hair treated on the back or affixed by any means to a backing of any material, a change from wall coverings of greige fabric of heading 5905 to wall coverings of finished fabric of heading 5905 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": "the good is not wall coverings consisting of textile fabric of wool or of fine animal hair treated on the back or affixed by any means to a backing of any material",
@@ -3447,7 +3620,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5906-5907"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of heading 5906 through 5907 to finished fabric of heading 5906 through 5907 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -3828,7 +4007,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5911.10-5911.20"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of subheading 5911.10 through 5911.20 to finished fabric of subheading 5911.10 through 5911.20 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -3897,7 +4082,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5911.31-5911.32"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1)(a) Except for fabric of wool or of fine animal hair, a change from greige fabric of subheading 5911.31 through 5911.32 to finished fabric of subheading 5911.31 through 5911.32 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -3999,7 +4190,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5911.40"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of subheading 5911.40 to finished fabric of subheading 5911.40 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -4105,7 +4302,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "5911.90"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(2)(a) If the good is a fabric, except for fabric of wool or of fine animal hair, a change from greige fabric of subheading 5911.90 to finished fabric of subheading 5911.90 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": "the good is a fabric, except for fabric of wool or of fine animal hair",
@@ -4208,7 +4411,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "6001-6006"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(1) Except for fabric of wool or of fine animal hair, a change from greige fabric of heading 6001 through 6006 to finished fabric of heading 6001 through 6006 by both dyeing and printing when accompanied by two or more of the following finishing operations: bleaching, shrinking, fulling, napping, decating, permanent stiffening, weighting, permanent embossing, or moireing; or,",
      "residual": false,
      "condition": "the good is not fabric of wool or of fine animal hair",
@@ -4768,7 +4977,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "6213-6214"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "Except for goods of heading 6213 through 6214 provided for in paragraph (e)(2) of this section, the country of origin of a good classifiable under heading 6213 through 6214 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process.",
      "residual": false,
      "condition": "the good is not goods of heading 6213 through 6214 provided for in paragraph (e)(2) of this section",
@@ -4879,7 +5094,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "6301-6306"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "Except for goods of heading 6302 through 6304 provided for in paragraph (e)(2) of this section, the country of origin of a good classifiable under heading 6301 through 6306 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process.",
      "residual": false,
      "condition": "the good is not goods of heading 6302 through 6304 provided for in paragraph (e)(2) of this section",
@@ -4904,7 +5125,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "6307.10"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "The country of origin of a good classifiable under subheading 6307.10 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process.",
      "residual": false,
      "condition": null,
@@ -4976,7 +5203,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "6307.90"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "The country of origin of a good classifiable under subheading 6307.90 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process.",
      "residual": false,
      "condition": null,
@@ -5001,7 +5234,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "6308"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "The country of origin of a good classifiable under heading 6308 is the country, territory, or insular possession in which the woven fabric component of the good was formed by a fabric-making process.",
      "residual": false,
      "condition": null,
@@ -5026,7 +5265,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "6309-6310"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "The country of origin of a good classifiable under heading 6309 through 6310 is the country, territory, or insular possession in which the good was last collected and packaged for shipment.",
      "residual": false,
      "condition": null,
@@ -6347,7 +6592,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "9404.90"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "Except for goods of subheading 9404.90 provided for in paragraph (e)(2) of this section, the country of origin of a good classifiable under subheading 9404.90 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process.",
      "residual": false,
      "condition": "the good is not goods of subheading 9404.90 provided for in paragraph (e)(2) of this section",
@@ -6686,7 +6937,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "9619"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(7) The country of origin of a baby diaper of cotton classifiable in heading 9619 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process; or",
      "residual": false,
      "condition": null,
@@ -6854,7 +7111,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "9619"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "(12) The country of origin of an other made up article of heading 9619 is the country, territory, or insular possession in which the woven fabric component of the good was formed by a fabric-making process.",
      "residual": false,
      "condition": null,
@@ -6879,7 +7142,13 @@
     {
      "kind": "process",
      "shift": null,
-     "target": null,
+     "target": {
+      "ranges": [
+       "9619.00.31-9619.00.33"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
      "text": "The country of origin of a good classifiable in subheading 9619.00.31 through 9619.00.33 is the country, territory, or insular possession in which the fabric comprising the good was formed by a fabric-making process.",
      "residual": false,
      "condition": null,

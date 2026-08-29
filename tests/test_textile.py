@@ -1,0 +1,184 @@
+"""102.21(c), the hierarchy for textile and apparel products.
+
+102.11 governs goods "other than textile and apparel products covered by
+§ 102.21". Answering a covered good under 102.11 cites a provision that excludes
+it, which for a tool whose claim is defensibility is worse than saying nothing.
+"""
+
+import pytest
+
+from originshift.resolve import Material, resolve
+from originshift.textile import TextileFacts
+
+
+def test_a_covered_good_is_not_answered_under_102_11(corpus_102_21):
+    """The bug this module exists to fix: 102.11(a)(1) was cited for textiles."""
+    r = resolve(good="6203.42", inputs=[], country="VN", wholly_obtained=True, corpus=corpus_102_21)
+    assert r.rule_id == "102.21(c)(1)"
+    assert not (r.rule_id or "").startswith("102.11")
+
+
+def test_coverage_follows_102_21_b_5_not_just_the_chapters(corpus_102_21):
+    """102.21 reaches beyond chapters 50-63: seat belts, hats, umbrellas."""
+    assert corpus_102_21.reaches("6203.42")     # apparel
+    assert corpus_102_21.reaches("8708.21")     # seat belts
+    assert corpus_102_21.reaches("6505.00")     # hats
+    assert corpus_102_21.reaches("9404.90")
+    assert not corpus_102_21.reaches("8708.29")  # a door part is not a textile
+    # the list is bounded: 4202.12.40-89 is covered, 4202.12.99 is not
+    assert corpus_102_21.reaches("4202.12.60")
+    assert not corpus_102_21.reaches("4202.12.99")
+
+
+def test_wholly_obtained_cites_c_1(corpus_102_21):
+    r = resolve(good="6203.42", inputs=[], country="VN", wholly_obtained=True, corpus=corpus_102_21)
+    assert (r.status, r.origin, r.basis) == ("resolved", "VN", "wholly_obtained")
+
+
+def test_knit_to_shape_cites_c_3_i(corpus_102_21):
+    r = resolve(
+        good="6110.20",
+        inputs=[Material("5205.11", "CN")],
+        country="VN",
+        textile=TextileFacts(knit_to_shape_in="VN"),
+        corpus=corpus_102_21,
+    )
+    assert (r.origin, r.rule_id, r.basis) == ("VN", "102.21(c)(3)(i)", "knit_to_shape")
+
+
+def test_wholly_assembled_cites_c_3_ii(corpus_102_21):
+    r = resolve(
+        good="6203.42",
+        inputs=[Material("5208.11", "CN")],
+        country="VN",
+        textile=TextileFacts(wholly_assembled_in="VN"),
+        corpus=corpus_102_21,
+    )
+    assert (r.origin, r.rule_id) == ("VN", "102.21(c)(3)(ii)")
+
+
+def test_an_excepted_heading_falls_past_c_3_ii(corpus_102_21):
+    """(c)(3)(ii) does not reach heading 6214, so assembly does not settle it."""
+    facts = TextileFacts(wholly_assembled_in="VN")
+    r = resolve(
+        good="6214.10", inputs=[Material("5007.10", "CN")], country="VN",
+        textile=facts, corpus=corpus_102_21,
+    )
+    assert r.status == "unresolved"
+    assert r.origin != "VN"
+
+    facts.most_important_process_in = "IT"
+    r = resolve(
+        good="6214.10", inputs=[Material("5007.10", "CN")], country="VN",
+        textile=facts, corpus=corpus_102_21,
+    )
+    assert (r.origin, r.rule_id) == ("IT", "102.21(c)(4)")
+
+
+def test_the_steps_run_in_order(corpus_102_21):
+    """(c)(4) must not be reached while (c)(3)(i) would answer."""
+    r = resolve(
+        good="6110.20",
+        inputs=[Material("5205.11", "CN")],
+        country="VN",
+        textile=TextileFacts(knit_to_shape_in="BD", most_important_process_in="VN"),
+        corpus=corpus_102_21,
+    )
+    assert r.origin == "BD"
+    assert r.rule_id == "102.21(c)(3)(i)"
+
+
+def test_last_important_process_is_the_final_step(corpus_102_21):
+    r = resolve(
+        good="6214.10",
+        inputs=[Material("5007.10", "CN")],
+        country="VN",
+        textile=TextileFacts(last_important_process_in="IN"),
+        corpus=corpus_102_21,
+    )
+    assert (r.origin, r.rule_id) == ("IN", "102.21(c)(5)")
+
+
+def test_the_textile_de_minimis_is_by_weight_not_value(corpus_102_21):
+    """102.13(c) allows 7 percent of total weight. 102.13(a)'s value test is
+    the wrong instrument here."""
+    r = resolve(
+        good="3921.12.15",
+        inputs=[Material("3921.12.15", "CN", weight=3.0)],
+        country="VN",
+        good_weight=100.0,
+        corpus=corpus_102_21,
+    )
+    assert r.basis == "tariff_shift_de_minimis"
+    assert "102.13(c)" in r.reason and "weight" in r.reason
+
+    over = resolve(
+        good="3921.12.15",
+        inputs=[Material("3921.12.15", "CN", weight=30.0)],
+        country="VN",
+        good_weight=100.0,
+        corpus=corpus_102_21,
+    )
+    assert over.status == "unresolved"
+
+
+def test_value_alone_does_not_trigger_the_textile_allowance(corpus_102_21):
+    """A material given a value but no weight cannot be disregarded under (c)."""
+    r = resolve(
+        good="3921.12.15",
+        inputs=[Material("3921.12.15", "CN", value=3.0)],
+        country="VN",
+        good_value=100.0,
+        corpus=corpus_102_21,
+    )
+    assert r.basis != "tariff_shift_de_minimis"
+
+
+def test_with_no_production_facts_it_names_the_steps_it_needs(corpus_102_21):
+    r = resolve(
+        good="3921.12.15",
+        inputs=[Material("3921.12.15", "CN")],
+        country="VN",
+        corpus=corpus_102_21,
+    )
+    assert r.status == "unresolved"
+    assert "(c)(3)(i)" in r.needed and "(c)(4)" in r.needed
+    assert "knit to shape" in r.needed
+
+
+def test_a_process_rule_is_findable(corpus_102_21):
+    """A rule with no tariff shift still governs its goods. Without a target the
+    index cannot see it, and the good reads as having no rule at all."""
+    found = corpus_102_21.candidates("6214.10")
+    assert found
+    assert any(alt.kind == "process" for _, alt in found)
+
+
+def test_no_covered_good_is_left_without_a_rule(corpus_102_21):
+    """Sampled across the coverage, every good should find something."""
+    import re
+
+    for rule in corpus_102_21.rules:
+        for scope in rule.scope:
+            code = scope.start
+            if corpus_102_21.reaches(code):
+                assert corpus_102_21.candidates(code), f"{code} has no findable rule"
+
+
+def test_102_17_still_reaches_textiles(corpus_102_21):
+    """102.21(c) applies 102.12 through 102.19 where appropriate."""
+    r = resolve(
+        good="6203.42",
+        inputs=[Material("5208.11", "CN")],
+        country="VN",
+        operation="simple_packing",
+        corpus=corpus_102_21,
+    )
+    assert r.rule_id == "102.17"
+    assert r.reason == "non_qualifying_operation"
+
+
+def test_a_non_textile_good_still_takes_102_11(corpus):
+    """Routing must not have captured everything."""
+    r = resolve(good="8708.29", inputs=[], country="VN", wholly_obtained=True, corpus=corpus)
+    assert r.rule_id == "102.11(a)(1)"

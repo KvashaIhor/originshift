@@ -22,7 +22,8 @@ import xml.etree.ElementTree as ET
 from collections import Counter
 
 from . import parse_102
-from .grammar import Alternative, CodeRange, Rule
+from .parse_102 import _ranges
+from .grammar import Alternative, CodeRange, Rule, Target
 
 REGIME = "US"
 
@@ -114,7 +115,15 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
         body = f"A change to {m.group('desc')} of " + body[m.end() :]
 
     if _PROCESS.match(body):
-        alt = Alternative(kind="process", text=raw, unparsed_reason="process_rule")
+        alt = Alternative(
+            kind="process",
+            text=raw,
+            # A process rule reaches the goods its row is keyed to. Without a
+            # target the index cannot find it, and a good it governs would be
+            # reported as having no rule at all — alarming, and wrong.
+            target=Target(ranges=_ranges(body) or list(scope)),
+            unparsed_reason="process_rule",
+        )
         alt.condition = condition
         alt.sequence = sequence
         alt.is_fallback = is_fallback
@@ -126,6 +135,7 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
         alt = Alternative(
             kind="process",
             text=raw,
+            target=Target(ranges=_ranges(m.group("to")) or list(scope)),
             unparsed_reason="process_rule",
         )
     else:
@@ -140,6 +150,55 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
     if condition and alt.unparsed_reason is None:
         alt.unparsed_reason = "conditional_on_the_good"
     return alt
+
+
+#: 102.21(b)(5) lists the non-textile-chapter goods the section still covers,
+#: in a compressed form: "4202.12.40-89" means 4202.12.40 through 4202.12.89,
+#: "6601.10-99" means 6601.10 through 6601.99.
+_COVERAGE_ENTRY = re.compile(
+    r"^(?P<start>\d{4}(?:\.\d{2,4}){0,2})"
+    r"(?:\s*[-–]\s*(?P<end>\d{2,4}))?"
+    r"(?:\s*\((?P<note>[^)]*)\))?\s*$"
+)
+
+
+def covered_goods(xml_text: str) -> tuple[list[CodeRange], list[str]]:
+    """What 102.21 reaches: chapters 50-63, plus the list in 102.21(b)(5).
+
+    Which hierarchy applies to a good turns on this. 102.11 says in its first
+    line that it governs goods *other than* textile and apparel products covered
+    by 102.21, so answering a hat or a car seat cover under 102.11 would cite a
+    provision that excludes it.
+    """
+    root = ET.fromstring(xml_text)
+    section = next(d for d in root.iter("DIV8") if d.attrib.get("N") == "102.21")
+
+    ranges = [CodeRange.parse(f"{c:02d}") for c in range(50, 64)]
+    notes: list[str] = []
+    extract = section.find(".//EXTRACT")
+    if extract is None:
+        return ranges, notes
+
+    for entry in extract.findall("FP-1"):
+        text = re.sub(r"\s+", " ", "".join(entry.itertext())).strip()
+        m = _COVERAGE_ENTRY.match(text)
+        if not m:
+            notes.append(text)
+            continue
+        start = m.group("start")
+        end = None
+        if m.group("end"):
+            # The tail replaces the same number of trailing digits.
+            tail = m.group("end")
+            end = start[: len(start) - len(tail)] + tail
+        try:
+            ranges.append(CodeRange.parse(start, end))
+        except ValueError:
+            notes.append(text)
+            continue
+        if m.group("note"):
+            notes.append(f"{start}: {m.group('note')}")
+    return ranges, notes
 
 
 def parse(xml_text: str, *, vintage: str, source_url: str) -> list[Rule]:
