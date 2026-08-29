@@ -1,0 +1,19 @@
+{
+  "good": "8708.29",
+  "country": "MX",
+  "label": "door assembly, produced in Mexico",
+  "value": 100.0,
+  "components": [
+    {
+      "good": "8708.99",
+      "country": "MX",
+      "label": "bracket subassembly, produced in Mexico",
+      "value": 35.0,
+      "components": [
+        { "good": "7208.10", "country": "KR", "label": "hot-rolled steel coil", "value": 30.0 }
+      ]
+    },
+    { "good": "7208.10", "country": "JP", "label": "steel panel", "value": 60.0 },
+    { "good": "8708.95", "country": "CN", "label": "airbag component", "value": 5.0 }
+  ]
+}

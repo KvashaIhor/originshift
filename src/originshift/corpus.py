@@ -21,8 +21,16 @@ from .grammar import (
     Target,
 )
 
-CORPUS_DIR = Path(__file__).resolve().parents[2] / "data" / "corpus"
-OVERLAY_DIR = Path(__file__).resolve().parents[2] / "data" / "overlays"
+#: Built corpora and reviewed overlays travel with the package, so an install
+#: is usable without a checkout. The 6201-6208 overlay is not a convenience: the
+#: eCFR carries no rule for most apparel, so shipping without it would leave a
+#: hole in the law rather than in the tooling.
+PACKAGE_DATA = Path(__file__).resolve().parent / "data"
+CORPUS_DIR = PACKAGE_DATA / "corpus"
+OVERLAY_DIR = PACKAGE_DATA / "overlays"
+
+#: Somewhere for a user's own overlays, kept apart from the shipped ones.
+USER_OVERLAYS_ENV = "ORIGINSHIFT_OVERLAYS"
 
 
 def _range(text: str) -> CodeRange:
@@ -143,13 +151,16 @@ class Corpus:
         Either way its provenance is kept, so a consumer can tell an answer
         resting on the eCFR from one resting on a document someone fed in.
         """
-        overlay_dir = overlay_dir or OVERLAY_DIR
-        if not overlay_dir.exists():
-            return []
+        import os
+
+        directories = [overlay_dir] if overlay_dir else [OVERLAY_DIR]
+        if overlay_dir is None and os.environ.get(USER_OVERLAYS_ENV):
+            directories.append(Path(os.environ[USER_OVERLAYS_ENV]))
 
         applied: list[str] = []
         by_id = {r.rule_id: i for i, r in enumerate(self.rules)}
-        for file in sorted(overlay_dir.glob("*.json")):
+        files = [f for d in directories if d.exists() for f in sorted(d.glob("*.json"))]
+        for file in files:
             data = json.loads(file.read_text(encoding="utf-8"))
             if data.get("extends") != self.name:
                 continue

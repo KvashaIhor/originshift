@@ -1,0 +1,7 @@
+id,good,country,materials,material_countries,material_values,good_value,operation
+E-1001,8708.29,VN,"7208.10,8708.99",,,,
+E-1002,8708.29,VN,8708.95,JP,,,
+E-1003,8708.29,VN,8708.95,JP,3.0,100.0,
+E-1004,6203.42,VN,"5208.11,5407.10",,,,
+E-1005,2008.11,CN,1202.41,,,,
+E-1006,8708.29,VN,7208.10,,,,simple_packing

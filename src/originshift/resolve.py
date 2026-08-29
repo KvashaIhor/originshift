@@ -167,15 +167,36 @@ def _fmt(ranges: list[CodeRange]) -> str:
 
 
 def _evaluate(rule: Rule, alt: Alternative, good: str, materials: list[str]) -> Finding:
+    #: What each unstructured reason actually asks the user for.
+    ASKS = {
+        "descriptive_source": (
+            "the rule names the materials it accepts by description rather than "
+            "by code, so it has to be read against what the materials are"
+        ),
+        "conditional_on_the_good": "a fact about the good that the rule turns on",
+        "process_rule": (
+            "where a named operation happened — this rule confers origin on the "
+            "place of the process, not on a movement between codes"
+        ),
+        "reverse_phrasing": "the rule is written as a change out of a code, not into one",
+        "no_source_clause": "the rule does not state its source in code terms",
+    }
+
     if alt.shift is None or alt.unparsed_reason:
+        asks: list[str] = []
+        if alt.condition:
+            asks.append(f"whether {alt.condition}, which this rule requires")
+        asks.append(
+            ASKS.get(
+                alt.unparsed_reason or "",
+                f"the rule is not reducible to codes ({alt.unparsed_reason})",
+            )
+        )
         return Finding(
             rule_id=rule.rule_id,
             rule_text=alt.text,
             satisfied=None,
-            unverifiable=[
-                f"the rule is not reducible to codes ({alt.unparsed_reason}); "
-                f"it must be read directly"
-            ],
+            unverifiable=asks,
         )
 
     checks = [_check_material(alt, good, m) for m in materials]
@@ -187,6 +208,12 @@ def _evaluate(rule: Rule, alt: Alternative, good: str, materials: list[str]) -> 
     # to vermouth of heading 2205 from heading 2204" does not apply to sangria,
     # which shares the heading. Matching on the code alone would apply the rule to
     # goods it was never written for, which is the one thing this must not do.
+    # 102.21 gates many rules on a fact about the good — "If the good is of
+    # staple fibers", "If the good consists of two or more component parts".
+    # Like a named target, no classification settles it.
+    if alt.condition:
+        unverifiable.insert(0, f"whether {alt.condition}, which this rule requires")
+
     target = alt.target
     if target is not None and target.description:
         unverifiable.append(

@@ -4,13 +4,30 @@ version = "0.0.1.dev0"
 description = "Non-preferential rules of origin, as data. Answers which country a good is legally from, and cites the rule."
 readme = "README.md"
 requires-python = ">=3.11"
-license = { text = "Apache-2.0" }
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+keywords = ["customs", "rules-of-origin", "trade-compliance", "hs-codes", "cbp", "usmca"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Legal Industry",
+  "Intended Audience :: Developers",
+  "Topic :: Office/Business",
+  "Programming Language :: Python :: 3",
+]
 # certifi only: python.org builds ship no usable trust store, and every source
 # this package reads is fetched over HTTPS from a government endpoint.
 dependencies = ["certifi"]
 
+[project.urls]
+Homepage = "https://github.com/originshift/originshift"
+Source = "https://github.com/originshift/originshift"
+
+[project.scripts]
+originshift = "originshift.cli:main"
+
 [project.optional-dependencies]
 dev = ["pytest>=8"]
+ingest = ["pdfplumber", "beautifulsoup4"]
 
 [build-system]
 requires = ["hatchling"]

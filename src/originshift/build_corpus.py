@@ -19,7 +19,8 @@ from . import parse_102, parse_102_21, sources
 from .grammar import Rule, digits
 
 ROOT = Path(__file__).resolve().parents[2]
-OUT = ROOT / "data" / "corpus"
+#: Written inside the package, so a built corpus ships with an install.
+OUT = Path(__file__).resolve().parent / "data" / "corpus"
 
 #: 102.20 is written against the HTSUS, which tracks an HS edition. Stated
 #: explicitly so a consumer can tell whether the corpus matches their codes.
@@ -183,7 +184,7 @@ def _build_one(which: str, issue_date: str | None) -> None:
 
     c = corpus["counts"]
     pct = c["fully_structured"] / c["alternatives"]
-    print(f"wrote {path.relative_to(ROOT)}  ({path.stat().st_size / 1024:.0f} KB)")
+    print(f"wrote {path.relative_to(Path(__file__).resolve().parents[1])}  ({path.stat().st_size / 1024:.0f} KB)")
     print(f"  source     : {corpus['source_url']}")
     print(f"  issue date : {corpus['source_issue_date']}   vintage: {corpus['vintage']}")
     print(f"  rules      : {c['rules']}")

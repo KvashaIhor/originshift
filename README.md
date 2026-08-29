@@ -3,20 +3,26 @@
 **Non-preferential rules of origin, as data.** Answers "what country is this good
 legally from?" and cites the rule it used.
 
-Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage:
+Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage.
+**The smaller one has far the wider reach:**
 
-| Corpus | Rules | Answerable from codes alone | Governs |
+| Corpus | Governs | Rules | Answerable from codes alone |
 |---|---|---|---|
-| **102.20** | 1,032 | 99.0% | country-of-origin marking under USMCA and NAFTA |
-| **102.21** | 101 (+1 overlay) | 31.8% | **all** textile and apparel imports, from any country |
+| **102.21** | **Every textile and apparel import, from any country** — 102.21(a) controls their origin *"for purposes of the Customs laws"*, except as to Israel | 101 (+1 overlay) | 31.8% |
+| **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 | 99.0% |
 
-**Read the scope before adopting.** 19 CFR 102.0 limits Part 102 to USMCA and
-NAFTA marking and the Morocco/Bahrain "new or different article of commerce"
-test. It is **not** the general origin test for US imports, and it does not
-decide Section 301 — both of those turn on common-law substantial
-transformation. [Scope, precisely](#scope-precisely) sets this out.
+If you import apparel, **102.21 is why this exists** — a sector where origin
+fraud, transshipment and forced-labour enforcement are all live. If you file
+under USMCA, 102.20 is your half.
 
-See [originshift.md](originshift.md) for the full plan.
+**Before adopting, read what Part 102 does not do.** Per **19 CFR 102.0** it does
+**not** decide Section 301 or Section 232 origin, and it does not decide AD/CVD
+scope. Those turn on the uncodified common-law **substantial transformation**
+test, which this does not implement and cannot, since it is case law rather than
+a rule table. [Scope, precisely](#scope-precisely) sets out the limits.
+
+See [originshift.md](originshift.md) for the original plan, amended where its
+reasoning turned out to be wrong.
 
 ## What is here
 
@@ -29,6 +35,8 @@ See [originshift.md](originshift.md) for the full plan.
 | `ingest.py` | Brings in rules from sources that cannot be fetched and parsed |
 | `build_corpus.py` | Emits the versioned corpus |
 | `resolve.py` | Walks 102.11, applies the corpus, and cites what it used |
+| `bom.py` | Walks a bill of materials, determining origin at each node |
+| `cli.py` | `originshift` — single lookups and batch CSV |
 | `validate.py` | Scores the corpus against CBP's own rulings |
 
 ## The corpus
@@ -159,6 +167,109 @@ Three outcomes and no others:
  'the rule requires: provided that the change is not the result of mere blanching of peanuts')
 ```
 
+## Command line
+
+```
+pip install originshift
+```
+
+```
+originshift resolve --good 8708.29 --inputs 7208.10,8708.99 --country VN
+originshift resolve --csv entries.csv --out results.csv
+originshift bom assembly.json
+originshift rule 6203.42 --corpus 102.21
+originshift corpora
+```
+
+**The batch path is the one that matters.** The question is usually "what does
+this say about last quarter's entries", not "what about this one good".
+`entries.csv` needs a `good` column; everything else is optional:
+
+| Column | |
+|---|---|
+| `good` | **required** — HS code of the finished article |
+| `country` | where the operation happened |
+| `materials` | material HS codes, comma-separated |
+| `material_countries` | positional, matching `materials` |
+| `material_values`, `good_value` | for the 102.13 de minimis allowance |
+| `wholly_obtained`, `is_set` | flags |
+| `operation` | a 102.17 operation, e.g. `simple_packing` |
+| `corpus` | force `102.20` or `102.21`; otherwise whichever has a rule |
+
+Every output row carries `status`, `origin`, `basis`, `rule_id`, `rule_text`,
+`needed`, `vintage` and `source` — so a determination in a spreadsheet is as
+traceable as one from the API. `source` reads `eCFR`, or names the document an
+overlaid rule came from.
+
+There is a worked `examples/entries.csv` and `examples/assembly.json`.
+
+## Bills of materials
+
+A single finished good is rarely the real question.
+
+```
+originshift bom examples/assembly.json
+```
+
+```
+8708.29  (door assembly, produced in Mexico) — MX
+   rule 102.20/8708.29: A change to subheading 8708.29 from any other subheading, except…
+   basis tariff_shift_de_minimis
+  8708.99  (bracket subassembly, produced in Mexico) — MX
+     rule 102.20/8708.99: A change to subheading 8708.99 from any other subheading, except…
+  7208.10  (hot-rolled steel coil) — KR (given)
+  7208.10  (steel panel) — JP (given)
+  8708.95  (airbag component) — CN (given)
+```
+
+Origin is settled bottom-up, because whether a subassembly is foreign to the
+country of final production decides whether the finished good's rule is met. A
+component whose own origin could not be settled goes up with **no country** —
+which the resolver reads as foreign, the conservative default — and the parent
+records it in `blocked_by`, so an answer standing on an unknown is never
+mistaken for a clean one.
+
+**This produces a determination, not a certificate of origin**, and does no
+preferential or FTA qualification. Both are deliberately out of scope — see
+[the patent note](originshift.md). Nothing is stored between calls.
+
+## What `unresolved` means
+
+**It is not an error, and it is not a failure to find a rule.** It means the
+rules genuinely do not decide the question on what you supplied — and the result
+names what is missing.
+
+```python
+>>> r = resolve(good="2008.11", inputs=["1202.41"], country="CN")
+>>> r.status
+'unresolved'
+>>> r.rule_id                      # the rule was found, and is cited
+'102.20/2008.11'
+>>> r.needed
+'the rule requires: provided that the change is not the result of mere blanching of peanuts'
+```
+
+Supply the missing fact and it resolves. Most of what `unresolved` asks for is
+one of a short list:
+
+| `reason` | What to supply |
+|---|---|
+| `insufficient_information` | the fact named in `needed` — a value, a process, what the good is |
+| `shift_not_satisfied` | nothing; the shift genuinely failed. `needed` names the material and the paragraph that applies next |
+| `no_input_materials_given` | the materials' HS codes, or `wholly_obtained=True` |
+| `no_rule_for_this_classification` | a code the corpus's vintage carries, or the other corpus |
+| `non_qualifying_operation` | nothing; 102.17 rules the operation out however the codes fall |
+
+`ambiguous` is rarer and means two rules both apply and the corpus does not rank
+them. Both are returned with their text.
+
+**For textiles, `unresolved` is the normal case, by design.** Only 31.8% of
+102.21 is answerable from classifications, because textile origin turns on
+fabric-making, knitting and assembly. So for chapters 50–63 this is less an
+oracle than a precise statement of *what you must establish*, drawn from the
+rule that applies to your code. That is worth having: the alternative is reading
+102.21(e)(1) yourself.
+
 ## Validation
 
 ```
@@ -251,20 +362,28 @@ Compiling rules and resolving a good against one is not the claimed invention.
 
 ## Scope, precisely
 
-**19 CFR 102.0** limits Part 102 to USMCA and NAFTA country-of-origin **marking**,
-and the "new or different article of commerce" test of the Morocco and Bahrain
-FTAs. It is **not** the general origin test for US imports — origin for a good
-from a non-USMCA country is decided by common-law substantial transformation, as
-is Section 301 applicability.
+**19 CFR 102.0** confines Part 102 to USMCA and NAFTA country-of-origin
+**marking**, plus the "new or different article of commerce" test of the Morocco
+and Bahrain FTAs.
 
-**102.21 is the broader half.** 102.21(a) makes it control the origin of
-imported textile and apparel products *"for purposes of the Customs laws"*, from
-any country, except as to Israel.
+**19 CFR 102.21(a)** is the wider grant: it controls the origin of textile and
+apparel products *"for purposes of the Customs laws"*, from any country, except
+as to Israel. Not marking-only, not USMCA-only.
 
-| Corpus | Rules | Answerable from codes alone | Governs |
-|---|---|---|---|
-| 102.20 | 1,032 | 99.0% | USMCA/NAFTA marking |
-| 102.21 | 101 (+1 overlay) | 31.8% | all textile and apparel imports |
+### What Part 102 does not decide
+
+| Question | Decided by | In this tool? |
+|---|---|---|
+| Marking origin, USMCA/NAFTA goods | 19 CFR 102.20 | yes |
+| Textile and apparel origin, any country | 19 CFR 102.21 | yes |
+| **Section 301 / Section 232 origin** | common-law **substantial transformation** | **no** |
+| **AD/CVD scope** | Commerce scope analysis | **no** |
+| Marking origin, other non-USMCA goods | common-law substantial transformation | **no** |
+| **Preferential / FTA qualification** | the agreement's own rules of origin | **no, deliberately** |
+
+Substantial transformation is case law, not a rule table, so it is not something
+this project can compile. A tool that claimed to answer Section 301 origin from
+Part 102 would be wrong, and a licensed broker would know it.
 
 Textile origin mostly turns on facts a classification does not carry — whether
 the good is of staple fibers or filaments, where the fabric-making process

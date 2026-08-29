@@ -34,7 +34,8 @@ from .grammar import CodeRange, Rule
 
 ROOT = Path(__file__).resolve().parents[2]
 STAGING = ROOT / "data" / "staging"
-OVERLAYS = ROOT / "data" / "overlays"
+#: Compiled overlays go where the corpus loader looks for them.
+OVERLAYS = Path(__file__).resolve().parent / "data" / "overlays"
 
 Method = Literal["api", "file"]
 Extractor = Literal[
