@@ -134,4 +134,74 @@ def test_an_unrecognised_operation_is_refused_not_ignored(corpus):
 def test_a_failed_shift_names_the_paragraph_that_applies_next(corpus):
     r = resolve(good="0406", inputs=["0406"], country="CA", corpus=corpus)
     assert "102.11(b)" in r.needed
-    assert "essential character" in r.needed
+    # and names the material to follow, not just the paragraph
+    assert "0406" in r.needed
+    assert "102.18(b)(1)(iii)" in r.needed
+
+
+def test_one_blocking_material_settles_essential_character(corpus):
+    """102.18(b)(1)(iii): where only one material sits in a provision from which
+    change is not allowed, the regulation names it outright. No judgement is
+    called for, so none should be invented."""
+    r = resolve(
+        good="8708.29",
+        inputs=[Material("7208.10", "VN"), Material("8708.95", "JP")],
+        country="VN",
+        corpus=corpus,
+    )
+    assert r.status == "resolved"
+    assert (r.origin, r.basis, r.rule_id) == ("JP", "essential_character", "102.11(b)(1)")
+    assert "102.18(b)(1)(iii)" in r.reason
+
+
+def test_essential_character_considers_domestic_materials_too(corpus):
+    """102.18(b)(1) admits "domestic or foreign materials", unlike 102.11(a)(3),
+    which looks only at foreign ones.
+
+    Here 8708.29 is foreign and fails the shift, so (a)(3) is not met. The
+    domestic 8708.95 sits in a provision the rule excepts, so (b) must weigh it
+    too — were it overlooked there would be a single candidate and the good
+    would resolve to Japan on a set of materials that is not the regulation's.
+    """
+    r = resolve(
+        good="8708.29",
+        inputs=[Material("8708.29", "JP"), Material("8708.95", "VN")],
+        country="VN",
+        corpus=corpus,
+    )
+    assert r.status == "unresolved"
+    assert r.origin != "JP"
+    assert "8708.95" in r.needed and "8708.29" in r.needed
+
+
+def test_candidates_sharing_a_country_need_no_judgement(corpus):
+    """Which one imparts essential character cannot change the answer."""
+    r = resolve(
+        good="8708.29",
+        inputs=[Material("8708.95", "JP"), Material("8708.29", "JP")],
+        country="VN",
+        corpus=corpus,
+    )
+    assert r.status == "resolved" and r.origin == "JP"
+    assert "cannot change the answer" in r.reason
+
+
+def test_candidates_from_different_countries_are_left_to_judgement(corpus):
+    """102.18(b)(2) weighs bulk, quantity, value and role. None is a code."""
+    r = resolve(
+        good="8708.29",
+        inputs=[Material("8708.95", "JP"), Material("8708.29", "KR")],
+        country="VN",
+        corpus=corpus,
+    )
+    assert r.status == "unresolved"
+    assert "102.18(b)(2)" in r.needed
+    assert "8708.95" in r.needed and "8708.29" in r.needed
+
+
+def test_a_set_is_excepted_from_102_11_b(corpus):
+    """102.11(b) opens "Except for a good ... classified as a set"."""
+    r = resolve(good="8708.29", inputs=["8708.95"], country="VN", is_set=True, corpus=corpus)
+    assert r.status == "unresolved"
+    assert "102.11(c)" in r.needed
+    assert "102.18(b)(1)(iii)" not in r.needed

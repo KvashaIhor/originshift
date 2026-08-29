@@ -271,6 +271,18 @@ class AgreementCase:
     ours: str
     agrees: bool | None  # None where the resolver declined to decide
     detail: str
+    #: Set only where the ruling states both the materials' origins and the
+    #: country CBP held, so the whole hierarchy can be scored rather than the
+    #: shift alone.
+    cbp_country: str | None = None
+    our_country: str | None = None
+
+
+#: A resolved good says nothing on its own about whether the 102.20 shift held.
+#: Reaching 102.11(b) at all means it did not — that is why the hierarchy moved
+#: on — so the shift verdict has to be read from the basis, not from `satisfied`.
+SHIFT_HELD = {"tariff_shift", "tariff_shift_de_minimis"}
+SHIFT_FAILED = {"essential_character"}
 
 
 def _our_verdict(result) -> tuple[str, str]:
@@ -279,6 +291,8 @@ def _our_verdict(result) -> tuple[str, str]:
         return "ambiguous", result.reason or ""
     if result.reason == "no_rule_for_this_classification":
         return "no_rule", result.needed or ""
+    if result.basis in SHIFT_FAILED:
+        return "not_met", result.reason or ""
     if result.satisfied is True:
         return "met", result.rule_id or ""
     if result.satisfied is False:
@@ -294,18 +308,31 @@ def agreement(corpus: Corpus | None = None, path: Path | None = None) -> list[Ag
     path = path or (CASES / "agreement-cases.json")
     data = json.loads(path.read_text(encoding="utf-8"))
 
+    from .resolve import Material
+
     out: list[AgreementCase] = []
     for case in data["cases"]:
+        origins = case.get("origins", {})
+        materials = [Material(code, origins.get(code)) for code in case["materials"]]
         result = resolve(
             good=case["good"],
-            inputs=case["materials"],
-            country="XX",  # the country is immaterial to whether the shift holds
+            inputs=materials,
+            country="XX",  # the operation's country; immaterial to the shift
             corpus=corpus,
         )
         ours, detail = _our_verdict(result)
         agrees = None if ours in ("abstained", "no_rule", "ambiguous") else ours == case["cbp"]
         out.append(
-            AgreementCase(case["ruling"], case["year"], case["cbp"], ours, agrees, detail)
+            AgreementCase(
+                case["ruling"],
+                case["year"],
+                case["cbp"],
+                ours,
+                agrees,
+                detail,
+                cbp_country=case.get("cbp_country"),
+                our_country=result.origin,
+            )
         )
     return out
 
@@ -324,6 +351,17 @@ def report_agreement(cases: list[AgreementCase]) -> None:
     if decided:
         print(f"agreement with CBP       : {len(agreed)}/{len(decided)} = {len(agreed)/len(decided):.1%}")
     print(f"majority-class baseline  : {baseline:.1%}  (always answering '{Counter(c.cbp for c in cases).most_common(1)[0][0]}')")
+
+    scored = [c for c in cases if c.cbp_country]
+    if scored:
+        right = [c for c in scored if c.our_country == c.cbp_country]
+        print()
+        print(f"of those, cases stating the materials' origins and the country")
+        print(f"CBP held, so the whole hierarchy can be scored : {len(scored)}")
+        print(f"   reached CBP's country                      : {len(right)}/{len(scored)}")
+        for c in scored:
+            mark = "ok " if c.our_country == c.cbp_country else "NO "
+            print(f"   {mark}[{c.ruling} {c.year}] CBP {c.cbp_country}, we {c.our_country}")
 
     disagreed = [c for c in decided if not c.agrees]
     if disagreed:

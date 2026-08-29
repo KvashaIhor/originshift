@@ -256,13 +256,26 @@ def _de_minimis(
     )
 
 
-def _next_paragraph(good: str) -> str:
-    """What 102.11 turns to once paragraph (a) has not produced an answer."""
-    return (
-        "102.11(b): the country of origin of the single material that imparts "
-        "the essential character to the good. That is a judgement about the "
-        "goods, not their codes, so it is outside what this corpus can settle"
-    )
+def _essential_character(
+    rule: Rule, alt: Alternative, good: str, materials: list[Material]
+) -> tuple[list[Material], list[Check]]:
+    """The materials 102.18(b)(1) lets you consider for essential character.
+
+    Only materials "classified in a tariff provision from which a change in
+    tariff classification is not allowed under the § 102.20 specific rule" count
+    — which is exactly the set that failed the shift. Two departures from
+    102.11(a)(3) matter: domestic materials are considered here as well as
+    foreign ones, and the question is which provision the material sits in
+    rather than whose it is.
+    """
+    considered: list[Material] = []
+    checks: list[Check] = []
+    for material in materials:
+        check = _check_material(alt, good, material.code)
+        checks.append(check)
+        if check.outcome in ("not_shifted", "excluded"):
+            considered.append(material)
+    return considered, checks
 
 
 def resolve(
@@ -272,6 +285,7 @@ def resolve(
     *,
     good_value: float | None = None,
     wholly_obtained: bool = False,
+    is_set: bool = False,
     operation: Operation | None = None,
     regime: str = "US",
     corpus: Corpus | None = None,
@@ -281,9 +295,16 @@ def resolve(
     Walks 102.11 in order. Paragraph (a) is answerable from classifications:
     (a)(1) wholly obtained, (a)(2) produced exclusively from domestic materials,
     (a)(3) every foreign material undergoes the change set out in 102.20, with
-    the 102.13 de minimis allowance applied to any that do not. Paragraphs (b)
-    to (d) turn on essential character, which is a judgement about the goods
-    themselves, so the resolver names them and stops.
+    the 102.13 de minimis allowance applied to any that do not.
+
+    Where (a) produces no answer, 102.11(b) follows the single material that
+    imparts the essential character. That is decidable more often than it looks:
+    102.18(b)(1) confines the candidates to materials in a provision from which
+    change is not allowed, and 102.18(b)(1)(iii) settles the case outright where
+    only one qualifies. Judgement is only reached with two or more, where
+    102.18(b)(2) weighs bulk, quantity, value and role — and there the resolver
+    names the candidates and stops. Set `is_set` for a good classified as a set,
+    which 102.11(b) excepts and 102.11(c) takes instead.
 
     Naming an `operation` from 102.17 defeats (a)(3) however the codes fall: a
     material does not undergo the change merely by being repacked or dismantled.
@@ -346,8 +367,8 @@ def resolve(
             reason="non_qualifying_operation",
             needed=(
                 f"102.17 rules out {NON_QUALIFYING[operation]} as conferring "
-                f"origin, whatever the classifications. Next is "
-                + _next_paragraph(good)
+                f"origin, whatever the classifications. Origin falls to be "
+                f"determined under 102.11(b)"
             ),
             vintage=corpus.vintage,
         )
@@ -451,23 +472,114 @@ def resolve(
         # de minimis route is named rather than swallowing the answer.
         de_minimis_note = f" Unless {detail}." if carried is None else f" {detail.capitalize()}."
 
-    # Paragraph (a) has not produced an answer, so 102.11(b) applies next.
-    first = findings[0]
+    # Paragraph (a) has produced no answer, so 102.11(b) applies: the country of
+    # origin of the single material that imparts the essential character.
+    first = findings[0] if closest is None else closest
     blocking = next(
         (c for c in first.checks if c.outcome in ("not_shifted", "excluded")), None
     )
     why = f"material {blocking.material} {blocking.detail}. " if blocking else ""
-    return OriginResult(
+    unresolved = OriginResult(
         status="unresolved",
         basis="tariff_shift",
         rule_id=first.rule_id,
         rule_text=first.rule_text,
         satisfied=False,
         reason="shift_not_satisfied",
-        needed=f"{why}Origin does not fall to {country} under 102.11(a)."
-        + de_minimis_note
-        + " Next is "
-        + _next_paragraph(good),
         vintage=corpus.vintage,
         trace=findings,
     )
+
+    if is_set:
+        unresolved.needed = (
+            f"{why}Origin does not fall to {country} under 102.11(a).{de_minimis_note} "
+            f"102.11(b) does not reach a good classified as a set, so 102.11(c) "
+            f"applies: the origin of all materials that merit equal consideration"
+        )
+        return unresolved
+
+    rule, alt = next(
+        ((r, a) for r, a in candidates if r.rule_id == first.rule_id), candidates[0]
+    )
+    considered, _ = _essential_character(rule, alt, good, materials)
+
+    if len(considered) == 1:
+        # 102.18(b)(1)(iii): where only one material sits in a provision from
+        # which change is not allowed, that material is the essential-character
+        # material. No judgement is called for, and none should be invented.
+        material = considered[0]
+        if material.country:
+            return OriginResult(
+                status="resolved",
+                origin=material.country,
+                basis="essential_character",
+                rule_id="102.11(b)(1)",
+                rule_text=(
+                    "The country of origin of the good is the country or countries "
+                    "of origin of the single material that imparts the essential "
+                    "character to the good."
+                ),
+                satisfied=True,
+                reason=(
+                    f"{material.code} is the only material in a provision from "
+                    f"which change is not allowed, so 102.18(b)(1)(iii) makes it "
+                    f"the essential-character material"
+                ),
+                vintage=corpus.vintage,
+                trace=findings,
+            )
+        unresolved.needed = (
+            f"{why}Origin does not fall to {country} under 102.11(a).{de_minimis_note} "
+            f"Under 102.11(b) it follows {material.code}, the only material in a "
+            f"provision from which change is not allowed (102.18(b)(1)(iii)) — so "
+            f"what is needed is the country of origin of {material.code}, or, "
+            f"where it is fungible and commingled, an inventory management "
+            f"method under 102.11(b)(2)"
+        )
+        return unresolved
+
+    if len(considered) > 1:
+        # 102.11(b)(1) follows the country of the essential-character material.
+        # Where every candidate shares a country, which one it is cannot change
+        # the answer, and the factors in 102.18(b)(2) need not be reached.
+        origins = {m.country for m in considered}
+        if len(origins) == 1 and None not in origins:
+            (only,) = origins
+            return OriginResult(
+                status="resolved",
+                origin=only,
+                basis="essential_character",
+                rule_id="102.11(b)(1)",
+                rule_text=(
+                    "The country of origin of the good is the country or countries "
+                    "of origin of the single material that imparts the essential "
+                    "character to the good."
+                ),
+                satisfied=True,
+                reason=(
+                    f"every material 102.18(b)(1) admits — "
+                    + ", ".join(m.code for m in considered)
+                    + f" — is of {only}, so which imparts the essential character "
+                    f"cannot change the answer"
+                ),
+                vintage=corpus.vintage,
+                trace=findings,
+            )
+
+        listed = ", ".join(m.code for m in considered)
+        unresolved.needed = (
+            f"{why}Origin does not fall to {country} under 102.11(a).{de_minimis_note} "
+            f"Under 102.11(b) it follows whichever of {listed} imparts the "
+            f"essential character. With more than one candidate 102.18(b)(2) "
+            f"leaves that to the bulk, quantity, weight, value and role of each, "
+            f"which are not classifications and are not in this corpus"
+        )
+        return unresolved
+
+    unresolved.needed = (
+        f"{why}Origin does not fall to {country} under 102.11(a).{de_minimis_note} "
+        f"Next is 102.11(b), and no material sits in a provision from which "
+        f"change is disallowed, so there is no essential-character candidate to "
+        f"follow"
+    )
+    return unresolved

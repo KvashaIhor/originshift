@@ -69,7 +69,22 @@ useful and inflates it for nothing.
 | 102.11(a)(2) | `exclusively_domestic` | every material's `country` |
 | 102.11(a)(3) | `tariff_shift` | the classifications |
 | 102.13 | `tariff_shift_de_minimis` | material values and `good_value` |
-| 102.11(b)–(d) | — | essential character: named, not decided |
+| 102.11(b)(1) | `essential_character` | the materials' countries |
+| 102.11(b)(2), (c), (d) | — | commingled stock, sets, minor processing: named, not decided |
+
+**102.11(b) is more decidable than it looks.** Essential character sounds like a
+judgement, but 102.18(b)(1) confines the candidates to materials sitting in a
+provision from which change is not allowed — exactly the set that failed the
+shift — and **102.18(b)(1)(iii)** then settles it outright:
+
+> *If there is only one material that is classified in a tariff provision from
+> which a change in tariff classification is not allowed … then that material
+> **will represent** the single material that imparts the essential character.*
+
+So judgement is only reached with two or more candidates, and even then not if
+they share a country. In all 19 curated cases where the shift definitely failed,
+exactly one material was in a disallowed provision — so the regulation named the
+answer in every one. Domestic materials count here, unlike under (a)(3).
 
 `102.17` is applied where an `operation` is given: repacking, dismantling, mere
 dilution, a change in end-use, or a GRI 2(a) collection of parts is not
