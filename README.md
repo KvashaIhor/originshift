@@ -3,8 +3,8 @@
 **Non-preferential rules of origin, as data.** Answers "what country is this good
 legally from?" and cites the rule it used.
 
-Status: `corpus/` and `grammar/` built for the US regime. `resolve/` and
-`validate/` not started. See [originshift.md](originshift.md) for the full plan.
+Status: all four components built for the US regime. See
+[originshift.md](originshift.md) for the full plan.
 
 ## What is here
 
@@ -14,8 +14,8 @@ Status: `corpus/` and `grammar/` built for the US regime. `resolve/` and
 | `grammar.py` | The type system rules compile into — ranges, shifts, exceptions |
 | `parse_102.py` | Compiles 19 CFR 102.20 into that grammar |
 | `build_corpus.py` | Emits the versioned corpus |
-| `resolve/` | Not started |
-| `validate/` | Not started |
+| `resolve.py` | Applies the corpus to a good and cites what it used |
+| `validate.py` | Scores the corpus against CBP's own rulings |
 
 ## The corpus
 
@@ -49,6 +49,64 @@ is amended.
 **Ranges are the primitive.** `5208-5212` is stored as a range, never expanded
 into the codes it covers. Expanding destroys the structure that makes the corpus
 useful and inflates it for nothing.
+
+## Resolving
+
+```python
+>>> from originshift import resolve
+>>> r = resolve(good="8708.29", inputs=["7208.10", "8708.99"], country="VN")
+>>> r.origin, r.rule_id
+('VN', '102.20/8708.29')
+>>> r.trace[0].checks[0].detail
+'in a different subheading from 8708.29'
+```
+
+Three outcomes and no others:
+
+| Outcome | Meaning |
+|---|---|
+| `resolved` | a rule applied; origin and rule ID returned |
+| `unresolved` | no rule applied, or the inputs are insufficient — **the missing item is named** |
+| `ambiguous` | more than one rule applies; all candidates returned with their rules |
+
+```python
+>>> r = resolve(good="2008.11", inputs=["1202.41"], country="CN")
+>>> r.status, r.needed
+('unresolved',
+ 'the rule requires: provided that the change is not the result of mere blanching of peanuts')
+```
+
+## Validation
+
+```
+python -m originshift.validate [--disagreements]
+```
+
+Ground truth is **CBP's own HQ rulings** — binding determinations by the
+authority whose rules this corpus compiles. 312 HQ rulings cite 102.20; 228 of
+them quote a rule, giving 252 quotations to score. Comparison is structural, not
+textual: CBP pluralises "heading", writes headings in HS dotted form (`48.17`
+for `4817`), and runs quotations into its own prose.
+
+| Era of ruling | n | Coverage | Rule fidelity |
+|---|---|---|---|
+| 2020–2026 | 45 | **97.8%** | **77.3%** |
+| 2003–2019 | 28 | 85.7% | 59.3% |
+| 1994–2002 | 179 | 77.7% | 50.3% |
+
+**Coverage** is how many quoted rules the corpus can place at all; **fidelity**
+is how many it holds as CBP stated them.
+
+Agreement falling away with age is the versioning argument (§7), not a defect.
+The corpus answers under HTSUS 2026, and HS renumbering moves the codes out from
+under older rulings: CBP's 2025 quotation of `9401.90` has no counterpart because
+HS 2022 split it into `9401.91` through `9401.99`.
+
+Two things had to be got right before the numbers meant anything, and both are
+pinned by tests. Rulings that cite 102.20 routinely also quote **USMCA and NAFTA
+preferential rules**, worded almost identically — 30% of quotations, scored
+against the wrong legal test until they were excluded. And a quotation that runs
+past its closing punctuation absorbs codes from CBP's following prose.
 
 ## Design commitments
 

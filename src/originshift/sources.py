@@ -74,3 +74,58 @@ def cfr_part(title: int, part: int, issue_date: str | None = None) -> Snapshot:
     if not path.exists():
         path.write_bytes(_get(url))
     return Snapshot(url=url, issue_date=issue_date, path=path)
+
+
+CROSS = "https://rulings.cbp.gov/api"
+
+#: CROSS caps totalHits at 10,000, so a query must stay well inside that to be
+#: sure the result set is complete rather than silently truncated.
+CROSS_HIT_CAP = 10_000
+
+
+def cross_search(
+    term: str, collection: str = "hq", page_size: int = 100
+) -> list[dict]:
+    """Every ruling matching a term, following pagination to the end."""
+    import json
+    import urllib.parse
+
+    out: list[dict] = []
+    page = 1
+    while True:
+        query = urllib.parse.urlencode(
+            {
+                "term": term,
+                "collection": collection,
+                "pageSize": page_size,
+                "page": page,
+            }
+        )
+        data = json.loads(_get(f"{CROSS}/search?{query}"))
+        total = data.get("totalHits", 0)
+        if total >= CROSS_HIT_CAP:
+            raise RuntimeError(
+                f"query {term!r} returned {total} hits, at or above CROSS's "
+                f"{CROSS_HIT_CAP} cap; the result set would be truncated"
+            )
+        batch = data.get("rulings", [])
+        out.extend(batch)
+        if len(out) >= total or not batch:
+            return out
+        page += 1
+
+
+def cross_ruling(number: str) -> dict:
+    """One ruling with its full text, cached on disk."""
+    import json
+    import time
+
+    cache = CACHE / "cross"
+    cache.mkdir(parents=True, exist_ok=True)
+    path = cache / f"{number}.json"
+    if path.exists():
+        return json.loads(path.read_text(encoding="utf-8"))
+    time.sleep(0.3)  # a public endpoint; do not hammer it
+    raw = _get(f"{CROSS}/ruling/{number}")
+    path.write_bytes(raw)
+    return json.loads(raw)
