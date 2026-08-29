@@ -1,0 +1,9 @@
+{
+ "method": "file",
+ "origin": "87 FR 68356 (CBP Dec. 22-25, 15 Nov 2022)",
+ "retrieved": "2026-08-29",
+ "sha256": "afeb4319687a006605c640ba34b79d42fe14b05bdc125ab84f28b9a2b1565cf0",
+ "extractor": "fr_text",
+ "reviewed_by": null,
+ "note": "read from fr-2022-23329.txt"
+}

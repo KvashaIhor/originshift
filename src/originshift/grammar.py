@@ -11,15 +11,23 @@ import re
 from dataclasses import dataclass, field, asdict
 from typing import Literal
 
-Level = Literal["chapter", "heading", "subheading", "tariff_item"]
+Level = Literal[
+    "chapter", "heading", "subheading", "tariff_item", "statistical_suffix"
+]
 
-#: Digit count that defines each level of the nomenclature.
+#: Digit count that defines each level of the nomenclature. The last two are
+#: US-specific: the HTSUS adds a tariff item, and a statistical reporting
+#: number beneath the six-digit subheading the HS defines internationally.
 LEVEL_DIGITS: dict[str, int] = {
     "chapter": 2,
     "heading": 4,
     "subheading": 6,
     "tariff_item": 8,
+    "statistical_suffix": 10,
 }
+
+#: A code as written in either rule table: 3921.90.2550 as well as 8708.29.
+CODE_PATTERN = r"\d{4}(?:\.\d{2}(?:\.\d{2,4})?)?|\d{1,2}"
 
 
 def digits(code: str) -> str:
@@ -32,7 +40,7 @@ def _format(d: str) -> str:
     if len(d) <= 4:
         return d
     out = f"{d[:4]}.{d[4:6]}"
-    return f"{out}.{d[6:8]}" if len(d) > 6 else out
+    return f"{out}.{d[6:]}" if len(d) > 6 else out
 
 
 def _widen(code: str, level: Level, *, low: bool) -> str:
@@ -183,6 +191,16 @@ class Alternative:
     #: True for a rule that applies only to goods the earlier alternatives did not
     #: reach: "For all other goods classified in subheading 9404.30 through 9404.90".
     residual: bool = False
+    #: A fact about the good that gates this alternative, e.g. "the good is of
+    #: staple fibers" or "the good contains pharmaceutical substances". Like a
+    #: named target, it cannot be settled from a classification.
+    condition: str | None = None
+    #: Position within an ordered rule. 102.21(e)(1) numbers its sub-rules, and
+    #: some are tried only when the ones before them did not determine origin.
+    sequence: int | None = None
+    #: True where the sub-rule opens "If the country of origin cannot be
+    #: determined under (1) above" — it is reached, not chosen.
+    is_fallback: bool = False
     #: Set when the parser could not fully structure this alternative.
     unparsed_reason: str | None = None
 

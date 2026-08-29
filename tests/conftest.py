@@ -34,3 +34,21 @@ def corpus():
     if not list(CORPUS_DIR.glob("102.20-*.json")):
         pytest.skip("no corpus built; run python -m originshift.build_corpus")
     return Corpus.load()
+
+
+@pytest.fixture(scope="session")
+def corpus_102_21():
+    from originshift.corpus import Corpus, CORPUS_DIR
+
+    if not list(CORPUS_DIR.glob("102.21-*.json")):
+        pytest.skip("no 102.21 corpus built")
+    return Corpus.load(which="102.21")
+
+
+@pytest.fixture(scope="session")
+def corpus_102_21_base():
+    from originshift.corpus import Corpus, CORPUS_DIR
+
+    if not list(CORPUS_DIR.glob("102.21-*.json")):
+        pytest.skip("no 102.21 corpus built")
+    return Corpus.load(which="102.21", overlays=False)

@@ -9,7 +9,7 @@ would silently lose it for any good in 3822.
 from __future__ import annotations
 
 import json
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 
 from .grammar import (
@@ -22,6 +22,7 @@ from .grammar import (
 )
 
 CORPUS_DIR = Path(__file__).resolve().parents[2] / "data" / "corpus"
+OVERLAY_DIR = Path(__file__).resolve().parents[2] / "data" / "overlays"
 
 
 def _range(text: str) -> CodeRange:
@@ -63,6 +64,9 @@ def _alternative(d: dict) -> Alternative:
         target=target,
         text=d["text"],
         residual=d["residual"],
+        condition=d.get("condition"),
+        sequence=d.get("sequence"),
+        is_fallback=d.get("is_fallback", False),
         unparsed_reason=d["unparsed_reason"],
     )
 
@@ -76,6 +80,14 @@ class Corpus:
     source_url: str
     source_issue_date: str
     rules: list[Rule]
+    name: str = "19-CFR-102.20"
+    #: Rules brought in from somewhere other than the primary source, keyed by
+    #: rule_id. A consumer can always ask which answers rest on one.
+    overlaid: dict[str, dict] = field(default_factory=dict)
+
+    def provenance_of(self, rule_id: str) -> dict | None:
+        """How a rule got here, where it did not come from the primary source."""
+        return self.overlaid.get(rule_id)
 
     @classmethod
     def from_dict(cls, d: dict) -> Corpus:
@@ -99,19 +111,70 @@ class Corpus:
             source_url=d["source_url"],
             source_issue_date=d["source_issue_date"],
             rules=rules,
+            name=d.get("corpus", "19-CFR-102.20"),
         )
 
     @classmethod
-    def load(cls, path: str | Path | None = None) -> Corpus:
-        """Load a corpus file, defaulting to the most recent build."""
+    def load(
+        cls,
+        path: str | Path | None = None,
+        *,
+        which: str = "102.20",
+        overlays: bool = True,
+    ) -> Corpus:
+        """Load a corpus, defaulting to the most recent build of `which`."""
         if path is None:
-            builds = sorted(CORPUS_DIR.glob("102.20-*.json"))
+            builds = sorted(CORPUS_DIR.glob(f"{which}-*.json"))
             if not builds:
                 raise FileNotFoundError(
-                    f"no corpus in {CORPUS_DIR}; run python -m originshift.build_corpus"
+                    f"no {which} corpus in {CORPUS_DIR}; run "
+                    f"python -m originshift.build_corpus"
                 )
             path = builds[-1]
-        return cls.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))
+        corpus = cls.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))
+        if overlays:
+            corpus.apply_overlays()
+        return corpus
+
+    def apply_overlays(self, overlay_dir: Path | None = None) -> list[str]:
+        """Merge in rules recovered from outside the primary source.
+
+        An overlay rule replaces a rule of the same id and is otherwise added.
+        Either way its provenance is kept, so a consumer can tell an answer
+        resting on the eCFR from one resting on a document someone fed in.
+        """
+        overlay_dir = overlay_dir or OVERLAY_DIR
+        if not overlay_dir.exists():
+            return []
+
+        applied: list[str] = []
+        by_id = {r.rule_id: i for i, r in enumerate(self.rules)}
+        for file in sorted(overlay_dir.glob("*.json")):
+            data = json.loads(file.read_text(encoding="utf-8"))
+            if data.get("extends") != self.name:
+                continue
+            for raw in data["rules"]:
+                rule = Rule(
+                    rule_id=raw["rule_id"],
+                    regime=raw["regime"],
+                    htsus=raw["htsus"],
+                    scope=[_range(x) for x in raw["scope"]],
+                    alternatives=[_alternative(a) for a in raw["alternatives"]],
+                    section=raw["section"],
+                    text=raw["text"],
+                    vintage=raw["vintage"],
+                    source_url=raw["source_url"],
+                )
+                if rule.rule_id in by_id:
+                    self.rules[by_id[rule.rule_id]] = rule
+                else:
+                    by_id[rule.rule_id] = len(self.rules)
+                    self.rules.append(rule)
+                self.overlaid[rule.rule_id] = data["provenance"] | {
+                    "overlay": data["overlay"]
+                }
+                applied.append(rule.rule_id)
+        return applied
 
     def candidates(self, code: str) -> list[tuple[Rule, Alternative]]:
         """Every rule alternative whose target reaches `code`."""

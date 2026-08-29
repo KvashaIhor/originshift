@@ -1,0 +1,102 @@
+{
+ "overlay": "cbp-dec-22-25",
+ "extends": "19-CFR-102.21",
+ "authority": "102.21(e)(1)",
+ "provenance": {
+  "method": "file",
+  "origin": "87 FR 68356 (CBP Dec. 22-25, 15 Nov 2022)",
+  "retrieved": "2026-08-29",
+  "sha256": "afeb4319687a006605c640ba34b79d42fe14b05bdc125ab84f28b9a2b1565cf0",
+  "extractor": "fr_text",
+  "reviewed_by": "verified against 87 FR 68356",
+  "note": "read from fr-2022-23329.txt"
+ },
+ "rules": [
+  {
+   "rule_id": "102.21(e)(1)/6201-6208",
+   "regime": "US",
+   "htsus": "6201-6208",
+   "scope": [
+    "6201-6208"
+   ],
+   "alternatives": [
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [],
+      "excluded": [],
+      "excluded_descriptions": [],
+      "provisos": [
+       "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
+      ],
+      "raw_source": "unassembled components"
+     },
+     "target": {
+      "ranges": [
+       "6201-6208"
+      ],
+      "description": "an assembled good of",
+      "excluding_description": null
+     },
+     "text": "(1) If the good consists of two or more component parts, a change to an assembled good of heading 6201 through 6208 from unassembled components, provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession.",
+     "residual": false,
+     "condition": "the good consists of two or more component parts",
+     "sequence": 1,
+     "is_fallback": false,
+     "unparsed_reason": "descriptive_source"
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "heading",
+        "ranges": [],
+        "outside_that_group": true,
+        "text": "any heading outside that group"
+       }
+      ],
+      "excluded": [
+       "5007",
+       "5111-5113",
+       "5208-5212",
+       "5309-5311",
+       "5407-5408",
+       "5512-5516",
+       "5602-5603",
+       "5801-5806",
+       "5809-5811",
+       "5903",
+       "5906-5907",
+       "6217",
+       "6307.90"
+      ],
+      "excluded_descriptions": [],
+      "provisos": [
+       "provided that the change is the result of a fabric-making process"
+      ],
+      "raw_source": "any heading outside that group, except from heading 5007, 5111 through 5113, 5208 through 5212, 5309 through 5311, 5407 through 5408, 5512 through 5516, 5602 through 5603, 5801 through 5806, 5809 through 5811, 5903, 5906 through 5907, and 6217, and subheading 6307.90, and"
+     },
+     "target": {
+      "ranges": [
+       "6201-6208"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
+     "text": "(2) If the good does not consist of two or more component parts, a change to heading 6201 through 6208 from any heading outside that group, except from heading 5007, 5111 through 5113, 5208 through 5212, 5309 through 5311, 5407 through 5408, 5512 through 5516, 5602 through 5603, 5801 through 5806, 5809 through 5811, 5903, 5906 through 5907, and 6217, and subheading 6307.90, and provided that the change is the result of a fabric-making process.",
+     "residual": false,
+     "condition": "the good does not consist of two or more component parts",
+     "sequence": 2,
+     "is_fallback": false,
+     "unparsed_reason": "conditional_on_the_good"
+    }
+   ],
+   "section": "102.21(e)(1) (overlay)",
+   "text": "(1) If the good consists of two or more component parts, a change to an assembled good of heading 6201 through 6208 from unassembled components, provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession. (2) If the good does not consist of two or more component parts, a change to heading 6201 through 6208 from any heading outside that group, except from heading 5007, 5111 through 5113, 5208 through 5212, 5309 through 5311, 5407 through 5408, 5512 through 5516, 5602 through 5603, 5801 through 5806, 5809 through 5811, 5903, 5906 through 5907, and 6217, and subheading 6307.90, and provided that the change is the result of a fabric-making process.",
+   "vintage": "HTSUS-2026",
+   "source_url": "87 FR 68356 (CBP Dec. 22-25, 15 Nov 2022)"
+  }
+ ]
+}

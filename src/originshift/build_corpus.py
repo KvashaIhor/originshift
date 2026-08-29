@@ -15,7 +15,7 @@ from collections import Counter
 from datetime import date
 from pathlib import Path
 
-from . import parse_102, sources
+from . import parse_102, parse_102_21, sources
 from .grammar import Rule, digits
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -79,18 +79,65 @@ def anomalies(rules: list[Rule]) -> list[dict]:
     return found
 
 
-def build(issue_date: str | None = None) -> dict:
+#: Headings 102.21(e)(1) does not reach in the eCFR text. CBP Dec. 22-25 was
+#: never incorporated, so the rule for most apparel is simply absent.
+UNINCORPORATED = {
+    "102.21(e)(1)": [
+        {
+            "kind": "missing_from_source",
+            "detail": (
+                "no rule for headings 6201 through 6208 — overcoats, suits, "
+                "jackets, trousers, shirts, dresses and blouses, the bulk of "
+                "apparel. CBP Dec. 22-25, 87 FR 68356 (15 Nov 2022) amended the "
+                "entry, but the eCFR records that the revision 'could not be "
+                "incorporated due to inaccurate amendatory instruction'"
+            ),
+            "remedy": (
+                "the amended text is in the Federal Register at 87 FR 68356 and "
+                "can be brought in through originshift.ingest"
+            ),
+        }
+    ]
+}
+
+CORPORA = {
+    "102.20": {
+        "parser": parse_102,
+        "authority": "19 CFR 102.20",
+        "title": "Specific rules by tariff classification (non-preferential origin)",
+        "scope": (
+            "Country-of-origin marking under USMCA and NAFTA, and the 'new or "
+            "different article of commerce' test of the Morocco and Bahrain FTAs "
+            "(19 CFR 102.0). Not a general origin test for US imports."
+        ),
+    },
+    "102.21": {
+        "parser": parse_102_21,
+        "authority": "19 CFR 102.21(e)(1)",
+        "title": "Textile and apparel products, specific rules by tariff classification",
+        "scope": (
+            "Controls the country of origin of imported textile and apparel "
+            "products for purposes of the Customs laws generally, from any "
+            "country, except as to Israel (19 CFR 102.21(a))."
+        ),
+    },
+}
+
+
+def build(which: str = "102.20", issue_date: str | None = None) -> dict:
+    spec = CORPORA[which]
     snap = sources.cfr_part(19, 102, issue_date)
     vintage = f"HTSUS-{NOMENCLATURE['htsus_year']}"
-    rules = parse_102.parse(snap.text, vintage=vintage, source_url=snap.url)
+    rules = spec["parser"].parse(snap.text, vintage=vintage, source_url=snap.url)
 
     alts = [a for r in rules for a in r.alternatives]
     structured = sum(a.structured for a in alts)
     return {
-        "corpus": "19-CFR-102.20",
+        "corpus": f"19-CFR-{which}",
         "regime": "US",
-        "title": "Specific rules by tariff classification (non-preferential origin)",
-        "authority": "19 CFR 102.20",
+        "title": spec["title"],
+        "authority": spec["authority"],
+        "applies_to": spec["scope"],
         "licence": "US Government work, public domain (17 U.S.C. 105)",
         "nomenclature": NOMENCLATURE,
         "vintage": vintage,
@@ -111,7 +158,7 @@ def build(issue_date: str | None = None) -> dict:
                 Counter(a.unparsed_reason for a in alts if a.unparsed_reason)
             ),
         },
-        "anomalies": anomalies(rules),
+        "anomalies": anomalies(rules) + UNINCORPORATED.get(spec["authority"].replace("19 CFR ", ""), []),
         "rules": [r.to_dict() for r in rules],
     }
 
@@ -119,11 +166,19 @@ def build(issue_date: str | None = None) -> dict:
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--issue-date", help="eCFR issue date; defaults to current")
+    ap.add_argument(
+        "--corpus", choices=sorted(CORPORA), default=None, help="default: both"
+    )
     args = ap.parse_args()
 
-    corpus = build(args.issue_date)
+    for which in [args.corpus] if args.corpus else sorted(CORPORA):
+        _build_one(which, args.issue_date)
+
+
+def _build_one(which: str, issue_date: str | None) -> None:
+    corpus = build(which, issue_date)
     OUT.mkdir(parents=True, exist_ok=True)
-    path = OUT / f"102.20-{corpus['source_issue_date']}.json"
+    path = OUT / f"{which}-{corpus['source_issue_date']}.json"
     path.write_text(json.dumps(corpus, indent=1, ensure_ascii=False), encoding="utf-8")
 
     c = corpus["counts"]
@@ -138,7 +193,7 @@ def main() -> None:
     if corpus["anomalies"]:
         print(f"\n  defects in the source text, reported not corrected:")
         for a in corpus["anomalies"]:
-            print(f"     {a['rule_id']}: {a['detail']}")
+            print(f"     {a.get('rule_id', a['kind'])}: {a['detail'][:150]}")
 
 
 if __name__ == "__main__":

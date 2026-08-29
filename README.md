@@ -13,6 +13,8 @@ Status: all four components built for the US regime. See
 | `sources.py` | Fetches primary law, pinned to a dated snapshot |
 | `grammar.py` | The type system rules compile into — ranges, shifts, exceptions |
 | `parse_102.py` | Compiles 19 CFR 102.20 into that grammar |
+| `parse_102_21.py` | Compiles 19 CFR 102.21(e)(1) — textiles and apparel |
+| `ingest.py` | Brings in rules from sources that cannot be fetched and parsed |
 | `build_corpus.py` | Emits the versioned corpus |
 | `resolve.py` | Walks 102.11, applies the corpus, and cites what it used |
 | `validate.py` | Scores the corpus against CBP's own rulings |
@@ -167,6 +169,32 @@ would put words in the regulation's mouth; ignoring them lets one typo answer
 for a hundred headings. They ship in the corpus's `anomalies` list with the
 verbatim text, and the consumer decides.
 
+**Rules the source does not carry can be fed in, and stay marked.** 102.21(e)(1)
+has **no entry for headings 6201 through 6208** — overcoats, suits, jackets,
+trousers, shirts, dresses, blouses, the bulk of apparel — because CBP Dec. 22-25
+was never incorporated: the eCFR records that the revision *"could not be
+incorporated due to inaccurate amendatory instruction."* The text exists, in the
+Federal Register.
+
+```
+python -m originshift.ingest extract 87-FR-68356.pdf --origin "87 FR 68356" --name cbp-dec-22-25
+#   read the staged rows against the source, correct them, then
+python -m originshift.ingest compile cbp-dec-22-25 --reviewed-by "your name"
+```
+
+Extraction never writes to a corpus — it writes a staging CSV for a person to
+check. Every document is hashed, and every rule carries where it came from and
+who read it, so an answer resting on a hand-fed document can always be told from
+one resting on the eCFR:
+
+```python
+>>> c = Corpus.load(which="102.21")
+>>> c.provenance_of("102.21(e)(1)/6201-6208")["origin"]
+'87 FR 68356 (CBP Dec. 22-25, 15 Nov 2022)'
+>>> c.provenance_of("102.21(e)(1)/5007") is None   # straight from the eCFR
+True
+```
+
 **Non-preferential only.** Preferential (trade-agreement) origin is out of
 scope, deliberately: `US9177286B2` runs to 2034 over bill-of-materials origin
 traversal with certificate output, and the EU already ships ROSA for free.
@@ -176,7 +204,32 @@ Compiling rules and resolving a good against one is not the claimed invention.
 
 | Source | Licence |
 |---|---|
-| 19 CFR 102.20, via the [eCFR API](https://www.ecfr.gov/api/versioner/v1/) | US Government work, public domain (17 U.S.C. §105) |
+| 19 CFR 102.20 and 102.21, via the [eCFR API](https://www.ecfr.gov/api/versioner/v1/) | US Government work, public domain (17 U.S.C. §105) |
+| CBP CROSS rulings, for validation | US Government work, public domain |
+| Federal Register, for text the CFR did not incorporate | US Government work, public domain |
+
+## Scope, precisely
+
+**19 CFR 102.0** limits Part 102 to USMCA and NAFTA country-of-origin **marking**,
+and the "new or different article of commerce" test of the Morocco and Bahrain
+FTAs. It is **not** the general origin test for US imports — origin for a good
+from a non-USMCA country is decided by common-law substantial transformation, as
+is Section 301 applicability.
+
+**102.21 is the broader half.** 102.21(a) makes it control the origin of
+imported textile and apparel products *"for purposes of the Customs laws"*, from
+any country, except as to Israel.
+
+| Corpus | Rules | Answerable from codes alone | Governs |
+|---|---|---|---|
+| 102.20 | 1,032 | 99.0% | USMCA/NAFTA marking |
+| 102.21 | 101 (+1 overlay) | 31.8% | all textile and apparel imports |
+
+Textile origin mostly turns on facts a classification does not carry — whether
+the good is of staple fibers or filaments, where the fabric-making process
+happened, whether it was knit to shape. So for chapters 50–63 the tool is less
+an oracle than a precise statement of *what you must establish*, drawn from the
+rule that applies to your code.
 
 ## Development
 
