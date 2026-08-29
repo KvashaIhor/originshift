@@ -56,16 +56,38 @@ def test_a_same_position_source_needs_a_fact_codes_do_not_carry(corpus):
     r = resolve(good="8486.90", inputs=["8486.90"], country="TW", corpus=corpus)
     assert r.status == "unresolved"
     assert r.reason == "insufficient_information"
-    assert "different good" in r.needed
     assert not any(f.satisfied for f in r.trace)
+    assert any(
+        "different good" in c.detail
+        for f in r.trace
+        for c in f.checks
+        if c.outcome == "needs_judgement"
+    )
+
+
+def test_a_rule_naming_a_good_does_not_apply_on_the_code_alone(corpus):
+    """102.20/2205 covers "vermouth of heading 2205 from heading 2204". Sangria
+    shares the heading and is not vermouth, so the code cannot settle it.
+
+    CBP held exactly this in HQ 735388: the shift was not met. Matching on the
+    code alone returned the opposite."""
+    r = resolve(good="2205", inputs=["2204"], country="ES", corpus=corpus)
+    assert r.status == "unresolved"
+    assert r.satisfied is None
+    assert "vermouth" in r.needed
 
 
 def test_two_satisfied_rules_are_reported_not_chosen_between(corpus):
-    """3822.11 is reached by two rules; picking one silently would be worse."""
-    r = resolve(good="3822.11", inputs=["2934.10"], country="IE", corpus=corpus)
+    """7019.11 is reached by two overlapping rules that are both satisfied.
+
+    102.20 states the glass-fibre shift twice, over ranges that overlap. Picking
+    one silently would hide that the regulation says it two ways.
+    """
+    r = resolve(good="7019.11", inputs=["7001"], country="IE", corpus=corpus)
     assert r.status == "ambiguous"
     assert r.origin is None
-    assert "102.20/3002.12-3002.90" in r.needed and "102.20/3822" in r.needed
+    assert "102.20/7019.11-7019.13" in r.needed
+    assert "102.20/7019.11-7019.19" in r.needed
 
 
 def test_a_disjunction_is_satisfied_by_any_one_alternative(corpus):

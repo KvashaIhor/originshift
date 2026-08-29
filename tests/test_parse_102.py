@@ -156,6 +156,19 @@ def test_provisos_are_preserved_not_dropped(by_htsus):
     assert any("50 percent by weight of milk solids" in p for p in provisos)
 
 
+def test_transcription_defects_are_reported_not_corrected(rules):
+    """102.20 contains typos. Repairing them would put words in the regulation's
+    mouth; ignoring them lets one typo answer for a hundred headings."""
+    from originshift.build_corpus import anomalies
+
+    found = {(a["rule_id"], a["kind"]) for a in anomalies(rules)}
+    assert ("102.20/2824.10-2824.90", "target_far_wider_than_key") in found
+    assert ("102.20/4441-4421", "reversed_htsus_key") in found
+    # the text itself is left exactly as the regulation has it
+    rule = next(r for r in rules if r.htsus == "2824.10-2824.90")
+    assert "2824.10 through 2924.90" in rule.text
+
+
 def test_textile_chapters_are_absent_because_102_21_governs_them(rules):
     """Chapters 50-63 are 102.21's, not 102.20's — their absence is correct."""
     covered = {

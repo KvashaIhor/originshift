@@ -24,6 +24,26 @@
    "no_source_clause": 1
   }
  },
+ "anomalies": [
+  {
+   "rule_id": "102.20/2824.10-2824.90",
+   "kind": "target_far_wider_than_key",
+   "detail": "target 2824.10-2924.90 spans 100 headings while the key 2824.10-2824.90 spans 0",
+   "text": "A change to subheading 2824.10 through 2924.90 from any other subheading, including another subheading within that group, except from heading 2607."
+  },
+  {
+   "rule_id": "102.20/4441-4421",
+   "kind": "reversed_htsus_key",
+   "detail": "the key 4441-4421 ends before it begins",
+   "text": "A change to plywood of subheading 4418.73 through 4418.79 from any other good of heading 4418 or from any other heading, except from heading 4412; or A change to any other good of subheading 4418.73 t"
+  },
+  {
+   "rule_id": "102.20/4441-4421",
+   "kind": "target_far_wider_than_key",
+   "detail": "target 4413-4421 spans 8 headings while the key 4441-4421 spans -20",
+   "text": "A change to any other good of heading 4413 through 4421 from any other heading, including another heading within that group."
+  }
+ ],
  "rules": [
   {
    "rule_id": "102.20/0101-0106",

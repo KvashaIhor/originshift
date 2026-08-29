@@ -119,6 +119,14 @@ This is load-bearing. One rule reads *"from any product other than edible meals
 and flours of Chapter 2"*. Read carelessly, that becomes *must come from Chapter
 2* — the exact inverse. The parser abstains instead, and a test pins it.
 
+**Defects in the source are reported, not corrected.** 102.20 contains
+transcription errors — the rule keyed `2824.10-2824.90` is written *"A change to
+subheading 2824.10 through **2924**.90"*, spanning a hundred headings it was
+never meant to reach, and the key `4441-4421` runs backwards. Repairing either
+would put words in the regulation's mouth; ignoring them lets one typo answer
+for a hundred headings. They ship in the corpus's `anomalies` list with the
+verbatim text, and the consumer decides.
+
 **Non-preferential only.** Preferential (trade-agreement) origin is out of
 scope, deliberately: `US9177286B2` runs to 2034 over bill-of-materials origin
 traversal with certificate output, and the EU already ships ROSA for free.

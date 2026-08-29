@@ -135,6 +135,22 @@ def _evaluate(rule: Rule, alt: Alternative, good: str, materials: list[str]) -> 
         f"the rule requires: {p}" for p in alt.shift.provisos
     ] + [f"the rule excludes: {d}" for d in alt.shift.excluded_descriptions]
 
+    # Some rules name a good rather than reaching every good of a code: "A change
+    # to vermouth of heading 2205 from heading 2204" does not apply to sangria,
+    # which shares the heading. Matching on the code alone would apply the rule to
+    # goods it was never written for, which is the one thing this must not do.
+    target = alt.target
+    if target is not None and target.description:
+        unverifiable.append(
+            f"whether the good is {target.description.rstrip(' of')!r}, which is "
+            f"what this rule covers within {_fmt(target.ranges)}"
+        )
+    if target is not None and target.excluding_description:
+        unverifiable.append(
+            f"whether the good is {target.excluding_description!r}, which this "
+            f"rule excludes"
+        )
+
     if any(c.outcome in ("not_shifted", "excluded") for c in checks):
         satisfied: bool | None = False
     elif any(c.outcome == "needs_judgement" for c in checks) or unverifiable:
@@ -165,10 +181,15 @@ def resolve(
     candidates = corpus.candidates(good)
     if not candidates:
         base.reason = "no_rule_for_this_classification"
-        base.needed = (
-            f"a rule in {regime} 102.20 covering {good}; chapters 50-63 are "
-            f"governed by 102.21 instead"
-        )
+        chapter = digits(good)[:2]
+        if "50" <= chapter <= "63":
+            why = "textiles and apparel are governed by 102.21, not 102.20"
+        else:
+            why = (
+                f"no rule in 102.20 targets it under {corpus.vintage}; the code "
+                f"may belong to an earlier nomenclature vintage"
+            )
+        base.needed = f"a rule covering {good} — {why}"
         return base
 
     if not inputs:
@@ -191,7 +212,7 @@ def resolve(
                 needed=(
                     "a choice between "
                     + ", ".join(sorted(by_rule))
-                    + "; they are both satisfied and this corpus does not rank them"
+                    + "; each is satisfied and this corpus does not rank them"
                 ),
                 vintage=corpus.vintage,
                 trace=findings,

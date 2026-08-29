@@ -218,6 +218,15 @@ def main() -> None:
     )
     args = ap.parse_args()
 
+    print("=" * 74)
+    print("AGREEMENT — does the resolver reach CBP's conclusion on the facts?")
+    print("=" * 74)
+    report_agreement(agreement())
+    print()
+    print("=" * 74)
+    print("RULE FIDELITY — does the corpus hold the rule CBP applied?")
+    print("=" * 74)
+
     report = run()
     print(f"HQ rulings examined      : {report.rulings_examined}")
     print(f"  quoting a 102.20 rule  : {report.rulings_quoting_a_rule}")
@@ -244,6 +253,94 @@ def main() -> None:
             print(f"  CBP quoted : {case.quoted[:200]}")
             if case.detail:
                 print(f"  {case.detail[:200]}")
+
+
+
+# --------------------------------------------------------------------------
+# Agreement: does the resolver reach CBP's conclusion on the facts?
+# --------------------------------------------------------------------------
+
+CASES = Path(__file__).resolve().parents[2] / "data" / "validation"
+
+
+@dataclass
+class AgreementCase:
+    ruling: str
+    year: int
+    cbp: str
+    ours: str
+    agrees: bool | None  # None where the resolver declined to decide
+    detail: str
+
+
+def _our_verdict(result) -> tuple[str, str]:
+    """Reduce an OriginResult to the question CBP answered: did the shift hold?"""
+    if result.status == "ambiguous":
+        return "ambiguous", result.reason or ""
+    if result.reason == "no_rule_for_this_classification":
+        return "no_rule", result.needed or ""
+    if result.satisfied is True:
+        return "met", result.rule_id or ""
+    if result.satisfied is False:
+        return "not_met", (result.needed or "")
+    return "abstained", (result.needed or "")
+
+
+def agreement(corpus: Corpus | None = None, path: Path | None = None) -> list[AgreementCase]:
+    """Run the resolver over the curated cases and compare with CBP."""
+    from .resolve import resolve
+
+    corpus = corpus or Corpus.load()
+    path = path or (CASES / "agreement-cases.json")
+    data = json.loads(path.read_text(encoding="utf-8"))
+
+    out: list[AgreementCase] = []
+    for case in data["cases"]:
+        result = resolve(
+            good=case["good"],
+            inputs=case["materials"],
+            country="XX",  # the country is immaterial to whether the shift holds
+            corpus=corpus,
+        )
+        ours, detail = _our_verdict(result)
+        agrees = None if ours in ("abstained", "no_rule", "ambiguous") else ours == case["cbp"]
+        out.append(
+            AgreementCase(case["ruling"], case["year"], case["cbp"], ours, agrees, detail)
+        )
+    return out
+
+
+def report_agreement(cases: list[AgreementCase]) -> None:
+    decided = [c for c in cases if c.agrees is not None]
+    agreed = [c for c in decided if c.agrees]
+    counts = Counter(c.ours for c in cases)
+    baseline = Counter(c.cbp for c in cases).most_common(1)[0][1] / len(cases)
+
+    print(f"curated cases            : {len(cases)}")
+    for outcome, n in counts.most_common():
+        print(f"   {n:>3}  {outcome}")
+    print()
+    print(f"coverage (a definite call): {len(decided)}/{len(cases)} = {len(decided)/len(cases):.1%}")
+    if decided:
+        print(f"agreement with CBP       : {len(agreed)}/{len(decided)} = {len(agreed)/len(decided):.1%}")
+    print(f"majority-class baseline  : {baseline:.1%}  (always answering '{Counter(c.cbp for c in cases).most_common(1)[0][0]}')")
+
+    disagreed = [c for c in decided if not c.agrees]
+    if disagreed:
+        print("\ndisagreements:")
+        for c in disagreed:
+            print(f"   [{c.ruling} {c.year}] CBP said {c.cbp}, we said {c.ours}")
+            print(f"      {c.detail[:150]}")
+    abstained = [c for c in cases if c.ours == "abstained"]
+    if abstained:
+        print("\nabstentions (neither right nor wrong — the resolver declined):")
+        for c in abstained:
+            print(f"   [{c.ruling} {c.year}] CBP said {c.cbp}; {c.detail[:120]}")
+    other = [c for c in cases if c.ours in ("no_rule", "ambiguous")]
+    if other:
+        print("\nnot answerable from this corpus:")
+        for c in other:
+            print(f"   [{c.ruling} {c.year}] {c.ours}: {c.detail[:110]}")
 
 
 if __name__ == "__main__":

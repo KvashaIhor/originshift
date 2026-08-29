@@ -16,6 +16,7 @@ from datetime import date
 from pathlib import Path
 
 from . import parse_102, sources
+from .grammar import Rule, digits
 
 ROOT = Path(__file__).resolve().parents[2]
 OUT = ROOT / "data" / "corpus"
@@ -23,6 +24,59 @@ OUT = ROOT / "data" / "corpus"
 #: 102.20 is written against the HTSUS, which tracks an HS edition. Stated
 #: explicitly so a consumer can tell whether the corpus matches their codes.
 NOMENCLATURE = {"hs_edition": "HS 2022", "htsus_year": 2026}
+
+
+#: A target reaching this many headings further than its own HTSUS key is a
+#: transcription defect in the regulation rather than a rule of that breadth.
+SPAN_TOLERANCE = 20
+
+
+def _headings(rng) -> int:
+    return int(digits(rng.end)[:4]) - int(digits(rng.start)[:4])
+
+
+def anomalies(rules: list[Rule]) -> list[dict]:
+    """Defects in the source text, reported rather than corrected.
+
+    19 CFR 102.20 contains transcription errors. The rule keyed 2824.10-2824.90
+    is written "A change to subheading 2824.10 through 2924.90", spanning a
+    hundred headings it was never meant to reach; the key 4441-4421 runs
+    backwards. Silently repairing either would put words in the regulation's
+    mouth, and ignoring them lets one typo answer for a hundred headings, so
+    they travel with the corpus and a consumer decides.
+    """
+    found: list[dict] = []
+    for rule in rules:
+        for scope in rule.scope:
+            if _headings(scope) < 0:
+                found.append(
+                    {
+                        "rule_id": rule.rule_id,
+                        "kind": "reversed_htsus_key",
+                        "detail": f"the key {rule.htsus} ends before it begins",
+                        "text": rule.text[:200],
+                    }
+                )
+        if not rule.scope:
+            continue
+        widest = max(_headings(s) for s in rule.scope)
+        for alt in rule.alternatives:
+            if not alt.target:
+                continue
+            for target in alt.target.ranges:
+                if _headings(target) > widest + SPAN_TOLERANCE:
+                    found.append(
+                        {
+                            "rule_id": rule.rule_id,
+                            "kind": "target_far_wider_than_key",
+                            "detail": (
+                                f"target {target} spans {_headings(target)} headings "
+                                f"while the key {rule.htsus} spans {widest}"
+                            ),
+                            "text": alt.text[:200],
+                        }
+                    )
+    return found
 
 
 def build(issue_date: str | None = None) -> dict:
@@ -57,6 +111,7 @@ def build(issue_date: str | None = None) -> dict:
                 Counter(a.unparsed_reason for a in alts if a.unparsed_reason)
             ),
         },
+        "anomalies": anomalies(rules),
         "rules": [r.to_dict() for r in rules],
     }
 
@@ -80,6 +135,10 @@ def main() -> None:
     print(f"  alternatives: {c['alternatives']}  structured {c['fully_structured']} ({pct:.1%})")
     for reason, n in sorted(c["by_reason"].items(), key=lambda kv: -kv[1]):
         print(f"     {n:>3}  {reason}")
+    if corpus["anomalies"]:
+        print(f"\n  defects in the source text, reported not corrected:")
+        for a in corpus["anomalies"]:
+            print(f"     {a['rule_id']}: {a['detail']}")
 
 
 if __name__ == "__main__":
