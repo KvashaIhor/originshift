@@ -48,6 +48,11 @@ def build(issue_date: str | None = None) -> dict:
             "alternatives": len(alts),
             "fully_structured": structured,
             "needs_judgement": len(alts) - structured,
+            # Structured but still not answerable on codes alone: a same-position
+            # source, a proviso, or an exception written as a description.
+            "decidable_from_codes": sum(
+                1 for a in alts if a.shift and a.shift.fully_decidable
+            ),
             "by_reason": dict(
                 Counter(a.unparsed_reason for a in alts if a.unparsed_reason)
             ),

@@ -15,14 +15,15 @@ from __future__ import annotations
 
 import re
 import xml.etree.ElementTree as ET
+from collections import Counter
 
 from .grammar import (
     Alternative,
     CodeRange,
     Rule,
     Shift,
+    SourceCondition,
     Target,
-    level_of,
 )
 
 REGIME = "US"
@@ -110,30 +111,69 @@ def _ranges(text: str) -> list[CodeRange]:
     return found
 
 
-def _level_from_phrase(phrase: str) -> tuple[str | None, bool]:
-    """Reduce a source phrase to the level the input must cross, if it names one.
+#: A source clause offers alternatives: "X or from Y", "X or any other Z".
+#: Splitting needs a lookahead, or the "or" inside a range list gets eaten.
+_OR = re.compile(r"\s+or\s+(?=from\s+|any\b|within\b)", re.I)
 
-    Returns (level, within_group). 102.20 writes this five ways:
-      "any other subheading"                  -> cross a subheading boundary
-      "any subheading outside that group"     -> ditto, "other" omitted
-      "any other good of subheading 8486.90"  -> from elsewhere in the same subheading
-      "any other product of Chapter 4"        -> ditto, at chapter level
-      "within chapter 3"                      -> a change inside the chapter counts
+_SAME_POSITION = re.compile(
+    rf"any\s+(?:other\s+)?(?:\w+\s+)?(?:goods?|products?)\s+of\s+(?P<lvl>{LEVEL_WORD})",
+    re.I,
+)
+_ANY_OTHER = re.compile(rf"any\s+(?:other\s+)?(?P<lvl>{LEVEL_WORD})", re.I)
+_WITHIN = re.compile(rf"within\s+(?P<lvl>{LEVEL_WORD})", re.I)
+
+
+def _source_condition(
+    phrase: str, scope: list[CodeRange]
+) -> SourceCondition | None:
+    """Read one branch of a source clause.
+
+    102.20 writes five shapes, and two of them mean opposite things:
+
+        "any other subheading"                  -> outside the target's subheading
+        "any subheading outside that group"     -> ditto, across the whole scope
+        "any other good of subheading 8486.90"  -> INSIDE 8486.90, a different good
+        "any other product of Chapter 4"        -> ditto, at chapter level
+        "within chapter 3"                      -> inside chapter 3
+        "Chapter 17"                            -> from that named position
     """
-    m = re.search(rf"within\s+({LEVEL_WORD})", phrase, re.I)
+    phrase = phrase.strip(" ,.")
+    if not phrase:
+        return None
+
+    m = _SAME_POSITION.search(phrase)
     if m:
-        return m.group(1).rstrip("s").lower(), True
-    m = re.search(
-        rf"any\s+(?:other\s+)?(?:\w+\s+)?(?:goods?|products?)\s+of\s+({LEVEL_WORD})",
-        phrase,
-        re.I,
-    )
+        ranges = _ranges(phrase[m.end() :])
+        return SourceCondition(
+            kind="same_position",
+            level=m.group("lvl").rstrip("s").lower(),  # type: ignore[arg-type]
+            ranges=ranges or list(scope),
+            text=phrase,
+        )
+
+    m = _WITHIN.search(phrase)
     if m:
-        return m.group(1).rstrip("s").lower(), False
-    m = re.search(rf"any\s+(?:other\s+)?({LEVEL_WORD})", phrase, re.I)
+        ranges = _ranges(phrase[m.end() :])
+        return SourceCondition(
+            kind="same_position",
+            level=m.group("lvl").rstrip("s").lower(),  # type: ignore[arg-type]
+            ranges=ranges or list(scope),
+            text=phrase,
+        )
+
+    m = _ANY_OTHER.search(phrase)
     if m:
-        return m.group(1).rstrip("s").lower(), False
-    return None, False
+        return SourceCondition(
+            kind="any_other",
+            level=m.group("lvl").rstrip("s").lower(),  # type: ignore[arg-type]
+            outside_that_group=bool(re.search(r"outside that group", phrase, re.I)),
+            text=phrase,
+        )
+
+    ranges = _ranges(phrase)
+    if ranges:
+        return SourceCondition(kind="named", ranges=ranges, text=phrase)
+    return None  # a described good, e.g. "any other product", "feathers or down"
 
 
 def _split_provisos(source: str) -> tuple[str, list[str]]:
@@ -256,7 +296,6 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
         carve_out = base[om.end() :].strip(" ,.")
         base = base[: om.start()].strip(" ,")
 
-    level, within = _level_from_phrase(base)
     excluded = _ranges(exceptions_text)
     # An exception with no codes in it is a description, and still binds.
     excluded_desc = (
@@ -264,25 +303,26 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
     )
     if carve_out:
         excluded_desc.append(carve_out)
-    # When no level is named, the rule lists the permitted sources outright.
-    from_ranges = [] if level else _ranges(base)
+    branches = [
+        _source_condition(p, scope) for p in _OR.split(base) if p.strip()
+    ]
+    sources = [b for b in branches if b is not None]
 
     shift = Shift(
-        from_level=level,  # type: ignore[arg-type]
+        sources=sources,
         excluded=excluded,
         excluded_descriptions=excluded_desc,
-        from_ranges=from_ranges,
-        outside_that_group=bool(re.search(r"outside that group", base, re.I)),
-        within_group=within,
         provisos=provisos,
         raw_source=source_text.strip(),
     )
 
     reason = None
-    if level is None and not from_ranges:
+    if not sources:
         # e.g. "from any other product", "from feathers or down": the source is a
         # description. A resolver cannot decide this from HS codes alone.
         reason = "descriptive_source"
+    elif len(sources) < len(branches):
+        reason = "partly_descriptive_source"
 
     return Alternative(
         kind="tariff_shift",
@@ -327,6 +367,10 @@ def parse(xml_text: str, *, vintage: str, source_url: str) -> list[Rule]:
             continue
         grouped.append({"htsus": htsus, "section": heading, "branches": [value]})
 
+    # 102.20 repeats a few HTSUS keys on separate rows (2915.39, 3102.90,
+    # 3104.90, 3808.99), so the key alone is not a unique identifier.
+    seen: Counter[str] = Counter()
+
     rules: list[Rule] = []
     for g in grouped:
         # Re-join fragments that continue the alternative above them.
@@ -350,9 +394,15 @@ def parse(xml_text: str, *, vintage: str, source_url: str) -> list[Rule]:
         except (ValueError, IndexError):
             scope = []
 
+        seen[g["htsus"]] += 1
+        occurrence = seen[g["htsus"]]
+        rule_id = f"102.20/{g['htsus']}"
+        if occurrence > 1:
+            rule_id = f"{rule_id}({occurrence})"
+
         rules.append(
             Rule(
-                rule_id=f"102.20/{g['htsus']}",
+                rule_id=rule_id,
                 regime=REGIME,
                 htsus=g["htsus"],
                 scope=scope,

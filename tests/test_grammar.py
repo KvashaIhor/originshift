@@ -20,8 +20,16 @@ def test_range_rejects_a_code_too_coarse_to_place():
     assert not CodeRange.parse("8708.29").contains("8708")
 
 
-def test_ranges_may_not_mix_levels():
-    import pytest
+def test_mixed_level_spans_widen_to_the_finer_level():
+    """"heading 1601 through 1602.50" is restated exactly, not rejected."""
+    span = CodeRange.parse("1601", "1602.50")
+    assert (str(span), span.level) == ("1601.00-1602.50", "subheading")
+    assert span.contains("1601.00") and span.contains("1602.50")
+    assert not span.contains("1602.51")
 
-    with pytest.raises(ValueError):
-        CodeRange.parse("0101", "0104.10")
+
+def test_a_coarse_upper_bound_covers_all_of_itself():
+    """"subheading 1602.50 through heading 1605" must include 1605.99."""
+    span = CodeRange.parse("1602.50", "1605")
+    assert str(span) == "1602.50-1605.99"
+    assert span.contains("1605.99")

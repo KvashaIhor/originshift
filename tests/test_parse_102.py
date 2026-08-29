@@ -1,5 +1,9 @@
 """Regression tests against the real 19 CFR 102.20 text."""
 
+import re
+
+from collections import Counter
+
 
 def test_corpus_size_is_stable(rules):
     assert len(rules) == 1032
@@ -12,8 +16,10 @@ def test_worked_example_from_the_spec(by_htsus):
     (alt,) = rule.alternatives
     assert alt.structured
     assert [str(r) for r in alt.target.ranges] == ["8708.29"]
-    assert alt.shift.from_level == "subheading"
+    (source,) = alt.shift.sources
+    assert source.kind == "any_other" and source.level == "subheading"
     assert [str(r) for r in alt.shift.excluded] == ["8708.95"]
+    assert alt.shift.fully_decidable
 
 
 def test_alternatives_split_across_rows_are_rejoined(by_htsus):
@@ -41,13 +47,14 @@ def test_exception_ranges_are_kept_as_ranges(by_htsus):
 
 def test_percentages_are_not_read_as_chapters(rules):
     """'more than 20% by weight' must not become chapter 20."""
-    import re
-
     for rule in rules:
         for alt in rule.alternatives:
             if not alt.shift:
                 continue
-            for r in alt.shift.excluded + alt.shift.from_ranges:
+            named = alt.shift.excluded + [
+                r for s in alt.shift.sources for r in s.ranges
+            ]
+            for r in named:
                 if r.level == "chapter":
                     assert re.search(
                         rf"chapters?\s+0?{int(r.start)}\b", alt.text, re.I
@@ -57,15 +64,81 @@ def test_percentages_are_not_read_as_chapters(rules):
 def test_other_than_carve_out_is_not_read_as_a_positive_source(by_htsus):
     """'from any product other than X of Chapter 2' must not require Chapter 2."""
     alt = by_htsus["0210.91-0210.99"].alternatives[1]
-    assert alt.shift.from_ranges == []
+    assert alt.shift.sources == []
     assert alt.shift.excluded_descriptions == ["edible meals and flours of Chapter 2"]
     assert not alt.structured  # honestly abstains rather than inverting the rule
 
 
-def test_descriptive_rules_abstain_rather_than_guess(rules):
-    unstructured = [
-        a for r in rules for a in r.alternatives if not a.structured
+def test_a_source_clause_can_offer_alternatives(by_htsus):
+    """'from any other good of subheading X or from any other subheading' is two
+    opposite conditions, and collapsing them loses half the rule."""
+    alt = next(
+        a for a in by_htsus["8486.90"].alternatives if "electrical machines" in a.text
+    )
+    inside, outside = alt.shift.sources
+    assert inside.kind == "same_position"
+    assert [str(r) for r in inside.ranges] == ["8486.90"]
+    assert outside.kind == "any_other" and outside.level == "subheading"
+    # An input inside 8486.90 qualifies under the first branch, so the rule
+    # cannot be settled on codes alone.
+    assert not inside.decidable_from_codes
+    assert not alt.shift.fully_decidable
+
+
+def test_named_sources_are_positive_not_exclusions(by_htsus):
+    """'from Chapter 17' means the input must come from there."""
+    alt = next(
+        a for a in by_htsus["1602.90"].alternatives if "from Chapter 17," in a.text
+    )
+    (source,) = alt.shift.sources
+    assert source.kind == "named"
+    assert [str(r) for r in source.ranges] == ["17"]
+
+
+def test_mixed_level_spans_are_kept_not_dropped(by_htsus):
+    """'heading 1601 through 1602.50' crosses levels; it must still resolve."""
+    rule = by_htsus["1601-1602.50"]
+    (span,) = rule.scope
+    assert (str(span), span.level) == ("1601.00-1602.50", "subheading")
+    assert span.contains("1601.10") and span.contains("1602.50")
+    assert not span.contains("1602.90")
+    assert rule.alternatives[0].target.ranges  # not left unable to match anything
+
+
+def test_a_target_may_reach_outside_its_htsus_key(by_htsus):
+    """The key column is an index, not a boundary.
+
+    The rule keyed 3002.12-3002.90 also targets subheadings in 3822. Indexing on
+    the key column alone would silently lose it.
+    """
+    alt = next(
+        a for a in by_htsus["3002.12-3002.90"].alternatives if "imines" in a.text
+    )
+    assert [str(r) for r in alt.target.ranges] == [
+        "3002.12-3002.15",
+        "3822.11-3822.12",
+        "3822.19",
     ]
+    assert alt.target.matches("3822.11")
+
+
+def test_rule_ids_are_unique(rules):
+    """102.20 repeats some HTSUS keys on separate rows."""
+    dupes = [k for k, n in Counter(r.rule_id for r in rules).items() if n > 1]
+    assert dupes == []
+    assert "102.20/2915.39(2)" in {r.rule_id for r in rules}
+
+
+def test_no_alternative_is_left_unable_to_match(rules):
+    """An alternative with no target ranges could never fire, silently."""
+    for rule in rules:
+        for alt in rule.alternatives:
+            if alt.target is not None:
+                assert alt.target.ranges, f"{rule.rule_id}: {alt.text[:80]}"
+
+
+def test_descriptive_rules_abstain_rather_than_guess(rules):
+    unstructured = [a for r in rules for a in r.alternatives if not a.structured]
     assert len(unstructured) == 14
     assert all(a.unparsed_reason for a in unstructured)
 
@@ -83,10 +156,13 @@ def test_provisos_are_preserved_not_dropped(by_htsus):
     assert any("50 percent by weight of milk solids" in p for p in provisos)
 
 
-def test_named_sources_are_positive_not_exclusions(by_htsus):
-    """'from Chapter 17' means the input must come from there."""
-    alt = next(
-        a for a in by_htsus["1602.90"].alternatives if "from Chapter 17," in a.text
-    )
-    assert [str(r) for r in alt.shift.from_ranges] == ["17"]
-    assert alt.shift.from_level is None
+def test_textile_chapters_are_absent_because_102_21_governs_them(rules):
+    """Chapters 50-63 are 102.21's, not 102.20's — their absence is correct."""
+    covered = {
+        c
+        for r in rules
+        for s in r.scope
+        for c in (re.sub(r"\D", "", s.start)[:2], re.sub(r"\D", "", s.end)[:2])
+    }
+    assert not covered & {f"{c:02d}" for c in range(50, 64)}
+    assert "84" in covered and "01" in covered

@@ -27,6 +27,24 @@ def digits(code: str) -> str:
     return re.sub(r"\D", "", code)
 
 
+def _format(d: str) -> str:
+    """Render a digit string in the conventional dotted form."""
+    if len(d) <= 4:
+        return d
+    out = f"{d[:4]}.{d[4:6]}"
+    return f"{out}.{d[6:8]}" if len(d) > 6 else out
+
+
+def _widen(code: str, level: Level, *, low: bool) -> str:
+    """Restate a coarse code at a finer level, spanning everything it covers.
+
+    Heading 1601 at subheading level is 1601.00 as a lower bound and 1601.99 as
+    an upper one.
+    """
+    d = digits(code).ljust(LEVEL_DIGITS[level], "0" if low else "9")
+    return _format(d)
+
+
 def level_of(code: str) -> Level:
     n = len(digits(code))
     for name, size in LEVEL_DIGITS.items():
@@ -50,10 +68,16 @@ class CodeRange:
     @classmethod
     def parse(cls, start: str, end: str | None = None) -> CodeRange:
         end = end or start
-        lvl = level_of(start)
-        if level_of(end) != lvl:
-            raise ValueError(f"range {start}-{end} mixes levels")
-        return cls(start=start, end=end, level=lvl)
+        lo, hi = level_of(start), level_of(end)
+        if lo != hi:
+            # 102.20 writes spans like "heading 1601 through 1602.50" that cross
+            # levels. Restate both ends at the finer level, so the span stays
+            # exact rather than being dropped for being irregular.
+            fine = lo if LEVEL_DIGITS[lo] > LEVEL_DIGITS[hi] else hi
+            start = _widen(start, fine, low=True)
+            end = _widen(end, fine, low=False)
+            lo = fine
+        return cls(start=start, end=end, level=lo)
 
     def contains(self, code: str) -> bool:
         """Is `code` inside this range, compared at this range's level?"""
@@ -89,28 +113,63 @@ class Target:
 
 
 @dataclass
-class Shift:
-    """A tariff-shift requirement: inputs must cross a boundary of the nomenclature."""
+class SourceCondition:
+    """One way the input material may qualify, under a shift.
 
-    #: The level the input must change across: "any other subheading" -> subheading.
-    from_level: Level | None = None
-    #: Ranges the input may not come from, i.e. "except from heading 5208 through 5212".
+    102.20 routinely offers several in the alternative:
+
+        "from any other good of subheading 8486.90 or from any other subheading"
+
+    Those two are opposites — inside that subheading, or outside it — so
+    collapsing them into a single condition inverts half the rule.
+    """
+
+    #: any_other      — input classified outside the target's own position at `level`
+    #: same_position  — input inside `ranges`, but a different good
+    #: named          — input must come from `ranges`
+    kind: Literal["any_other", "same_position", "named"]
+    level: Level | None = None
+    ranges: list[CodeRange] = field(default_factory=list)
+    #: "any other heading outside that group" — the whole scope, not just the
+    #: target's own heading, is off limits as a source.
+    outside_that_group: bool = False
+    text: str = ""
+
+    @property
+    def decidable_from_codes(self) -> bool:
+        """A same-position source turns on which *good* it is, not its code.
+
+        Two goods can share a subheading, so no HS code can settle it and a
+        resolver must ask rather than assume.
+        """
+        return self.kind != "same_position"
+
+
+@dataclass
+class Shift:
+    """A tariff-shift requirement: where the input material may come from."""
+
+    #: Disjunction — the shift is met if any one source condition is met.
+    sources: list[SourceCondition] = field(default_factory=list)
+    #: Ranges the input may not come from: "except from heading 5208 through 5212".
     excluded: list[CodeRange] = field(default_factory=list)
     #: Exceptions the nomenclature cannot express, e.g. "except from formed uppers"
     #: or "except a change resulting from a simple assembly". Kept verbatim: they
     #: bind legally, so a resolver must not treat their absence as satisfaction.
     excluded_descriptions: list[str] = field(default_factory=list)
-    #: Ranges the input must come FROM, where the rule names specific origins
-    #: instead of a shift: "A change to subheading 1602.90 from Chapter 4".
-    from_ranges: list[CodeRange] = field(default_factory=list)
-    #: "outside that group" — inputs from within the target's own span do not count.
-    outside_that_group: bool = False
-    #: "a change ... within chapter 3" — the change happens inside the level, not across it.
-    within_group: bool = False
     #: Free-text conditions the codes cannot express, kept verbatim.
     provisos: list[str] = field(default_factory=list)
-    #: Source phrasing that did not reduce to a level, kept for inspection.
+    #: Source phrasing as it appeared, for inspection.
     raw_source: str = ""
+
+    @property
+    def fully_decidable(self) -> bool:
+        return (
+            bool(self.sources)
+            and all(s.decidable_from_codes for s in self.sources)
+            and not self.excluded_descriptions
+            and not self.provisos
+        )
 
 
 @dataclass
@@ -151,10 +210,11 @@ class Rule:
         d["scope"] = [str(r) for r in self.scope]
         for alt in d["alternatives"]:
             if alt.get("shift"):
-                for key in ("excluded", "from_ranges"):
-                    alt["shift"][key] = [
-                        str(CodeRange(**r)) for r in alt["shift"][key]
-                    ]
+                alt["shift"]["excluded"] = [
+                    str(CodeRange(**r)) for r in alt["shift"]["excluded"]
+                ]
+                for src in alt["shift"]["sources"]:
+                    src["ranges"] = [str(CodeRange(**r)) for r in src["ranges"]]
             if alt.get("target"):
                 alt["target"]["ranges"] = [
                     str(CodeRange(**r)) for r in alt["target"]["ranges"]
