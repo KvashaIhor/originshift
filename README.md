@@ -394,6 +394,19 @@ rule that applies to your code.
 ## Development
 
 ```
-pip install -e ".[dev]"
+pip install -e ".[dev,ingest]"
 pytest
+python -m originshift.build_corpus     # rebuild both corpora from the eCFR
+python -m originshift.validate         # score them against CBP's rulings
 ```
+
+Built corpora and reviewed overlays live in `src/originshift/data/` and ship
+with the package, so an install works without a checkout. Point
+`ORIGINSHIFT_OVERLAYS` at a directory to load your own alongside them.
+
+## Releasing
+
+Not yet published. `python -m build` produces both artefacts and
+`python -m twine check dist/*` passes; version is `0.1.0`. Before uploading,
+fill in `[project.urls]` in `pyproject.toml` — it is commented out rather than
+pointing at a URL that does not resolve.

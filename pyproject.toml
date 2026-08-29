@@ -1,6 +1,6 @@
 [project]
 name = "originshift"
-version = "0.0.1.dev0"
+version = "0.1.0"
 description = "Non-preferential rules of origin, as data. Answers which country a good is legally from, and cites the rule."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -18,9 +18,11 @@ classifiers = [
 # this package reads is fetched over HTTPS from a government endpoint.
 dependencies = ["certifi"]
 
-[project.urls]
-Homepage = "https://github.com/originshift/originshift"
-Source = "https://github.com/originshift/originshift"
+# [project.urls]
+# Fill in once the repository has a home. Publishing metadata that points at a
+# URL which does not resolve is worse than publishing none.
+# Homepage = "..."
+# Source = "..."
 
 [project.scripts]
 originshift = "originshift.cli:main"
