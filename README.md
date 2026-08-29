@@ -3,8 +3,20 @@
 **Non-preferential rules of origin, as data.** Answers "what country is this good
 legally from?" and cites the rule it used.
 
-Status: all four components built for the US regime. See
-[originshift.md](originshift.md) for the full plan.
+Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage:
+
+| Corpus | Rules | Answerable from codes alone | Governs |
+|---|---|---|---|
+| **102.20** | 1,032 | 99.0% | country-of-origin marking under USMCA and NAFTA |
+| **102.21** | 101 (+1 overlay) | 31.8% | **all** textile and apparel imports, from any country |
+
+**Read the scope before adopting.** 19 CFR 102.0 limits Part 102 to USMCA and
+NAFTA marking and the Morocco/Bahrain "new or different article of commerce"
+test. It is **not** the general origin test for US imports, and it does not
+decide Section 301 — both of those turn on common-law substantial
+transformation. [Scope, precisely](#scope-precisely) sets this out.
+
+See [originshift.md](originshift.md) for the full plan.
 
 ## What is here
 
@@ -25,9 +37,17 @@ Status: all four components built for the US regime. See
 python -m originshift.build_corpus
 ```
 
-Writes `data/corpus/102.20-<issue-date>.json`: **1,032 rules / 1,455
-alternatives**, of which **1,441 (99.0%) are fully structured**. The remaining 14
-are recorded with a reason rather than guessed at.
+Writes one file per corpus, named for its eCFR issue date — pass `--corpus` to
+build just one:
+
+| File | Rules | Alternatives | Answerable from codes alone |
+|---|---|---|---|
+| `data/corpus/102.20-<issue-date>.json` | 1,032 | 1,455 | 1,441 (99.0%) |
+| `data/corpus/102.21-<issue-date>.json` | 101 | 176 | 56 (31.8%) |
+
+Everything else is recorded with a reason rather than guessed at: a source
+naming a good instead of a code, a condition on the good, a rule that turns on
+where a process happened.
 
 Every record carries its provenance — source URL, eCFR issue date, and the
 nomenclature vintage it answers under — so it can be re-derived after the source
@@ -36,13 +56,34 @@ is amended.
 ```json
 {
   "rule_id": "102.20/8708.29",
-  "scope": ["8708.29"],
-  "alternatives": [{
-    "kind": "tariff_shift",
-    "shift": { "from_level": "subheading", "excluded": ["8708.95"] },
-    "target": { "ranges": ["8708.29"] },
-    "text": "A change to subheading 8708.29 from any other subheading, except from subheading 8708.95."
-  }],
+  "scope": [
+    "8708.29"
+  ],
+  "alternatives": [
+    {
+      "kind": "tariff_shift",
+      "shift": {
+        "sources": [
+          {
+            "kind": "any_other",
+            "level": "subheading",
+            "ranges": [],
+            "outside_that_group": false,
+            "text": "any other subheading"
+          }
+        ],
+        "excluded": [
+          "8708.95"
+        ]
+      },
+      "target": {
+        "ranges": [
+          "8708.29"
+        ]
+      },
+      "text": "A change to subheading 8708.29 from any other subheading, except from subheading 8708.95."
+    }
+  ],
   "vintage": "HTSUS-2026",
   "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-26/title-19.xml?part=102"
 }
