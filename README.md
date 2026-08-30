@@ -23,7 +23,7 @@ If you import apparel, 102.21 is the half you want. If you file under USMCA,
 
 **Before adopting, read what Part 102 does not do.** Per **19 CFR 102.0** it does
 **not** decide Section 301 or Section 232 origin, and it does not decide AD/CVD
-scope. Those turn on the uncodified common-law **substantial transformation**
+scope. Those turn on the uncodified common-law substantial transformation
 test, which this does not implement and cannot, since it is case law rather than
 a rule table. [Scope, precisely](#scope-precisely) sets out the limits.
 
@@ -363,7 +363,7 @@ rule that applies to your code. That is worth having: the alternative is reading
 python -m originshift.validate [--disagreements]
 ```
 
-Ground truth is **CBP's own HQ rulings**, which are binding determinations by
+Ground truth is CBP's own HQ rulings, which are binding determinations by
 the authority whose rules this corpus compiles. 312 HQ rulings cite 102.20; 228
 of them quote a rule, giving 254 quotations to score.
 
@@ -387,7 +387,7 @@ HS 2022 split it into `9401.91` through `9401.99`.
 
 Two things shape that number. Rulings citing 102.20 routinely also quote **USMCA
 and NAFTA preferential rules**, which are worded almost identically and are a
-different legal test. They come to **44% of everything the extractor finds** and
+different legal test. They come to 44% of everything the extractor finds, and
 are excluded before scoring. A quotation is also cut where the rule ends, since
 one that runs on into CBP's prose picks up codes that are not part of it.
 
@@ -467,7 +467,7 @@ as to Israel. Not marking-only, not USMCA-only.
 |---|---|---|
 | Marking origin, USMCA/NAFTA goods | 19 CFR 102.20 | yes |
 | Textile and apparel origin, any country | 19 CFR 102.21 | yes |
-| **Section 301 / Section 232 origin** | common-law **substantial transformation** | **no** |
+| **Section 301 / Section 232 origin** | common-law substantial transformation | **no** |
 | **AD/CVD scope** | Commerce scope analysis | **no** |
 | Marking origin, other non-USMCA goods | common-law substantial transformation | **no** |
 | **Preferential / FTA qualification** | the agreement's own rules of origin | **no, deliberately** |
@@ -485,8 +485,7 @@ Whether it was knit to shape.
 | 102.20 | 1,441 / 1,455 = 99.0% | 1,018 / 1,455 = 70.0% |
 | 102.21 | 56 / 176 = 31.8% | 21 / 176 = 11.9% |
 
-Read the second column as a property of the **rule table**, not a measure of the
-tool. It counts rules that need nothing beyond a classification — and for
+Read the second column as a property of the rule table, not of the tool. It counts rules that need nothing beyond a classification — and for
 textiles almost none do, because 102.21 is written around processes. It is not
 how often you get an answer: supply what the rules ask for and the curated cases
 resolve 13 of 13. It is how much of the work the codes can do on their own.
