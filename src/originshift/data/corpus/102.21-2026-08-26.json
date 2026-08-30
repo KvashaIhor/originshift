@@ -101,6 +101,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading"
@@ -146,6 +147,7 @@
        "5906-5907",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading, except from heading 5007, 5111 through 5113, 5208 through 5212, 5309 through 5311, 5407 through 5408, 5512 through 5516, 5601 through 5603, 5801 through 5804, 5806, 5809, 5903, 5906 through 5907, and 6001 through 6006"
@@ -191,6 +193,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading"
@@ -236,6 +239,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading"
@@ -281,6 +285,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading"
@@ -326,6 +331,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -373,6 +379,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -420,6 +427,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -467,6 +475,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory or insular possession"
@@ -514,6 +523,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -561,6 +571,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -608,6 +619,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter"
@@ -653,6 +665,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of garnetting. If the change to heading 5003 is not the result of garnetting, the country of origin of the good is the country of origin of the good prior to its becoming waste"
@@ -700,6 +713,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -733,6 +747,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process"
@@ -797,6 +812,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -844,6 +860,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter"
@@ -889,6 +906,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading"
@@ -934,6 +952,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter"
@@ -979,6 +998,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -1026,6 +1046,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -1073,6 +1094,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter"
@@ -1118,6 +1140,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of garnetting. If the change to heading 5202 is not the result of garnetting, the country of origin of the good is the country of origin of the good prior to its becoming waste"
@@ -1165,6 +1188,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter"
@@ -1210,6 +1234,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -1274,6 +1299,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -1321,6 +1347,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter"
@@ -1352,6 +1379,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of garnetting. If the change is not the result of garnetting, the country of origin of the good is the country of origin of the good prior to its becoming waste"
@@ -1399,6 +1427,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -1446,6 +1475,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -1484,6 +1514,7 @@
        "4811",
        "4818"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading, except from heading 4707, 4801 through 4806, 4811, and 4818"
@@ -1546,6 +1577,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -1593,6 +1625,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process"
@@ -1657,6 +1690,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -1704,6 +1738,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process"
@@ -1753,6 +1788,7 @@
       "excluded": [
        "54"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter, except from Chapter 54"
@@ -1798,6 +1834,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of garnetting. If the change is not the result of garnetting, the country of origin of the good is the country of origin of the good prior to its becoming waste"
@@ -1847,6 +1884,7 @@
       "excluded": [
        "54"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter, except from Chapter 54"
@@ -1892,6 +1930,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -1956,6 +1995,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -2008,6 +2048,7 @@
        "5501-5507",
        "9619"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading, except from heading 5105, 5203, 5501 through 5507, and articles of wadding of heading 9619"
@@ -2048,6 +2089,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading or from wadding of heading 5601"
@@ -2110,6 +2152,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -2161,6 +2204,7 @@
        "5401-5408",
        "5501-5502"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process"
@@ -2200,6 +2244,7 @@
        "5306-5308",
        "5508-5511"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -2251,6 +2296,7 @@
        "5401-5408",
        "5501-5502"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process; or"
@@ -2289,6 +2335,7 @@
        "5306-5308",
        "5508-5511"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -2340,6 +2387,7 @@
        "5401-5406",
        "5501-5511"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process; or"
@@ -2378,6 +2426,7 @@
        "5306-5308",
        "5508-5511"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -2444,6 +2493,7 @@
       "excluded": [
        "5804"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -2480,6 +2530,7 @@
        "5804",
        "6002-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process; or (b) If the good contains nontextile attachments, from any heading, including a change from another good of heading 5608, provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -2575,6 +2626,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other chapter"
@@ -2645,6 +2697,7 @@
        "5512-5516",
        "6002-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -2711,6 +2764,7 @@
       "excluded": [
        "5608"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -2775,6 +2829,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -2829,6 +2884,7 @@
        "5407-5408",
        "5512-5516"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -2901,6 +2957,7 @@
        "5512-5516",
        "5801-5803"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -2984,6 +3041,7 @@
        "5501-5502",
        "5604-5607"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process"
@@ -3024,6 +3082,7 @@
        "5508-5516",
        "5604-5607"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -3078,6 +3137,7 @@
        "5407-5408",
        "5512-5516"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -3116,6 +3176,7 @@
        "5501-5502",
        "5604-5607"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process; or (b) If the trimming is of staple fibers, a change to subheading 5808.90 from any other heading, except from heading 5106 through 5113, 5204 through 5212, 5306 through 5311, 5401 through 5408, 5508 through 5516, and 5604 through 5607, and provided that the change is the result of a spinning process"
@@ -3156,6 +3217,7 @@
        "5508-5511",
        "5604-5607"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process; or (c) If the good has not been wholly assembled in a single country, territory, or insular possession and the good is of filaments, including strips, a change to subheading 5808.90 from any other heading, except from heading 5001 through 5007, 5401 through 5406, and 5501 through 5502, and provided that the change is the result of an extrusion process"
@@ -3213,6 +3275,7 @@
        "5804",
        "5806"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -3337,6 +3400,7 @@
        "5907",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -3443,6 +3507,7 @@
        "5808",
        "6002-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -3490,6 +3555,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -3583,6 +3649,7 @@
        "5808",
        "6002-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -3658,6 +3725,7 @@
        "5808",
        "6002-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -3716,6 +3784,7 @@
        "5808",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading, except from heading 5007, 5111 through 5113, 5208 through 5212, 5309 through 5311, 5407 through 5408, 5512 through 5516, 5801 through 5802, 5806, 5808, and 6001 through 6006"
@@ -3751,6 +3820,7 @@
        "5401-5406",
        "5501-5502"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process; or (b) If the good is of staple fibers, a change to heading 5908 from any other heading, except from heading 5106 through 5110, 5204 through 5207, 5306 through 5308, and 5508 through 5511, and 5605 through 5607, and provided that the change is the result of a spinning process"
@@ -3810,6 +3880,7 @@
        "5808",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the good does not contain armor or accessories of nontextile material and provided that the change is the result of a fabric-making process; or"
@@ -3843,6 +3914,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -3894,6 +3966,7 @@
        "5401-5406",
        "5501-5502"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process; or (b) If the good is of staple fibers, a change of those fibers to heading 5910 from any other heading, except from heading 5106 through 5110, 5204 through 5207, 5306 through 5308, and 5508 through 5511, and provided that the change is the result of a spinning process"
@@ -3939,6 +4012,7 @@
        "5808-5809",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading, except from heading 5007, 5111 through 5113, 5208 through 5212, 5309 through 5311, 5407 through 5408, 5512 through 5516, 5602 through 5603, 5801 through 5804, 5806, 5808 through 5809, and 6001 through 6006, and provided the change is the result of a fabric-making process"
@@ -3970,6 +4044,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -4045,6 +4120,7 @@
        "5806",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4120,6 +4196,7 @@
        "5806",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4153,6 +4230,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -4228,6 +4306,7 @@
        "5806",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4279,6 +4358,7 @@
        "5401-5406",
        "5501-5502"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process; or (b) If the good is of staple fibers, a change of those fibers to subheading 5911.90 from any other heading, except from heading 5106 through 5110, 5204 through 5207, 5306 through 5308, and 5508 through 5511, and provided that the change is the result of a spinning process"
@@ -4341,6 +4421,7 @@
        "5809",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4374,6 +4455,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -4438,6 +4520,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4477,6 +4560,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -4524,6 +4608,7 @@
        "9619",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4559,6 +4644,7 @@
       "excluded": [
        "9619"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the knit to shape components are knit in a single country territory or insular possession"
@@ -4598,6 +4684,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -4645,6 +4732,7 @@
        "6217",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4684,6 +4772,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -4732,6 +4821,7 @@
        "6307.90",
        "9619"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4771,6 +4861,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -4820,6 +4911,7 @@
        "6307.90",
        "9619.00.61-9619.00.79"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4859,6 +4951,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -4907,6 +5000,7 @@
        "6217",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -4940,6 +5034,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the knit to shape components are knit in a single country, territory, or insular possession"
@@ -5010,6 +5105,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5057,6 +5153,7 @@
        "6217",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -5166,6 +5263,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5306,6 +5404,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5353,6 +5452,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5401,6 +5501,7 @@
        "5906-5907",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -5448,6 +5549,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5496,6 +5598,7 @@
        "5906-5907",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -5543,6 +5646,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5591,6 +5695,7 @@
        "5906-5907",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -5638,6 +5743,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5673,6 +5779,7 @@
       "excluded": [
        "5602"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -5720,6 +5827,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5767,6 +5875,7 @@
        "5906-5907",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -5814,6 +5923,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5861,6 +5971,7 @@
        "5906-5907",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -5917,6 +6028,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -5952,6 +6064,7 @@
       "excluded": [
        "5602"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric making process"
@@ -5985,6 +6098,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -6032,6 +6146,7 @@
        "5906-5907",
        "6001-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -6079,6 +6194,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -6126,6 +6242,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process"
@@ -6167,6 +6284,7 @@
        "7019.80.10",
        "7019.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -6214,6 +6332,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of an extrusion process"
@@ -6255,6 +6374,7 @@
        "7019.80.10",
        "7019.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a spinning process"
@@ -6302,6 +6422,7 @@
        }
       ],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -6356,6 +6477,7 @@
        "5407-5408",
        "5512-5516"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -6381,6 +6503,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -6420,6 +6543,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -6468,6 +6592,7 @@
        "6001-6006",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -6507,6 +6632,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -6555,6 +6681,7 @@
        "6001-6006",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -6625,6 +6752,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -6684,6 +6812,7 @@
        "5906-5907",
        "6002-6006"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process"
@@ -6736,6 +6865,7 @@
        "5501-5507",
        "5601"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
       "raw_source": "any other heading, except from heading 5105, 5203, 5501 through 5507, and from 5601; or"
@@ -6759,6 +6889,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession; or"
@@ -6806,6 +6937,7 @@
        "6101-6117",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process; or"
@@ -6841,6 +6973,7 @@
       "excluded": [
        "6101-6117"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the knit to shape components are knit in a single country, territory, or insular possession; or"
@@ -6866,6 +6999,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession; or"
@@ -6914,6 +7048,7 @@
        "6217",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process; or"
@@ -6956,6 +7091,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession; or"
@@ -7004,6 +7140,7 @@
        "6217",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process; or"
@@ -7029,6 +7166,7 @@
      "shift": {
       "sources": [],
       "excluded": [],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of the good being wholly assembled in a single country, territory, or insular possession"
@@ -7083,6 +7221,7 @@
        "6217",
        "6307.90"
       ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [
        "provided that the change is the result of a fabric-making process; or"

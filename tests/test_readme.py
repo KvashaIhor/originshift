@@ -65,3 +65,19 @@ def test_the_scope_limit_is_stated_before_the_usage(corpus):
     text = README.read_text(encoding="utf-8")
     assert "102.0" in text
     assert text.index("102.0") < text.index("## Resolving")
+
+
+def test_the_corpus_round_trips_through_its_own_loader(corpus, corpus_102_21):
+    """A field added to the grammar but not to the loader is silently dropped on
+    load — it has happened twice (condition/sequence, then excluded_when), and
+    both times the corpus on disk was right while the object in memory was not.
+    """
+    import json
+
+    from originshift.corpus import CORPUS_DIR, Corpus
+
+    for which in ("102.20", "102.21"):
+        path = sorted(CORPUS_DIR.glob(f"{which}-*.json"))[-1]
+        raw = json.loads(path.read_text(encoding="utf-8"))
+        out = [r.to_dict() for r in Corpus.from_dict(raw).rules]
+        assert out == raw["rules"], f"{which} loses fields on load"

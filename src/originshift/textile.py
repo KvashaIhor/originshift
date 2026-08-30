@@ -275,6 +275,37 @@ def _condition_holds(
     return None
 
 
+def defeated_by_materials(alt, good: str, materials: list):
+    """The code-level part of an (e)(1) change, checked even where the rule is
+    also gated on a fact or a process.
+
+    102.21(c)(2) confers origin where each foreign material "underwent an
+    applicable change in tariff classification, **and/or** met any other
+    requirement" — the two are conjunctive for the material set. A rule that
+    names a process still excepts what it excepts, so a material from an
+    excepted provision defeats it however the process went.
+
+    Returns the check that defeats the alternative, or None.
+    """
+    from .resolve import _check_material
+
+    if alt.shift is None:
+        return None
+
+    # A source stated as a description cannot judge "not shifted" — only the
+    # named exceptions are decidable there.
+    code_decidable = bool(alt.shift.sources) and all(
+        s.decidable_from_codes for s in alt.shift.sources
+    )
+    fatal = ("excluded", "not_shifted") if code_decidable else ("excluded",)
+
+    for material in materials:
+        check = _check_material(alt, good, material.code)
+        if check.outcome in fatal:
+            return check
+    return None
+
+
 def resolve_e2(good: str, country: str, facts: TextileFacts, corpus: Corpus):
     """102.21(e)(2), for the listed goods that are not of cotton or of wool."""
     from .resolve import OriginResult
@@ -460,6 +491,8 @@ def resolve_textile(
         candidates, key=lambda rc: (rc[1].sequence or 0, rc[1].is_fallback)
     )
     unmet_conditions: list[str] = []
+    # Only foreign materials are tested; a domestic one has nothing to shift.
+    foreign = [m for m in materials if m.country is None or m.country != country]
 
     governed_by_e2 = False
     for rule, alt in ordered:
@@ -482,11 +515,23 @@ def resolve_textile(
 
         # A requirement stated as a process is met by saying where it happened,
         # whether the rule is wholly a process rule or a shift with a proviso
-        # that names one. 102.21(c)(2) takes either.
+        # that names one. 102.21(c)(2) takes either — but where the rule also
+        # states a change, the materials must survive it.
         if alt.kind == "process" or not alt.structured:
             named = _process_named(alt.text)
             where = facts.process_in.get(named) if named else None
             if where:
+                blocked = defeated_by_materials(alt, good, foreign)
+                if blocked is not None:
+                    findings.append(
+                        Finding(
+                            rule_id=rule.rule_id,
+                            rule_text=alt.text,
+                            satisfied=False,
+                            checks=[blocked],
+                        )
+                    )
+                    continue
                 return OriginResult(
                     status="resolved",
                     origin=where,
@@ -499,6 +544,7 @@ def resolve_textile(
                         f"(e)(1) — the {named} occurred in {where}"
                     ),
                     vintage=corpus.vintage,
+                    trace=findings,
                 )
             if named:
                 unmet_conditions.append(f"where the {named} occurred")
@@ -506,7 +552,6 @@ def resolve_textile(
 
         if alt.shift is None:
             continue
-        foreign = [m for m in materials if m.country is None or m.country != country]
         finding = _evaluate(rule, alt, good, [m.code for m in foreign])
         findings.append(finding)
         if finding.satisfied is True:

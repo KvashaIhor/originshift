@@ -16,6 +16,7 @@ from pathlib import Path
 from .grammar import (
     Alternative,
     CodeRange,
+    QualifiedExclusion,
     Rule,
     Shift,
     SourceCondition,
@@ -75,6 +76,12 @@ def _alternative(d: dict) -> Alternative:
                 for c in s["sources"]
             ],
             excluded=[_range(r) for r in s["excluded"]],
+            excluded_when=[
+                QualifiedExclusion(
+                    ranges=[_range(r) for r in q["ranges"]], when=q["when"]
+                )
+                for q in s.get("excluded_when", ())
+            ],
             excluded_descriptions=s["excluded_descriptions"],
             provisos=s["provisos"],
             raw_source=s["raw_source"],

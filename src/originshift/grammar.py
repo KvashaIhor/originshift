@@ -154,13 +154,30 @@ class SourceCondition:
 
 
 @dataclass
+class QualifiedExclusion:
+    """An exception that bites only when something is also true.
+
+    "except from subheading 8708.95 **when resulting from a simple assembly**"
+    does not bar 8708.95 outright — it bars it where the change was a simple
+    assembly. Applied absolutely, the shift falsely fails and 102.11(b) then
+    hands origin to the wrong country.
+    """
+
+    ranges: list[CodeRange] = field(default_factory=list)
+    #: The qualifier, verbatim. It is a fact about the operation, not a code.
+    when: str = ""
+
+
+@dataclass
 class Shift:
     """A tariff-shift requirement: where the input material may come from."""
 
     #: Disjunction — the shift is met if any one source condition is met.
     sources: list[SourceCondition] = field(default_factory=list)
-    #: Ranges the input may not come from: "except from heading 5208 through 5212".
+    #: Ranges the input may not come from outright.
     excluded: list[CodeRange] = field(default_factory=list)
+    #: Ranges excepted only under a stated condition.
+    excluded_when: list[QualifiedExclusion] = field(default_factory=list)
     #: Exceptions the nomenclature cannot express, e.g. "except from formed uppers"
     #: or "except a change resulting from a simple assembly". Kept verbatim: they
     #: bind legally, so a resolver must not treat their absence as satisfaction.
@@ -177,6 +194,7 @@ class Shift:
             and all(s.decidable_from_codes for s in self.sources)
             and not self.excluded_descriptions
             and not self.provisos
+            and not self.excluded_when
         )
 
 
@@ -231,6 +249,8 @@ class Rule:
                 alt["shift"]["excluded"] = [
                     str(CodeRange(**r)) for r in alt["shift"]["excluded"]
                 ]
+                for q in alt["shift"]["excluded_when"]:
+                    q["ranges"] = [str(CodeRange(**r)) for r in q["ranges"]]
                 for src in alt["shift"]["sources"]:
                     src["ranges"] = [str(CodeRange(**r)) for r in src["ranges"]]
             if alt.get("target"):

@@ -652,6 +652,7 @@ def agreement(corpus: Corpus | None = None, path: Path | None = None) -> list[Ag
             good=case["good"],
             inputs=materials,
             country="XX",  # the operation's country; immaterial to the shift
+            qualifiers=case.get("qualifiers"),
             corpus=corpus,
         )
         ours, detail = _our_verdict(result)

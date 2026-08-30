@@ -179,3 +179,32 @@ def test_textile_chapters_are_absent_because_102_21_governs_them(rules):
     }
     assert not covered & {f"{c:02d}" for c in range(50, 64)}
     assert "84" in covered and "01" in covered
+
+
+def test_a_qualified_exception_keeps_its_qualifier(by_htsus):
+    """"except from subheading 8301.60 when that change is pursuant to GRI 2(a)"
+    does not bar 8301.60 outright.
+
+    Keeping the code and dropping the qualifier turned a conditional bar into an
+    absolute one: the shift falsely failed, and 102.11(b) then handed origin to
+    the country of a material the rule in fact allows. 102.18(a) is explicit
+    that the exception bites only "if the change results from the assembly of
+    parts into an incomplete or unfinished good".
+    """
+    (alt,) = by_htsus["8301.10-8301.50"].alternatives
+    assert alt.shift.excluded == []          # not an absolute bar
+    (qualified,) = alt.shift.excluded_when
+    assert [str(r) for r in qualified.ranges] == ["8301.60"]
+    assert "General Rule of Interpretation 2(a)" in qualified.when
+
+
+def test_qualified_and_absolute_exceptions_are_told_apart(rules):
+    absolute = qualified = 0
+    for rule in rules:
+        for alt in rule.alternatives:
+            if not alt.shift:
+                continue
+            absolute += bool(alt.shift.excluded)
+            qualified += bool(alt.shift.excluded_when)
+    assert qualified > 80        # "when resulting from a simple assembly", GRI 2(a)
+    assert absolute > 400        # the ordinary kind still outnumbers them

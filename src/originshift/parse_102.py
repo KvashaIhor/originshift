@@ -20,6 +20,7 @@ from collections import Counter
 from .grammar import (
     Alternative,
     CodeRange,
+    QualifiedExclusion,
     Rule,
     Shift,
     SourceCondition,
@@ -176,6 +177,40 @@ def _source_condition(
     return None  # a described good, e.g. "any other product", "feathers or down"
 
 
+#: An exception carrying its own condition: "except from heading 8501 when
+#: resulting from simple assembly", "except from subheading X when that change
+#: is pursuant to General Rule of Interpretation 2(a)".
+_QUALIFIER = re.compile(
+    r"\s*(?P<when>(?:when|if|where)\b.+)$", re.I | re.S
+)
+
+
+def _split_qualified(exceptions: str) -> tuple[str, list[QualifiedExclusion]]:
+    """Separate exceptions that bite outright from those that bite on a condition.
+
+    102.18(a) is explicit that a GRI 2(a) exception applies only "if the change
+    results from the assembly of parts into an incomplete or unfinished good".
+    Keeping the codes and dropping the qualifier turns a conditional bar into an
+    absolute one, and the shift then fails for changes the rule allows.
+    """
+    plain: list[str] = []
+    qualified: list[QualifiedExclusion] = []
+    for clause in re.split(r",?\s*(?:and\s+)?except\b", exceptions, flags=re.I):
+        if not clause.strip():
+            continue
+        m = _QUALIFIER.search(clause)
+        if m and _ranges(clause[: m.start()]):
+            qualified.append(
+                QualifiedExclusion(
+                    ranges=_ranges(clause[: m.start()]),
+                    when=m.group("when").strip(" ,."),
+                )
+            )
+        else:
+            plain.append(clause)
+    return " except ".join(plain), qualified
+
+
 def _split_provisos(source: str) -> tuple[str, list[str]]:
     """Peel off 'provided that ...' conditions, which codes cannot express."""
     provisos: list[str] = []
@@ -286,6 +321,7 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
         if exm
         else (source_text, "")
     )
+    unconditional_text, qualified = _split_qualified(exceptions_text)
 
     # "from any product other than edible meals and flours of Chapter 2" excludes
     # those goods; it does not require the input to come from Chapter 2. Peel the
@@ -296,10 +332,13 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
         carve_out = base[om.end() :].strip(" ,.")
         base = base[: om.start()].strip(" ,")
 
-    excluded = _ranges(exceptions_text)
+    excluded = _ranges(unconditional_text)
     # An exception with no codes in it is a description, and still binds.
+    # Only where nothing at all was captured — a qualified exception is now
+    # modelled, not left as an unreadable description.
+    captured = bool(excluded) or bool(qualified)
     excluded_desc = (
-        [] if excluded or not exceptions_text.strip() else [exceptions_text.strip(" ,.")]
+        [] if captured or not exceptions_text.strip() else [exceptions_text.strip(" ,.")]
     )
     if carve_out:
         excluded_desc.append(carve_out)
@@ -311,6 +350,7 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
     shift = Shift(
         sources=sources,
         excluded=excluded,
+        excluded_when=qualified,
         excluded_descriptions=excluded_desc,
         provisos=provisos,
         raw_source=source_text.strip(),

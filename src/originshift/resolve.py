@@ -125,7 +125,12 @@ def _covered(material: str, ranges: list[CodeRange]) -> CodeRange | None:
     return next((r for r in ranges if r.contains(material)), None)
 
 
-def _check_material(alt: Alternative, good: str, material: str) -> Check:
+def _check_material(
+    alt: Alternative,
+    good: str,
+    material: str,
+    qualifiers: dict[str, bool] | None = None,
+) -> Check:
     """Test one input material against a shift's source conditions."""
     shift = alt.shift
     assert shift is not None
@@ -133,6 +138,26 @@ def _check_material(alt: Alternative, good: str, material: str) -> Check:
     hit = _covered(material, shift.excluded)
     if hit is not None:
         return Check(material, "excluded", f"excluded from the shift by {hit}")
+
+    # An exception that carries its own condition bars the material only where
+    # that condition holds. Applying it outright fails a change the rule allows,
+    # and 102.11(b) then hands origin to the wrong country.
+    for qualified in shift.excluded_when:
+        hit = _covered(material, qualified.ranges)
+        if hit is None:
+            continue
+        settled = qualifiers.get(qualified.when.lower()) if qualifiers else None
+        if settled is True:
+            return Check(
+                material, "excluded", f"excluded by {hit} {qualified.when}"
+            )
+        if settled is None:
+            return Check(
+                material,
+                "needs_judgement",
+                f"{hit} is excepted only {qualified.when}, and whether it was is "
+                f"not something the classifications say",
+            )
 
     undecidable: list[str] = []
     for source in shift.sources:
@@ -176,7 +201,13 @@ def _fmt(ranges: list[CodeRange]) -> str:
     return ", ".join(str(r) for r in ranges)
 
 
-def _evaluate(rule: Rule, alt: Alternative, good: str, materials: list[str]) -> Finding:
+def _evaluate(
+    rule: Rule,
+    alt: Alternative,
+    good: str,
+    materials: list[str],
+    qualifiers: dict[str, bool] | None = None,
+) -> Finding:
     #: What each unstructured reason actually asks the user for.
     ASKS = {
         "descriptive_source": (
@@ -209,7 +240,7 @@ def _evaluate(rule: Rule, alt: Alternative, good: str, materials: list[str]) -> 
             unverifiable=asks,
         )
 
-    checks = [_check_material(alt, good, m) for m in materials]
+    checks = [_check_material(alt, good, m, qualifiers) for m in materials]
     unverifiable = [
         f"the rule requires: {p}" for p in alt.shift.provisos
     ] + [f"the rule excludes: {d}" for d in alt.shift.excluded_descriptions]
@@ -294,7 +325,11 @@ def _de_minimis(
 
 
 def _essential_character(
-    rule: Rule, alt: Alternative, good: str, materials: list[Material]
+    rule: Rule,
+    alt: Alternative,
+    good: str,
+    materials: list[Material],
+    qualifiers: dict[str, bool] | None = None,
 ) -> tuple[list[Material], list[Check]]:
     """The materials 102.18(b)(1) lets you consider for essential character.
 
@@ -308,7 +343,7 @@ def _essential_character(
     considered: list[Material] = []
     checks: list[Check] = []
     for material in materials:
-        check = _check_material(alt, good, material.code)
+        check = _check_material(alt, good, material.code, qualifiers)
         checks.append(check)
         if check.outcome in ("not_shifted", "excluded"):
             considered.append(material)
@@ -326,6 +361,7 @@ def resolve(
     operation: Operation | None = None,
     good_weight: float | None = None,
     textile: "TextileFacts | None" = None,
+    qualifiers: dict[str, bool] | None = None,
     regime: str = "US",
     corpus: Corpus | None = None,
 ) -> OriginResult:
@@ -456,7 +492,9 @@ def resolve(
         return base
 
     codes = [m.code for m in foreign]
-    findings = [_evaluate(rule, alt, good, codes) for rule, alt in candidates]
+    findings = [
+        _evaluate(rule, alt, good, codes, qualifiers) for rule, alt in candidates
+    ]
 
     # 102.11(a)(3)
     met = [f for f in findings if f.satisfied is True]
@@ -560,7 +598,7 @@ def resolve(
     rule, alt = next(
         ((r, a) for r, a in candidates if r.rule_id == first.rule_id), candidates[0]
     )
-    considered, _ = _essential_character(rule, alt, good, materials)
+    considered, _ = _essential_character(rule, alt, good, materials, qualifiers)
 
     if len(considered) == 1:
         # 102.18(b)(1)(iii): where only one material sits in a provision from

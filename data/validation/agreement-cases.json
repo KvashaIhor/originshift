@@ -343,11 +343,14 @@
     "8714"
    ],
    "cbp": "not_met",
-   "note": "components of 8714; rule excepts them where GRI 2(a) applies",
+   "note": "components of 8714; the rule excepts them where GRI 2(a) applies, and CBP found it did \u2014 'undergo a change in tariff classification as a result of GRI 2(a), and as a result do not satisfy the rule'",
    "origins": {
     "8714": "CN"
    },
-   "cbp_country": "CN"
+   "cbp_country": "CN",
+   "qualifiers": {
+    "when that change is pursuant to general rule of interpretation 2(a)": true
+   }
   }
  ],
  "country_cases": "Where a case carries `origins` and `cbp_country`, the country CBP held is compared with the one the resolver reaches. Cases were excluded where the ruling covers several scenarios or products (H332368, H320969, 735447), where the essential-character material is commingled across countries so 102.11(b)(2) applies (H332368 scenario 2), where CBP reached the answer by a paragraph other than 102.11(b) (558944, 559431), and where the good is a set governed by 102.11(c) (560081)."
