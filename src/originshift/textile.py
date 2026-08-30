@@ -630,10 +630,10 @@ def resolve_textile(
             satisfied=None,
             reason="insufficient_information",
             needed=(
-                "102.21(c)(2) turns on a requirement in (e)(1) that is not a code: "
-                + "; ".join(u for u in unmet_conditions if u)
-                + ". Supply it as a TextileFacts condition or process, or give the "
-                "production facts (c)(3) to (c)(5) need"
+                "102.21(c)(2) turns on a requirement in (e)(1) that no "
+                "classification carries: "
+                + "; ".join(dict.fromkeys(u for u in unmet_conditions if u))
+                + ". Give it, or record that (c)(2) does not settle this good"
             ),
             vintage=corpus.vintage,
             trace=findings,

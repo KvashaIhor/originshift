@@ -1,0 +1,6 @@
+id,good,country,materials,material_countries,fibre,knit_to_shape,component_parts,assembled_in,fabric_made_in,knit_in,most_important_process_in
+A-2001,6203.42,VN,5208.11,CN,cotton,no,yes,VN,,,
+A-2002,6110.20,VN,5205.11,CN,cotton,yes,,,,BD,
+A-2003,6301.30,VN,5205.11,CN,other,no,no,,IN,,
+A-2004,6214.10,VN,5007.10,CN,other,no,no,,,,
+A-2005,6203.42,VN,5208.11,CN,,,,,,,

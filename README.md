@@ -6,17 +6,19 @@ legally from?" and cites the rule it used.
 Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage.
 **The smaller one has far the wider reach:**
 
-| Corpus | Governs | Rules | Parsed into structure | Answerable from codes alone |
+| Corpus | Governs | Rules | You supply | Scored against CBP |
 |---|---|---|---|---|
-| **102.21** | **Every textile and apparel import, from any country** — 102.21(a) controls their origin *"for purposes of the Customs laws"*, except as to Israel | 101 (+1 overlay) | 31.8% | **11.9%** |
-| **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 | 99.0% | **70.0%** |
+| **102.21** | **Every textile and apparel import, from any country** — 102.21(a) controls their origin *"for purposes of the Customs laws"*, except as to Israel | 101 (+1 overlay) | codes **and production facts** | **13/13** country, 13/13 paragraph |
+| **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 | codes | **22/22** shift, 8/8 country |
 
-Those two columns are not the same claim, and only the second one is about what
-you get back. **Parsed into structure** is how much of the table the parser read
-completely. **Answerable from codes alone** is how much of it yields an answer
-without a fact the classifications do not carry — a value threshold, a named
-process, whether a good is of cotton. The rest abstains and says which fact it
-needs, which is the point.
+**The two halves ask different things of you, and it is worth knowing which you
+are using.** For 102.20 you give classifications and get a country. For 102.21
+you give classifications *and* facts about production — the fibre, whether the
+good was knit to shape, where it was assembled — because that is what the
+regulation turns on. Those are spec-sheet facts, not exotic ones, but they have
+to reach the tool. Give a garment nothing but codes and you will get
+`unresolved` back with a list of what it needs, which is correct and not very
+useful.
 
 If you import apparel, **102.21 is why this exists** — a sector where origin
 fraud, transshipment and forced-labour enforcement are all live. If you file
@@ -249,6 +251,28 @@ this say about last quarter's entries", not "what about this one good".
 | `wholly_obtained`, `is_set` | flags |
 | `operation` | a 102.17 operation, e.g. `simple_packing` |
 | `corpus` | force `102.20` or `102.21`; otherwise whichever has a rule |
+| `good_weight`, `material_weights` | for the 102.13(c) textile allowance, which is by weight |
+
+For textiles and apparel, named for what is on a spec sheet rather than for the
+rule they feed:
+
+| Column | |
+|---|---|
+| `fibre` | `cotton`, `wool`, `cotton-blend` or `other` — decides whether 102.21(e)(1) or (e)(2) governs |
+| `knit_to_shape` | yes / no |
+| `component_parts` | yes / no — two or more |
+| `knit_in`, `assembled_in`, `fabric_made_in` | where each operation happened |
+| `dyed_printed_in`, `finishing` | for 102.21(e)(2)(i), which needs two or more named finishing operations |
+| `most_important_process_in`, `last_important_process_in` | 102.21(c)(4) and (c)(5) |
+| `c2_settled` | yes, where you have found that 102.21(c)(2) does not settle the good |
+
+```
+originshift resolve --good 6203.42 --inputs 5208.11 --country VN \
+    --fibre cotton --component-parts yes --assembled-in VN
+#   6203.42  →  RESOLVED   VN   102.21(e)(1)/6201-6208
+```
+
+There is a worked `examples/apparel.csv`.
 
 Every output row carries `status`, `origin`, `basis`, `rule_id`, `rule_text`,
 `needed`, `vintage` and `source` — so a determination in a spreadsheet is as
@@ -323,8 +347,9 @@ one of a short list:
 `ambiguous` is rarer and means two rules both apply and the corpus does not rank
 them. Both are returned with their text.
 
-**For textiles, `unresolved` is the normal case, by design.** Only 11.9% of
-102.21 yields an answer from classifications alone, because textile origin turns on
+**For textiles, `unresolved` without production facts is the normal case, by
+design.** Only 11.9% of 102.21 needs nothing but a classification, because
+textile origin turns on
 fabric-making, knitting and assembly. So for chapters 50–63 this is less an
 oracle than a precise statement of *what you must establish*, drawn from the
 rule that applies to your code. That is worth having: the alternative is reading
@@ -470,10 +495,16 @@ happened, whether it was knit to shape. So for chapters 50–63 the tool is less
 an oracle than a precise statement of *what you must establish*, drawn from the
 rule that applies to your code.
 
-| Corpus | Parsed into structure | Answerable from codes alone |
+| Corpus | Parsed into structure | Decidable on codes with no other fact |
 |---|---|---|
 | 102.20 | 1,441 / 1,455 = 99.0% | 1,018 / 1,455 = 70.0% |
 | 102.21 | 56 / 176 = 31.8% | 21 / 176 = 11.9% |
+
+Read the second column as a property of the **rule table**, not a measure of the
+tool. It counts rules that need nothing beyond a classification — and for
+textiles almost none do, because 102.21 is written around processes. It is not
+how often you get an answer: supply what the rules ask for and the curated cases
+resolve 13 of 13. It is how much of the work the codes can do on their own.
 
 ## Development
 

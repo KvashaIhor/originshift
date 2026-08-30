@@ -21,7 +21,12 @@ from pathlib import Path
 from .corpus import Corpus
 from .resolve import Material, OriginResult, resolve
 
-#: Columns a batch file may carry. Only `good` and `country` are required.
+#: Columns a batch file may carry. Only `good` is required.
+#:
+#: The textile columns are named for what is on a spec sheet or a purchase
+#: order, not for the fields they set: a compliance analyst knows the fibre and
+#: where the garment was assembled, and should not have to know that one of
+#: those feeds 102.21(e)(2) and the other feeds both (e)(1) and (c)(3)(ii).
 INPUT_COLUMNS = (
     "id",
     "good",
@@ -29,12 +34,30 @@ INPUT_COLUMNS = (
     "materials",
     "material_countries",
     "material_values",
+    "material_weights",
     "good_value",
+    "good_weight",
     "wholly_obtained",
     "is_set",
     "operation",
     "corpus",
+    # textiles and apparel, 102.21
+    "fibre",
+    "knit_to_shape",
+    "component_parts",
+    "knit_in",
+    "assembled_in",
+    "fabric_made_in",
+    "dyed_printed_in",
+    "finishing",
+    "most_important_process_in",
+    "last_important_process_in",
+    "c2_settled",
 )
+
+#: "of cotton", "of wool" or a blend 16% or more cotton keeps a good with
+#: 102.21(e)(1); anything else goes to (e)(2). One question, three limbs.
+_EXCEPTED_FIBRES = {"cotton", "wool", "cotton-blend", "cotton blend"}
 
 OUTPUT_COLUMNS = (
     "id",
@@ -64,16 +87,62 @@ def _materials(row: dict) -> list[Material]:
     codes = _split(row.get("materials"))
     countries = _split(row.get("material_countries"))
     values = _split(row.get("material_values"))
-    out: list[Material] = []
-    for i, code in enumerate(codes):
-        out.append(
-            Material(
-                code=code,
-                country=countries[i] if i < len(countries) else None,
-                value=float(values[i]) if i < len(values) and values[i] else None,
-            )
+    weights = _split(row.get("material_weights"))
+
+    def at(seq: list[str], i: int) -> float | None:
+        return float(seq[i]) if i < len(seq) and seq[i] else None
+
+    return [
+        Material(
+            code=code,
+            country=countries[i] if i < len(countries) else None,
+            value=at(values, i),
+            weight=at(weights, i),
         )
-    return out
+        for i, code in enumerate(codes)
+    ]
+
+
+def _textile_facts(row: dict):
+    """Build the 102.21 facts from the spec-sheet columns, or None if none given."""
+    from .textile import TextileFacts
+
+    given = {k: (row.get(k) or "").strip() for k in (
+        "fibre", "knit_to_shape", "component_parts", "knit_in", "assembled_in",
+        "fabric_made_in", "dyed_printed_in", "finishing",
+        "most_important_process_in", "last_important_process_in", "c2_settled",
+    )}
+    if not any(given.values()):
+        return None
+
+    conditions: dict[str, bool] = {}
+    if given["knit_to_shape"]:
+        conditions["knit to shape"] = _flag(given["knit_to_shape"])
+    if given["component_parts"]:
+        conditions["two or more component parts"] = _flag(given["component_parts"])
+
+    # One column feeds the rule wherever the regulation asks for that operation.
+    process_in: dict[str, str] = {}
+    if given["fabric_made_in"]:
+        process_in["fabric-making process"] = given["fabric_made_in"]
+    if given["knit_in"]:
+        process_in["knit"] = given["knit_in"]
+    if given["assembled_in"]:
+        process_in["wholly assembled"] = given["assembled_in"]
+
+    fibre = given["fibre"].lower()
+    return TextileFacts(
+        excepted_fibre=(fibre in _EXCEPTED_FIBRES) if fibre else None,
+        conditions=conditions,
+        process_in=process_in,
+        knit_to_shape_in=given["knit_in"] or None,
+        wholly_assembled_in=given["assembled_in"] or None,
+        most_important_process_in=given["most_important_process_in"] or None,
+        last_important_process_in=given["last_important_process_in"] or None,
+        dyed_and_printed_in=given["dyed_printed_in"] or None,
+        finishing_operations=tuple(_split(given["finishing"])),
+        c2_does_not_determine=_flag(given["c2_settled"]),
+    )
 
 
 def _corpora(names: list[str]) -> dict[str, Corpus]:
@@ -118,9 +187,11 @@ def _resolve_row(row: dict, corpora: dict[str, Corpus]) -> tuple[OriginResult, C
         inputs=_materials(row),
         country=(row.get("country") or "").strip(),
         good_value=float(row["good_value"]) if row.get("good_value") else None,
+        good_weight=float(row["good_weight"]) if row.get("good_weight") else None,
         wholly_obtained=_flag(row.get("wholly_obtained")),
         is_set=_flag(row.get("is_set")),
         operation=(row.get("operation") or "").strip() or None,
+        textile=_textile_facts(row),
         corpus=corpus,
     )
     return result, corpus
@@ -181,11 +252,24 @@ def cmd_resolve(args: argparse.Namespace) -> int:
         "materials": ",".join(args.inputs or []),
         "material_countries": ",".join(args.material_countries or []),
         "material_values": ",".join(args.material_values or []),
+        "material_weights": ",".join(args.material_weights or []),
         "good_value": args.good_value or "",
+        "good_weight": args.good_weight or "",
         "wholly_obtained": str(args.wholly_obtained),
         "is_set": str(args.is_set),
         "operation": args.operation or "",
         "corpus": args.corpus or "",
+        "fibre": args.fibre or "",
+        "knit_to_shape": args.knit_to_shape or "",
+        "component_parts": args.component_parts or "",
+        "knit_in": args.knit_in or "",
+        "assembled_in": args.assembled_in or "",
+        "fabric_made_in": args.fabric_made_in or "",
+        "dyed_printed_in": args.dyed_printed_in or "",
+        "finishing": ",".join(args.finishing or []),
+        "most_important_process_in": args.most_important_process_in or "",
+        "last_important_process_in": args.last_important_process_in or "",
+        "c2_settled": str(args.c2_settled),
     }
     result, corpus = _resolve_row(row, corpora)
     _print(result, corpus, args.good)
@@ -309,6 +393,32 @@ def build_parser() -> argparse.ArgumentParser:
     r.add_argument("--is-set", action="store_true")
     r.add_argument("--operation", help="a 102.17 operation, e.g. simple_packing")
     r.add_argument("--corpus", choices=["102.20", "102.21"])
+    r.add_argument("--material-weights", type=lambda v: _split(v))
+    r.add_argument("--good-weight")
+    t = r.add_argument_group(
+        "textiles and apparel (102.21)",
+        "Facts a classification does not carry. Without them an apparel good "
+        "can only ever come back unresolved, naming which of these it needs.",
+    )
+    t.add_argument("--fibre", help="cotton | wool | cotton-blend | other")
+    t.add_argument("--knit-to-shape", help="yes | no")
+    t.add_argument("--component-parts", help="yes | no — two or more")
+    t.add_argument("--knit-in", metavar="COUNTRY")
+    t.add_argument("--assembled-in", metavar="COUNTRY")
+    t.add_argument("--fabric-made-in", metavar="COUNTRY")
+    t.add_argument("--dyed-printed-in", metavar="COUNTRY")
+    t.add_argument(
+        "--finishing",
+        type=lambda v: _split(v),
+        help="finishing operations accompanying the dyeing and printing",
+    )
+    t.add_argument("--most-important-process-in", metavar="COUNTRY")
+    t.add_argument("--last-important-process-in", metavar="COUNTRY")
+    t.add_argument(
+        "--c2-settled",
+        action="store_true",
+        help="you have found that 102.21(c)(2) does not determine origin",
+    )
     r.add_argument("--csv", help="a file of entries; needs a 'good' column")
     r.add_argument("--out", help="write results here instead of stdout")
     r.set_defaults(func=cmd_resolve)

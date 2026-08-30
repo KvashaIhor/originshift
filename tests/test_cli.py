@@ -132,3 +132,64 @@ def test_corpora_lists_what_is_built_and_what_was_overlaid(capsys):
     assert code == 0
     assert "19-CFR-102.20" in out.out and "19-CFR-102.21" in out.out
     assert "102.21(e)(1)/6201-6208" in out.out
+
+
+# ---- textiles: the CLI could not supply a single fact 102.21 turns on --------
+
+
+def test_apparel_resolves_through_the_cli(capsys):
+    """The README leads with apparel, and for apparel the CLI could only ever
+    return unresolved — there was no flag for fibre, knitting or assembly."""
+    code, out = run(
+        [
+            "resolve", "--good", "6203.42", "--inputs", "5208.11", "--country", "VN",
+            "--fibre", "cotton", "--component-parts", "yes", "--assembled-in", "VN",
+        ],
+        capsys,
+    )
+    assert code == 0
+    assert "RESOLVED" in out.out
+    assert "102.21(e)(1)/6201-6208" in out.out
+
+
+def test_the_fibre_flag_chooses_between_the_two_tables(capsys):
+    """"cotton" keeps a scarf of 6214 with (e)(1); anything else is (e)(2)'s."""
+    _, cotton = run(
+        ["resolve", "--good", "6214.20", "--inputs", "5208.11", "--country", "VN",
+         "--fibre", "cotton", "--fabric-made-in", "IN"], capsys,
+    )
+    assert "102.21(e)(1)" in cotton.out
+
+    _, silk = run(
+        ["resolve", "--good", "6214.10", "--inputs", "5007.10", "--country", "VN",
+         "--fibre", "other", "--dyed-printed-in", "IT",
+         "--finishing", "bleaching,napping"], capsys,
+    )
+    assert "102.21(e)(2)(i)" in silk.out
+
+
+def test_an_apparel_batch_resolves_and_says_what_is_missing(tmp_path, capsys):
+    from pathlib import Path
+
+    example = Path(__file__).resolve().parents[1] / "examples" / "apparel.csv"
+    if not example.exists():
+        pytest.skip("example not present")
+    out_path = tmp_path / "r.csv"
+    code, _ = run(["resolve", "--csv", str(example), "--out", str(out_path)], capsys)
+    assert code == 0
+
+    rows = {r["id"]: r for r in csv.DictReader(out_path.open(encoding="utf-8"))}
+    assert rows["A-2001"]["origin"] == "VN"   # wholly assembled
+    assert rows["A-2002"]["origin"] == "BD"   # knit to shape
+    assert rows["A-2003"]["origin"] == "IN"   # fabric-making
+    # the row with no facts given must say which it needs, not fail silently
+    assert rows["A-2005"]["status"] == "unresolved"
+    assert "component parts" in rows["A-2005"]["needed"]
+
+
+def test_the_needed_message_does_not_speak_python_at_a_cli_user(capsys):
+    _, out = run(
+        ["resolve", "--good", "6203.42", "--inputs", "5208.11", "--country", "VN"],
+        capsys,
+    )
+    assert "TextileFacts" not in out.out
