@@ -81,3 +81,31 @@ def test_the_corpus_round_trips_through_its_own_loader(corpus, corpus_102_21):
         raw = json.loads(path.read_text(encoding="utf-8"))
         out = [r.to_dict() for r in Corpus.from_dict(raw).rules]
         assert out == raw["rules"], f"{which} loses fields on load"
+
+
+def test_writable_paths_never_land_inside_an_installed_package():
+    """Four modules anchored on Path(__file__).parents[2], which from a wheel
+    resolves into the virtualenv's lib directory: the documented commands raised
+    FileNotFoundError, and anything that wrote would have written into
+    site-packages."""
+    from originshift import paths
+
+    for target in (paths.CACHE, paths.STAGING):
+        assert paths.PACKAGE_DATA not in target.parents, target
+        assert "site-packages" not in str(target)
+    # read-only data ships with the package and is addressed inside it
+    assert paths.VALIDATION.is_relative_to(paths.PACKAGE_DATA)
+
+
+def test_the_rulings_guard_says_what_to_run():
+    """Returning None for a missing index meant run(only=None), which scores
+    every cached ruling — a checkout without the index printed different, wrong
+    numbers with nothing to say they were wrong."""
+    from originshift import validate
+
+    assert issubclass(validate.RulingsNotFetched, FileNotFoundError)
+    import inspect
+
+    source = inspect.getsource(validate.ruling_set)
+    assert "raise RulingsNotFetched" in source
+    assert "--fetch" in source

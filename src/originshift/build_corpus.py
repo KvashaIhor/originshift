@@ -15,12 +15,12 @@ from collections import Counter
 from datetime import date
 from pathlib import Path
 
+from . import paths
 from . import parse_102, parse_102_21, sources
 from .grammar import Rule, digits
 
-ROOT = Path(__file__).resolve().parents[2]
 #: Written inside the package, so a built corpus ships with an install.
-OUT = Path(__file__).resolve().parent / "data" / "corpus"
+OUT = paths.PACKAGE_DATA / "corpus"
 
 #: 102.20 is written against the HTSUS, which tracks an HS edition. Stated
 #: explicitly so a consumer can tell whether the corpus matches their codes.

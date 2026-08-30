@@ -81,8 +81,8 @@ def test_a_code_outside_the_corpus_is_reported_as_absent(corpus):
 def report(corpus):
     from originshift import sources
 
-    if not (sources.CACHE / "cross").exists():
-        pytest.skip("CROSS rulings not cached")
+    if not validate.rulings_available("102.20"):
+        pytest.skip("CROSS rulings not fetched; run validate --fetch")
     # The cache holds both parts' rulings; score them apart.
     return validate.run(corpus, only=validate.ruling_set("102.20"))
 
@@ -111,8 +111,8 @@ def test_agreement_is_strongest_on_rulings_of_the_corpus_own_era(report):
 def report_21(corpus_102_21):
     from originshift import parse_102_21, sources
 
-    if not validate.ruling_set("102.21"):
-        pytest.skip("102.21 rulings not cached")
+    if not validate.rulings_available("102.21"):
+        pytest.skip("CROSS rulings not fetched; run validate --fetch")
     return validate.run(
         corpus_102_21,
         attribution=validate.ATTRIBUTION_21,
@@ -148,6 +148,8 @@ def test_the_hierarchy_restatements_are_not_scored_as_e1_rules(corpus_102_21):
 def test_where_cbp_reached_c2_this_corpus_can_too(corpus_102_21):
     """The failure that matters: a requirement CBP satisfied that this corpus
     offers no route to. Before the (c)(2) process fix this was 2 of 26."""
+    if not validate.rulings_available("102.21"):
+        pytest.skip("CROSS rulings not fetched; run validate --fetch")
     cases = validate.steps(corpus_102_21)
     two = [c for c in cases if c.step == "2" and c.reachable is not None]
     assert len(two) >= 20
@@ -196,9 +198,8 @@ def test_e2_falls_through_when_it_does_not_determine(corpus_102_21):
 
 @pytest.fixture(scope="module")
 def textile_cases(corpus_102_21):
-    path = validate.CASES / "textile-cases.json"
-    if not path.exists():
-        pytest.skip("curated textile cases not present")
+    if not validate.rulings_available("102.21"):
+        pytest.skip("CROSS rulings not fetched; run validate --fetch")
     return validate.textiles(corpus_102_21)
 
 

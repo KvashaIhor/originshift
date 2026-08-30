@@ -1,9 +1,16 @@
 __pycache__/
 *.pyc
 .venv/
-data/cache/*.xml
-data/cache/*.json
-data/staging/
 .pytest_cache/
 *.egg-info/
 dist/
+build/
+
+# Source documents are fetched, not committed — except the two that the test
+# suite needs to run at all, which are small and pinned:
+#   data/cache/cfr-19-102-<date>.xml   the regulation the corpora are built from
+#   data/cache/cross-hq-*-index.json   which rulings the validation set is drawn from
+# The rulings themselves are ~12 MB the package never reads; fetch them with
+#   python -m originshift.validate --fetch
+data/cache/cross/
+data/staging/

@@ -457,14 +457,25 @@ rule that applies to your code.
 
 ```
 pip install -e ".[dev,ingest]"
-pytest
+pytest                                 # passes on a fresh clone
+python -m originshift.validate --fetch # download the CROSS rulings (~5 min)
+pytest                                 # now including the validation measures
 python -m originshift.build_corpus     # rebuild both corpora from the eCFR
 python -m originshift.validate         # score them against CBP's rulings
 ```
 
-Built corpora and reviewed overlays live in `src/originshift/data/` and ship
-with the package, so an install works without a checkout. Point
-`ORIGINSHIFT_OVERLAYS` at a directory to load your own alongside them.
+The 866 CROSS rulings the validation measures are scored over are **not
+committed** — they are 12 MB the package never reads. Until they are fetched
+those tests skip, saying so. What *is* committed is the pinned regulation
+snapshot and the two ruling indices, so everything else runs on a clone.
+
+Built corpora, reviewed overlays and the curated validation cases live in
+`src/originshift/data/` and ship with the package, so an install works without a
+checkout. Anything written at runtime — fetched sources, ingest staging — goes
+to the repository's `data/` in a checkout and to your cache directory
+(`XDG_CACHE_HOME`, else `~/.cache/originshift`) from an install; never inside
+the installed package. Point `ORIGINSHIFT_OVERLAYS` at a directory to load your
+own overlays alongside the shipped ones.
 
 ## Releasing
 

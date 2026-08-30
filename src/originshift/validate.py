@@ -21,6 +21,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Literal
 
+from . import paths
 from . import parse_102, sources
 from .corpus import Corpus
 from .grammar import Alternative
@@ -83,12 +84,72 @@ ATTRIBUTION_21 = re.compile(r"102\.21")
 ATTRIBUTION_WINDOW = 400
 
 
-def ruling_set(part: str) -> set[str] | None:
-    """The rulings indexed for a part, so the two sets are scored apart."""
+class RulingsNotFetched(FileNotFoundError):
+    """The cached rulings a measurement needs are not present."""
+
+
+def ruling_set(part: str) -> set[str]:
+    """The rulings indexed for a part, so the two sets are scored apart.
+
+    Raises rather than returning None. Returning None meant `run(only=None)`,
+    which scores *every* cached ruling — so a checkout without the index printed
+    a different, wrong set of numbers with nothing to say they were wrong.
+    """
     index = sources.CACHE / f"cross-hq-{part}-index.json"
     if not index.exists():
-        return None
+        raise RulingsNotFetched(
+            f"no ruling index for {part} at {index}. Run "
+            f"python -m originshift.validate --fetch"
+        )
     return {r["rulingNumber"] for r in json.loads(index.read_text(encoding="utf-8"))}
+
+
+def rulings_available(part: str) -> bool:
+    """Are the rulings for a part actually on disk, not merely indexed?
+
+    The index is committed and small; the rulings are neither. A measurement
+    needs both, and checking only the index left tests failing on a clone with
+    an assertion about coverage rather than a word about what was missing.
+    """
+    try:
+        wanted = ruling_set(part)
+    except RulingsNotFetched:
+        return False
+    cached = sources.CACHE / "cross"
+    if not cached.is_dir():
+        return False
+    return sum(1 for n in wanted if (cached / f"{n}.json").exists()) >= len(wanted) * 0.9
+
+
+def fetch_rulings(parts: tuple[str, ...] = ("102.20", "102.21")) -> None:
+    """Download the CROSS rulings the validation measurements are scored over.
+
+    They are not committed: 789 files the package itself never reads.
+    """
+    import time
+
+    for part in parts:
+        index_path = sources.CACHE / f"cross-hq-{part}-index.json"
+        if not index_path.exists():
+            print(f"  indexing HQ rulings citing {part} …")
+            hits = sources.cross_search(part, collection="hq")
+            sources.CACHE.mkdir(parents=True, exist_ok=True)
+            index_path.write_text(json.dumps(hits, indent=1), encoding="utf-8")
+        hits = json.loads(index_path.read_text(encoding="utf-8"))
+        missing = [
+            h["rulingNumber"]
+            for h in hits
+            if not (sources.CACHE / "cross" / f"{h['rulingNumber']}.json").exists()
+        ]
+        print(f"  {part}: {len(hits)} indexed, {len(missing)} to fetch")
+        started = time.time()
+        for n, number in enumerate(missing, 1):
+            try:
+                sources.cross_ruling(number)
+            except Exception as exc:  # a public endpoint; one failure is not fatal
+                print(f"    {number}: {exc}")
+            if n % 100 == 0:
+                print(f"    {n}/{len(missing)}  {time.time() - started:.0f}s")
 
 
 def plain_text(ruling: dict) -> str:
@@ -523,11 +584,28 @@ def main() -> None:
 
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
+        "--fetch",
+        action="store_true",
+        help="download the CROSS rulings the measurements are scored over",
+    )
+    ap.add_argument(
         "--disagreements",
         action="store_true",
         help="print each disagreement in full, for reading",
     )
     args = ap.parse_args()
+
+    if args.fetch:
+        fetch_rulings()
+        return
+
+    missing = [p for p in ("102.20", "102.21") if not rulings_available(p)]
+    if missing:
+        print(
+            f"the CROSS rulings for {', '.join(missing)} are not cached.\n"
+            f"Run: python -m originshift.validate --fetch"
+        )
+        return
 
     print("=" * 74)
     print("AGREEMENT — does the resolver reach CBP's conclusion on the facts?")
@@ -594,7 +672,7 @@ def main() -> None:
 # Agreement: does the resolver reach CBP's conclusion on the facts?
 # --------------------------------------------------------------------------
 
-CASES = Path(__file__).resolve().parents[2] / "data" / "validation"
+CASES = paths.VALIDATION
 
 
 @dataclass

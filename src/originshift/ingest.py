@@ -30,12 +30,12 @@ from datetime import date
 from pathlib import Path
 from typing import Literal
 
+from . import paths
 from .grammar import CodeRange, Rule
 
-ROOT = Path(__file__).resolve().parents[2]
-STAGING = ROOT / "data" / "staging"
+STAGING = paths.STAGING
 #: Compiled overlays go where the corpus loader looks for them.
-OVERLAYS = Path(__file__).resolve().parent / "data" / "overlays"
+OVERLAYS = paths.PACKAGE_DATA / "overlays"
 
 Method = Literal["api", "file"]
 Extractor = Literal[

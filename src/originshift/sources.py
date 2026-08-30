@@ -7,6 +7,7 @@ later even after the source has been amended.
 
 from __future__ import annotations
 
+from . import paths
 import ssl
 import urllib.request
 from dataclasses import dataclass
@@ -14,7 +15,7 @@ from functools import cache
 from pathlib import Path
 
 ECFR = "https://www.ecfr.gov/api/versioner/v1"
-CACHE = Path(__file__).resolve().parents[2] / "data" / "cache"
+CACHE = paths.CACHE
 
 USER_AGENT = "originshift/0.0.1 (+https://github.com/originshift/originshift)"
 
