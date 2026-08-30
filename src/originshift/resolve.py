@@ -324,7 +324,7 @@ def _failing(finding: Finding) -> list[str]:
 def _de_minimis(
     finding: Finding,
     good: str,
-    materials: dict[str, Material],
+    materials: list[Material],
     good_value: float | None,
 ) -> tuple[bool | None, str]:
     """Apply 102.13 to the materials that failed the shift.
@@ -339,11 +339,15 @@ def _de_minimis(
             f"chapter {digits(good)[:2]}"
         )
 
-    failed = _failing(finding)
-    values = [materials[m].value for m in failed if m in materials]
+    # Every material with a failing code, not one per code: two materials can
+    # share a classification, and collapsing them counted one value twice and
+    # lost the other.
+    failed = set(_failing(finding))
+    contributing = [m for m in materials if m.code in failed]
+    values = [m.value for m in contributing]
     if good_value is None or any(v is None for v in values) or not values:
         return None, (
-            f"the value of {', '.join(failed)} as a share of the value of the "
+            f"the value of {', '.join(sorted(failed))} as a share of the value of the "
             f"good — under 102.13 they are disregarded at no more than "
             f"{limit:.0%}, and the shift would then be met"
         )
@@ -352,7 +356,7 @@ def _de_minimis(
     if share <= limit:
         return True, f"disregarded under 102.13 at {share:.1%} of the value of the good"
     return False, (
-        f"{', '.join(failed)} come to {share:.1%} of the value of the good, "
+        f"{', '.join(sorted(failed))} come to {share:.1%} of the value of the good, "
         f"above the {limit:.0%} allowed by 102.13"
     )
 
@@ -456,7 +460,6 @@ def _resolve(
         raise ValueError(f"corpus is regime {corpus.regime}, not {regime}")
 
     materials = [Material.of(m) for m in inputs]
-    by_code = {m.code: m for m in materials}
     base = OriginResult(status="unresolved", vintage=corpus.vintage)
 
     # 102.11 governs goods "other than textile and apparel products covered by
@@ -615,7 +618,7 @@ def _resolve(
     closest = min(near, key=lambda f: len(_failing(f))) if near else None
     de_minimis_note = ""
     if closest is not None:
-        carried, detail = _de_minimis(closest, good, by_code, good_value)
+        carried, detail = _de_minimis(closest, good, materials, good_value)
         if carried:
             return OriginResult(
                 status="resolved",
@@ -658,8 +661,23 @@ def _resolve(
         )
         return unresolved
 
+    # 102.18(b)(1) confines the candidates to materials in a provision from
+    # which change is not allowed "under the § 102.20 specific rule ...
+    # applicable to the good" — that is the alternative that actually blocked
+    # the change. Keying on rule_id alone took the rule's first alternative
+    # instead, so the result could report the change blocked by one material
+    # under alternative 2 and then nominate the materials alternative 2 says
+    # did shift.
     rule, alt = next(
-        ((r, a) for r, a in candidates if r.rule_id == first.rule_id), candidates[0]
+        (
+            (r, a)
+            for r, a in candidates
+            if r.rule_id == first.rule_id and a.text == first.rule_text
+        ),
+        next(
+            ((r, a) for r, a in candidates if r.rule_id == first.rule_id),
+            candidates[0],
+        ),
     )
     considered, _ = _essential_character(rule, alt, good, materials, qualifiers)
 

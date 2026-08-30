@@ -268,3 +268,38 @@ def test_an_unrecognised_role_is_refused_not_ignored(corpus):
             country="VN",
             corpus=corpus,
         )
+
+
+def test_two_materials_sharing_a_code_both_count_toward_de_minimis(corpus):
+    """They collapsed into a dict keyed on the code, so the last one's value was
+    counted twice and the other's lost. 2.0 + 4.0 of a 100.0 good is 6% and
+    within the allowance; counting 4.0 twice makes it 8% and outside it."""
+    r = resolve(
+        good="8708.29",
+        country="VN",
+        good_value=100.0,
+        inputs=[Material("8708.95", "BR", value=2.0), Material("8708.95", "TH", value=4.0)],
+        corpus=corpus,
+    )
+    assert r.basis == "tariff_shift_de_minimis"
+    assert "6.0%" in r.reason
+
+
+def test_essential_character_uses_the_alternative_that_actually_blocked(corpus):
+    """102.18(b)(1) confines the candidates to materials in a provision from
+    which change is not allowed "under the § 102.20 specific rule applicable to
+    the good" — the alternative that blocked it.
+
+    Keying on rule_id alone took the rule's first alternative, so the result
+    reported the change blocked by one material and then nominated the materials
+    that same alternative says did shift.
+    """
+    r = resolve(
+        good="1806.20",
+        country="CH",
+        inputs=[Material("1701.99", "BR"), Material("1702.11", "TH"), Material("1805.00", "CN")],
+        corpus=corpus,
+    )
+    assert r.origin == "CN"
+    assert "1805.00" in r.reason
+    assert "1701.99" not in r.reason and "1702.11" not in r.reason

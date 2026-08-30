@@ -130,11 +130,16 @@ class TextileFacts:
 
 def de_minimis_by_weight(
     failing: list[str],
-    materials: dict,
+    materials: list,
     good_weight: float | None,
 ) -> tuple[bool | None, str]:
-    """102.13(c): disregard failing materials at no more than 7% of total weight."""
-    weights = [getattr(materials.get(m), "weight", None) for m in failing]
+    """102.13(c): disregard failing materials at no more than 7% of total weight.
+
+    Every material with a failing code contributes, not one per code — two can
+    share a classification.
+    """
+    codes = set(failing)
+    weights = [m.weight for m in materials if m.code in codes]
     if good_weight is None or not weights or any(w is None for w in weights):
         return None, (
             f"the weight of {', '.join(failing)} as a share of the total weight "
@@ -469,7 +474,6 @@ def resolve_textile(
         _failing,
     )
 
-    by_code = {m.code: m for m in materials}
     result = OriginResult(status="unresolved", vintage=corpus.vintage)
 
     # 102.17 reaches textiles too — 102.21(c) applies 102.12 through 102.19.
@@ -599,7 +603,7 @@ def resolve_textile(
     near = [f for f in findings if f.satisfied is False and _failing(f)]
     if near:
         closest = min(near, key=lambda f: len(_failing(f)))
-        carried, detail = de_minimis_by_weight(_failing(closest), by_code, good_weight)
+        carried, detail = de_minimis_by_weight(_failing(closest), materials, good_weight)
         if carried:
             return OriginResult(
                 status="resolved",
