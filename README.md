@@ -11,18 +11,15 @@ Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage.
 | **102.21** | **Every textile and apparel import, from any country** — 102.21(a) controls their origin *"for purposes of the Customs laws"*, except as to Israel | 101 (+1 overlay) | codes **and production facts** | **13/13** country, 13/13 paragraph |
 | **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 | codes | **22/22** shift, 8/8 country |
 
-**The two halves ask different things of you, and it is worth knowing which you
-are using.** For 102.20 you give classifications and get a country. For 102.21
-you give classifications *and* facts about production — the fibre, whether the
-good was knit to shape, where it was assembled — because that is what the
-regulation turns on. Those are spec-sheet facts, not exotic ones, but they have
-to reach the tool. Give a garment nothing but codes and you will get
-`unresolved` back with a list of what it needs, which is correct and not very
-useful.
+**The two halves ask different things of you.** For 102.20 you give
+classifications and get a country back. For 102.21 you also have to say how the
+good was made: its fibre, whether it was knit to shape, where it was assembled.
+That is what the regulation turns on. All of it sits on a spec sheet, but it has
+to reach the tool. Give a garment nothing but codes and you get `unresolved`
+back with a list of what it needs.
 
-If you import apparel, **102.21 is why this exists** — a sector where origin
-fraud, transshipment and forced-labour enforcement are all live. If you file
-under USMCA, 102.20 is your half.
+If you import apparel, 102.21 is the half you want. If you file under USMCA,
+102.20 is.
 
 **Before adopting, read what Part 102 does not do.** Per **19 CFR 102.0** it does
 **not** decide Section 301 or Section 232 origin, and it does not decide AD/CVD
@@ -67,9 +64,9 @@ Everything else is recorded with a reason rather than guessed at: a source
 naming a good instead of a code, a condition on the good, a rule that turns on
 where a process happened.
 
-Every record carries its provenance — source URL, eCFR issue date, and the
-nomenclature vintage it answers under — so it can be re-derived after the source
-is amended.
+Every record carries its provenance: the source URL, the eCFR issue date, and
+the nomenclature vintage it answers under. A rule can be re-derived after the
+source is amended.
 
 ```json
 {
@@ -123,10 +120,10 @@ useful and inflates it for nothing.
 ```
 
 **Which hierarchy applies is decided first.** 102.11 governs goods *"other than
-textile and apparel products covered by § 102.21"*, so a covered good — which
-includes hats, umbrellas and car seat belts, not just chapters 50–63 — takes
-102.21(c) instead. Citing 102.11 for one of those would cite a provision that
-excludes it.
+textile and apparel products covered by § 102.21"*, so a covered good takes
+102.21(c) instead. Coverage runs wider than chapters 50–63: hats, umbrellas and
+car seat belts are all 102.21's. Citing 102.11 for one of them would cite a
+provision that excludes it.
 
 ### Goods under 102.20 — the 102.11 hierarchy
 
@@ -157,13 +154,18 @@ happened**, which is why textiles abstain so often — and the abstention names
 which step it is waiting on.
 
 **Paragraph (e) has two tables, and the fibre decides which applies.** (e)(2)
-takes headings **6213 and 6214** and fourteen named **subheadings** — 6117.10,
-6302.22, 6302.29, 6302.53, 6302.59, 6302.93, 6302.99, 6303.92, 6303.99, 6304.19,
-6304.93, 6304.99, 9404.90.85 and 9404.90.95 — and only those, *except* goods of
-cotton, of wool, or a blend 16% or more cotton by weight, which stay with (e)(1).
-So a silk scarf of 6214 is (e)(2)'s and a cotton one is (e)(1)'s, while 6302.10
-and 6304.20 are (e)(1)'s outright. With the fibre unstated, neither table is
-picked and the question is named.
+reaches headings 6213 and 6214 plus fourteen named subheadings:
+
+```
+6117.10   6302.22   6302.29   6302.53   6302.59   6302.93   6302.99
+6303.92   6303.99   6304.19   6304.93   6304.99   9404.90.85   9404.90.95
+```
+
+It reaches those and nothing else. Fibre then carves it back: a good of cotton,
+of wool, or of a blend 16% or more cotton by weight stays with (e)(1) even so.
+A silk scarf of 6214 is therefore (e)(2)'s, while a cotton one is (e)(1)'s.
+6302.10 and 6304.20 are (e)(1)'s outright. Where the fibre has not been stated,
+neither table is picked and the resolver asks.
 
 ```python
 >>> from originshift.textile import TextileFacts
@@ -179,10 +181,10 @@ picked and the question is named.
 named finishing operations — one does not carry it, and the count is the whole
 test.
 
-**102.11(b) is more decidable than it looks.** Essential character sounds like a
-judgement, but 102.18(b)(1) confines the candidates to materials sitting in a
-provision from which change is not allowed — exactly the set that failed the
-shift — and **102.18(b)(1)(iii)** then settles it outright:
+**102.11(b) is mostly decidable.** 102.18(b)(1) confines the essential-character
+candidates to materials sitting in a provision from which change is not allowed,
+which is the set that failed the shift. **102.18(b)(1)(iii)** then settles it
+outright:
 
 > *If there is only one material that is classified in a tariff provision from
 > which a change in tariff classification is not allowed … then that material
@@ -193,9 +195,9 @@ they share a country. In all 19 curated cases where the shift definitely failed,
 exactly one material was in a disallowed provision — so the regulation named the
 answer in every one. Domestic materials count here, unlike under (a)(3).
 
-`102.17` is applied where an `operation` is given: repacking, dismantling, mere
-dilution, a change in end-use, or a GRI 2(a) collection of parts is not
-origin-conferring however the codes fall.
+`102.17` is applied where an `operation` is given. Repacking, dismantling, mere
+dilution, a change in end-use and a GRI 2(a) collection of parts confer no
+origin, however the codes fall.
 
 ```python
 >>> from originshift.resolve import Material
@@ -237,9 +239,9 @@ originshift rule 6203.42 --corpus 102.21
 originshift corpora
 ```
 
-**The batch path is the one that matters.** The question is usually "what does
-this say about last quarter's entries", not "what about this one good".
-`entries.csv` needs a `good` column; everything else is optional:
+`--csv` takes a file of entries and writes a file of determinations, which is
+usually the question: what does this say about last quarter's entries.
+`entries.csv` needs a `good` column. Everything else is optional:
 
 | Column | |
 |---|---|
@@ -306,11 +308,12 @@ it sits: the bracket's origin is settled first, and the door assembly's rule is
 then applied against the result.
 
 Origin is settled bottom-up, because whether a subassembly is foreign to the
-country of final production decides whether the finished good's rule is met. A
-component whose own origin could not be settled goes up with **no country** —
-which the resolver reads as foreign, the conservative default — and the parent
-records it in `blocked_by`, so an answer standing on an unknown is never
-mistaken for a clean one.
+country of final production decides whether the finished good's rule is met.
+
+A component whose own origin could not be settled goes up with **no country**.
+The resolver reads that as foreign, which is the conservative default, and the
+parent records the component in `blocked_by`. An answer standing on an unknown
+is never mistaken for a clean one.
 
 **This produces a determination, not a certificate of origin**, and does no
 preferential or FTA qualification. Both are deliberately out of scope — see
@@ -318,9 +321,9 @@ preferential or FTA qualification. Both are deliberately out of scope — see
 
 ## What `unresolved` means
 
-**It is not an error, and it is not a failure to find a rule.** It means the
-rules genuinely do not decide the question on what you supplied — and the result
-names what is missing.
+**`unresolved` means the rules do not decide the question on what you gave.**
+The rule was usually found and is cited; what is missing is a fact, and the
+result names it. It is not an error condition.
 
 ```python
 >>> r = resolve(good="2008.11", inputs=["1202.41"], country="CN")
@@ -360,11 +363,13 @@ rule that applies to your code. That is worth having: the alternative is reading
 python -m originshift.validate [--disagreements]
 ```
 
-Ground truth is **CBP's own HQ rulings** — binding determinations by the
-authority whose rules this corpus compiles. 312 HQ rulings cite 102.20; 228 of
-them quote a rule, giving 254 quotations to score. Comparison is structural, not
-textual: CBP pluralises "heading", writes headings in HS dotted form (`48.17`
-for `4817`), and runs quotations into its own prose.
+Ground truth is **CBP's own HQ rulings**, which are binding determinations by
+the authority whose rules this corpus compiles. 312 HQ rulings cite 102.20; 228
+of them quote a rule, giving 254 quotations to score.
+
+Comparison is structural rather than textual, because CBP quotes the regulation
+loosely. It pluralises "heading", writes headings in the HS dotted form (`48.17`
+for `4817`), and runs a quotation into its own prose.
 
 | Era of ruling | n | Coverage | Rule fidelity |
 |---|---|---|---|
@@ -380,23 +385,23 @@ defect. The corpus answers under HTSUS 2026, and HS renumbering moves the codes
 out from under older rulings: CBP's 2025 quotation of `9401.90` has no counterpart because
 HS 2022 split it into `9401.91` through `9401.99`.
 
-Two things shape the number and are worth knowing. Rulings that cite 102.20
-routinely also quote **USMCA and NAFTA preferential rules**, worded almost
-identically and a different legal test — **44% of everything the extractor
-finds**, excluded before scoring. And a quotation is cut where the rule ends,
-since one that runs into CBP's prose picks up codes that are not part of it.
+Two things shape that number. Rulings citing 102.20 routinely also quote **USMCA
+and NAFTA preferential rules**, which are worded almost identically and are a
+different legal test. They come to **44% of everything the extractor finds** and
+are excluded before scoring. A quotation is also cut where the rule ends, since
+one that runs on into CBP's prose picks up codes that are not part of it.
 
 ## Design commitments
 
-**It never guesses.** Where a rule names a good rather than a code — *"from
-mustard flour or meal"*, *"from feathers or down"* — or turns on a fact a
-classification does not carry, the alternative is left unstructured with the
-reason recorded, and the resolver abstains naming what it needs. An honest
-abstention tells you what to go and find out; a confident wrong answer does not.
+**It never guesses.** Some rules name a good where you would expect a code, as
+in *"from feathers or down"*. Others turn on a fact no classification carries.
+Either way the alternative is left unstructured, the reason is recorded, and the
+resolver abstains and says what it needs. An honest abstention tells you what to
+go and find out.
 
-The regulation rewards the caution. One rule reads *"from any product other than
-edible meals and flours of Chapter 2"* — read as a positive source that becomes
-*must come from Chapter 2*, the exact inverse.
+The regulation rewards that caution. One rule reads *"from any product other
+than edible meals and flours of Chapter 2"*. Read as a positive source, that
+becomes *must come from Chapter 2*, which is the exact inverse.
 
 **Defects in the source are reported, not corrected.** 102.20 contains
 transcription errors — the rule keyed `2824.10-2824.90` is written *"A change to
@@ -407,10 +412,10 @@ for a hundred headings. They ship in the corpus's `anomalies` list with the
 verbatim text, and the consumer decides.
 
 **Rules the source does not carry can be fed in, and stay marked.** 102.21(e)(1)
-has **no entry for headings 6201 through 6208** — overcoats, suits, jackets,
-trousers, shirts, dresses, blouses, the bulk of apparel — because CBP Dec. 22-25
-was never incorporated: the eCFR records that the revision *"could not be
-incorporated due to inaccurate amendatory instruction."* The text exists, in the
+has **no entry for headings 6201 through 6208**, which is most apparel:
+overcoats, suits, jackets, trousers, shirts, dresses, blouses. CBP Dec. 22-25
+was never incorporated, and the eCFR records why — the revision *"could not be
+incorporated due to inaccurate amendatory instruction."* The text exists in the
 Federal Register.
 
 ```
@@ -471,11 +476,9 @@ Substantial transformation is case law, not a rule table, so it is not something
 this project can compile. A tool that claimed to answer Section 301 origin from
 Part 102 would be wrong, and a licensed broker would know it.
 
-Textile origin mostly turns on facts a classification does not carry — whether
-the good is of staple fibers or filaments, where the fabric-making process
-happened, whether it was knit to shape. So for chapters 50–63 the tool is less
-an oracle than a precise statement of *what you must establish*, drawn from the
-rule that applies to your code.
+Textile origin turns on facts a classification does not carry. Whether the good
+is of staple fibers or of filaments. Where the fabric-making process happened.
+Whether it was knit to shape.
 
 | Corpus | Parsed into structure | Decidable on codes alone |
 |---|---|---|
@@ -500,9 +503,9 @@ python -m originshift.validate         # score them against CBP's rulings
 ```
 
 The 789 CROSS rulings the validation measures are scored over are **not
-committed** — they are 12 MB the package never reads. Until they are fetched
-those tests skip, saying so. What *is* committed is the pinned regulation
-snapshot and the two ruling indices, so everything else runs on a clone.
+committed**, being 12 MB the package never reads. Until they are fetched, those
+tests skip and say so. The pinned regulation snapshot and the two ruling indices
+are committed, so everything else runs on a clone.
 
 Built corpora, reviewed overlays and the curated validation cases live in
 `src/originshift/data/` and ship with the package, so an install works without a
