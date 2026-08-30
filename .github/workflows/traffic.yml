@@ -1,0 +1,42 @@
+# GitHub keeps fourteen days of traffic data and then discards it. Referrers
+# are the only passive signal that names where readers come from, so they are
+# snapshotted daily and committed. The file is the record; GitHub is not.
+name: traffic
+
+on:
+  schedule:
+    - cron: "17 4 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  snapshot:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Snapshot traffic
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          for ep in views clones; do
+            gh api "repos/$REPO/traffic/$ep" > "/tmp/$ep.json"
+          done
+          for ep in referrers paths; do
+            gh api "repos/$REPO/traffic/popular/$ep" > "/tmp/$ep.json"
+          done
+          python3 .github/merge_traffic.py
+      - name: Commit if anything changed
+        run: |
+          if [ -n "$(git status --porcelain traffic/)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add traffic/
+            git commit -m "Traffic through $(date -u +%Y-%m-%d) [skip ci]"
+            git push
+          else
+            echo "no new traffic"
+          fi

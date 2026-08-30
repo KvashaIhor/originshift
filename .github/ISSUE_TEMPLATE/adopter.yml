@@ -1,0 +1,44 @@
+name: Adopter
+description: Tell me you use originshift, publicly or privately
+title: "Adopter: "
+labels: ["adopter"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        The package reports nothing about its use, so this is the only way I
+        learn who relies on it. Every field is optional. If any of it is
+        commercially sensitive, email me instead — a private note is just as
+        useful and will not be listed.
+  - type: input
+    id: org
+    attributes:
+      label: Organisation
+      description: Or "an individual broker", or nothing at all.
+  - type: dropdown
+    id: role
+    attributes:
+      label: What kind of work
+      options:
+        - Customs broker or forwarder
+        - Importer or corporate trade compliance
+        - Apparel or textile sourcing
+        - Law firm or consultancy
+        - Software vendor embedding the corpus
+        - Academic or research
+        - Something else
+  - type: textarea
+    id: use
+    attributes:
+      label: How you use it
+      description: Which corpus, and where it sits in your workflow.
+      placeholder: 102.21 on apparel entries, as a second opinion before filing.
+  - type: dropdown
+    id: listing
+    attributes:
+      label: May I list you in ADOPTERS.md?
+      options:
+        - "Yes"
+        - "No — keep this private"
+    validations:
+      required: true

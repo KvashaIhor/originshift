@@ -551,6 +551,13 @@ classification, and for textiles almost none do, because 102.21 is written
 around processes. It says nothing about how often you get an answer. Supply
 what the rules ask for and the curated cases resolve 13 of 13.
 
+## Who uses this
+
+The package reports nothing about its use, and never will. That leaves
+[ADOPTERS.md](ADOPTERS.md) as the only record, kept by hand. If you rely on a
+corpus here, say so in an issue or by email, publicly or privately — knowing
+which rules are carried into real filings is what decides where the care goes.
+
 ## Development
 
 ```
