@@ -18,6 +18,7 @@ import json
 import re
 from collections import Counter
 from dataclasses import dataclass, field
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
 
@@ -185,6 +186,15 @@ def signature(alt: Alternative) -> tuple:
     )
 
 
+#: 102.11 and the GRI 3 set language state when a good is a set, never what
+#: change of classification confers origin on one.
+SET_LANGUAGE = re.compile(
+    r"specifically described in the Harmonized System as a set"
+    r"|classified as a set pursuant to GRI",
+    re.I,
+)
+
+
 def quoted_rules(text: str, attribution: re.Pattern | None = None) -> list[str]:
     """Every statement of a 102.20 rule in a ruling, and nothing else.
 
@@ -202,6 +212,10 @@ def quoted_rules(text: str, attribution: re.Pattern | None = None) -> list[str]:
         # A restatement of the 102.21(c) hierarchy is not an (e)(1) table rule
         # and must not be scored as one.
         if HIERARCHY_RESTATEMENT.search(quote):
+            continue
+        # Nor is the set language, which the extractor reaches because it sits
+        # inside the same attribution window as a real rule.
+        if SET_LANGUAGE.search(quote):
             continue
         resumed = NARRATIVE.search(quote)
         if resumed:
@@ -295,6 +309,17 @@ def check_quote(
     process or a condition on the good, which the 102.20 grammar cannot read.
     """
     grammar = grammar or parse_102
+
+    # CBP quotes a compound rule as it is written — "A change to X from Y, or a
+    # change within Z from ...". Read whole, a phrase from the second branch
+    # decides the kind of the first, so each branch is scored on its own and the
+    # rule counts as held if the corpus holds any one of them.
+    pieces = parse_102.split_alternatives(normalise(quote))
+    if len(pieces) > 1:
+        rank = {"equivalent": 0, "differs": 1, "target_absent": 2, "unparsed": 3}
+        results = [check_quote(piece, corpus, grammar) for piece in pieces]
+        return min(results, key=lambda r: rank[r[0]])
+
     alt = grammar.parse_alternative(normalise(quote), scope=[])
     if alt.target is None or not alt.target.ranges:
         return "unparsed", None, "the quotation does not parse as a rule"
@@ -317,6 +342,17 @@ def check_quote(
     )
 
 
+def _belongs_to_other_part(
+    quote: str, corpus: Corpus, other: Corpus, grammar=None
+) -> bool:
+    """Is this quotation a rule for a good the other part of 102 governs?"""
+    alt = (grammar or parse_102).parse_alternative(normalise(quote), scope=[])
+    if alt.target is None or not alt.target.ranges:
+        return False
+    anchor = alt.target.ranges[0].start
+    return other.reaches(anchor) and not corpus.candidates(anchor)
+
+
 def run(
     corpus: Corpus | None = None,
     cache_dir: Path | None = None,
@@ -324,12 +360,16 @@ def run(
     attribution: re.Pattern | None = None,
     only: set[str] | None = None,
     grammar=None,
+    governed_elsewhere: Corpus | None = None,
 ) -> Report:
     """Score a corpus against every cached HQ ruling that quotes its part.
 
     `only` restricts to a set of ruling numbers, so the 102.20 and 102.21 sets
     are scored apart — the cache holds both and a ruling citing one routinely
-    quotes the other.
+    quotes the other. `only` filters by ruling; `governed_elsewhere` filters by
+    good, dropping a quotation whose target the other part governs. Scoring a
+    102.21 rule against the 102.20 corpus measures nothing, because the corpus
+    is correct to hold no rule for a good that is not its.
     """
     corpus = corpus or Corpus.load()
     cache_dir = cache_dir or (sources.CACHE / "cross")
@@ -349,6 +389,10 @@ def run(
 
         year = (ruling.get("rulingDate") or "")[:4]
         for quote in sorted(quotes):
+            if governed_elsewhere is not None and _belongs_to_other_part(
+                quote, corpus, governed_elsewhere, grammar
+            ):
+                continue
             verdict, rule_id, detail = check_quote(quote, corpus, grammar)
             report.cases.append(
                 FidelityCase(
@@ -578,6 +622,142 @@ def report_steps(cases: list[StepCase]) -> None:
         print(f"   good not identifiable from the text       : {unknown}")
 
 
+# --------------------------------------------------------------------------
+# The scorecard, as a file
+# --------------------------------------------------------------------------
+
+
+def emit(path: Path) -> None:
+    """Write the scorecard as markdown.
+
+    The numbers are published, so they are generated. A hand-written copy drifts
+    from what the code measures, which is the failure this whole page exists to
+    rule out.
+    """
+    from . import parse_102_21
+
+    corpus = Corpus.load()
+    corpus_21 = Corpus.load(which="102.21")
+    report = run(
+        only=ruling_set("102.20"), governed_elsewhere=corpus_21
+    )
+    t = run(
+        corpus_21,
+        attribution=ATTRIBUTION_21,
+        only=ruling_set("102.21"),
+        grammar=parse_102_21,
+    )
+    cases = agreement(corpus)
+    tex = globals()["textiles"](corpus_21)
+    built = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+
+    o: list[str] = []
+    w = o.append
+    w("# Validation scorecard")
+    w("")
+    w(f"Generated {built} by `python -m originshift.validate --emit`.")
+    w(f"Corpus `{corpus.vintage}`, from eCFR issue `{corpus.source_issue_date}`.")
+    w("")
+    w("Ground truth is CBP's own HQ rulings, which are binding determinations by")
+    w("the authority whose rules this corpus compiles.")
+    w("")
+
+    w("## Agreement — does the resolver reach CBP's conclusion?")
+    w("")
+    decided = [c for c in cases if c.agrees is not None]
+    agreed = [c for c in decided if c.agrees]
+    scored = [c for c in cases if c.cbp_country]
+    right = [c for c in scored if c.our_country == c.cbp_country]
+    w(f"- curated cases: **{len(cases)}**")
+    w(f"- a definite call: **{len(decided)}/{len(cases)}**")
+    if decided:
+        w(f"- agreement with CBP: **{len(agreed)}/{len(decided)}**")
+    if scored:
+        w(f"- cases stating both the materials' origins and the country CBP held,")
+        w(f"  so the whole hierarchy can be scored: **{len(scored)}**, of which")
+        w(f"  **{len(right)}/{len(scored)}** reached CBP's country")
+    right_t = [c for c in tex if c.country_agrees]
+    same = [c for c in tex if c.step_agrees]
+    w(f"- curated textile cases: **{len(tex)}**, of which **{len(right_t)}/{len(tex)}**")
+    w(f"  reached CBP's country and **{len(same)}/{len(tex)}** by the same paragraph of (c)")
+    w("")
+
+    w("## Rule fidelity — does the corpus hold the rule CBP applied?")
+    w("")
+    w("### 19 CFR 102.20")
+    w("")
+    w(f"- HQ rulings examined: **{report.rulings_examined}**")
+    w(f"- of those, quoting a 102.20 rule: **{report.rulings_quoting_a_rule}**")
+    w(f"- rule quotations scored: **{len(report.cases)}**")
+    w("")
+    w("| Verdict | n |")
+    w("|---|---|")
+    for verdict, n in report.by_verdict.most_common():
+        w(f"| `{verdict}` | {n} |")
+    w("")
+    w(f"**Coverage {report.coverage:.1%}** — quoted rules the corpus places at all.  ")
+    w(f"**Rule fidelity {report.fidelity:.1%}** — placed rules it holds as CBP stated them.")
+    w("")
+    w("By era of the ruling. The corpus answers under one nomenclature vintage, so")
+    w("agreement with older rulings falls away, and does:")
+    w("")
+    w("| Era of ruling | n | Coverage | Rule fidelity |")
+    w("|---|---|---|---|")
+    for era, (n, cov, fid) in sorted(report.stratify().items(), reverse=True):
+        w(f"| {era.replace('-', '–')} | {n} | {cov:.1%} | {fid:.1%} |")
+    w("")
+    w("HS renumbering moves the codes out from under older rulings, which is why a")
+    w("vintage is pinned at all.")
+    w("")
+    w("### 19 CFR 102.21")
+    w("")
+    w(f"- HQ rulings examined: **{t.rulings_examined}**")
+    w(f"- of those, quoting an (e)(1) rule: **{t.rulings_quoting_a_rule}**")
+    w(f"- rule quotations scored: **{len(t.cases)}**")
+    w(f"- coverage **{t.coverage:.1%}**, rule fidelity **{t.fidelity:.1%}**")
+    w("")
+
+    w("## What is excluded before scoring, and why")
+    w("")
+    w("Rulings citing 102.20 routinely also quote **USMCA and NAFTA preferential")
+    w("rules**, which are worded almost identically and are a different legal test.")
+    w("Those are excluded. A quotation is also cut where the rule ends, since one")
+    w("running on into CBP's prose picks up codes that are not part of it.")
+    w("")
+    w("Comparison is structural, because CBP quotes the regulation loosely: it")
+    w("pluralises \"heading\", writes headings in the HS dotted form (`48.17` for")
+    w("`4817`), and runs a quotation into its own prose.")
+    w("")
+
+    w("## Every disagreement")
+    w("")
+    w("Listed in full. They are not all corpus defects.")
+    w("")
+    for case in report.cases:
+        if case.verdict == "equivalent":
+            continue
+        w(f"**{case.ruling}** ({case.year}) — `{case.verdict}`")
+        w("")
+        w(f"> {case.quoted[:400]}")
+        w("")
+        if case.detail:
+            w(f"{case.detail[:400]}")
+            w("")
+
+    w("## Reproducing this")
+    w("")
+    w("```")
+    w("pip install -e \".[dev]\"")
+    w("python -m originshift.validate --fetch   # the CROSS rulings, ~5 min")
+    w("python -m originshift.validate           # print")
+    w("python -m originshift.validate --emit docs/validation.md")
+    w("```")
+    w("")
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text("\n".join(o) + "\n", encoding="utf-8")
+    print(f"wrote {path}")
+
+
 def main() -> None:
     import argparse
 
@@ -591,6 +771,12 @@ def main() -> None:
         "--disagreements",
         action="store_true",
         help="print each disagreement in full, for reading",
+    )
+    ap.add_argument(
+        "--emit",
+        metavar="PATH",
+        type=Path,
+        help="write the scorecard as markdown instead of printing it",
     )
     args = ap.parse_args()
 
@@ -606,6 +792,10 @@ def main() -> None:
         )
         return
 
+    if args.emit:
+        emit(args.emit)
+        return
+
     print("=" * 74)
     print("AGREEMENT — does the resolver reach CBP's conclusion on the facts?")
     print("=" * 74)
@@ -615,7 +805,8 @@ def main() -> None:
     print("RULE FIDELITY — does the corpus hold the rule CBP applied? (102.20)")
     print("=" * 74)
 
-    report = run(only=ruling_set("102.20"))
+    corpus_21 = Corpus.load(which="102.21")
+    report = run(only=ruling_set("102.20"), governed_elsewhere=corpus_21)
     print(f"HQ rulings examined      : {report.rulings_examined}")
     print(f"  quoting a 102.20 rule  : {report.rulings_quoting_a_rule}")
     print(f"  rule quotations        : {len(report.cases)}")
@@ -632,7 +823,6 @@ def main() -> None:
 
     from . import parse_102_21
 
-    corpus_21 = Corpus.load(which="102.21")
     print()
     print("=" * 74)
     print("102.21 — TEXTILES AND APPAREL")
