@@ -162,7 +162,13 @@ def test_the_stated_validation_numbers_are_current(corpus):
         pytest.skip("CROSS rulings not fetched; run validate --fetch")
 
     text = README.read_text(encoding="utf-8")
-    report = validate.run(corpus, only=validate.ruling_set("102.20"))
+    # Scored the way the published figures are: a rule for a good 102.21
+    # governs goes to that corpus rather than counting as a miss here.
+    report = validate.run(
+        corpus,
+        only=validate.ruling_set("102.20"),
+        governed_elsewhere=Corpus.load(which="102.21"),
+    )
     assert str(len(report.cases)) in text, f"quotations are now {len(report.cases)}"
     for era, (n, coverage, fidelity) in report.stratify().items():
         assert str(n) in text, f"{era} n is now {n}"

@@ -3,6 +3,21 @@
 **Non-preferential rules of origin, as data.** Answers "what country is this good
 legally from?" and cites the rule it used.
 
+`0.1.0` · alpha · Python ≥3.11 · Apache-2.0 · corpus `HTSUS-2026`, eCFR `2026-08-26`
+
+**Part 102 only.** For non-textile goods it does not decide Section 301 or 232
+origin, and it never decides AD/CVD scope. [Scope, precisely](#scope-precisely).
+
+```
+pip install originshift
+```
+
+```
+originshift resolve --good 6203.42 --inputs 5208.11 --country VN \
+    --fibre cotton --component-parts yes --assembled-in VN
+#   6203.42  →  RESOLVED   VN   102.21(e)(1)/6201-6208
+```
+
 Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage.
 **The smaller one has far the wider reach:**
 
@@ -10,6 +25,8 @@ Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage.
 |---|---|---|---|---|
 | **102.21** | **Every textile and apparel import, from any country** — 102.21(a) controls their origin *"for purposes of the Customs laws"*, except as to Israel | 101 (+1 overlay) | codes **and production facts** | **13/13** country, 13/13 paragraph |
 | **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 | codes | **22/22** shift, 8/8 country |
+
+CBP's own ruling database cites 102.21 in 3,310 rulings and 102.20 in 909.
 
 **The two halves ask different things of you.** For 102.20 you give
 classifications and get a country back. For 102.21 you also have to say how the
@@ -21,11 +38,25 @@ back with a list of what it needs.
 If you import apparel, 102.21 is the half you want. If you file under USMCA,
 102.20 is.
 
-**Before adopting, read what Part 102 does not do.** Per **19 CFR 102.0** it does
-**not** decide Section 301 or Section 232 origin, and it does not decide AD/CVD
-scope. Those turn on the uncodified common-law substantial transformation
-test, which this does not implement and cannot, being case law and not a rule
-table. [Scope, precisely](#scope-precisely) sets out the limits.
+**It never guesses.** Every determination comes back `resolved`, `unresolved`
+or `ambiguous`. `unresolved` names the fact the rule needs and stops there.
+Where two rules both apply you get both, with their text.
+
+```python
+>>> from originshift import resolve
+>>> r = resolve(good="2008.11", inputs=["1202.41"], country="CN")
+>>> r.status, r.needed
+('unresolved',
+ 'the rule requires: provided that the change is not the result of mere blanching of peanuts')
+```
+
+**What Part 102 does not reach.** Per **19 CFR 102.0**, Part 102 is confined to
+marking. A textile or apparel good is the exception: 102.21 governs its origin
+for purposes of the Customs laws, and the Chapter 99 provisions key off that
+determination. For any other good, Section 301 and Section 232 origin turn
+on the common-law substantial transformation test. That test is case law. It has
+no rule table, and nothing here compiles one. Commerce decides AD/CVD scope.
+[Scope, precisely](#scope-precisely) sets out the limits.
 
 ## What is here
 
@@ -54,7 +85,7 @@ the eCFR issue date it was built from. Pass `--corpus` to build just one.
 
 | File | Rules | Alternatives | Parsed into structure | Decidable on codes alone |
 |---|---|---|---|---|
-| `102.20-<issue-date>.json` | 1,032 | 1,455 | 1,441 (99.0%) | 1,018 (70.0%) |
+| `102.20-<issue-date>.json` | 1,032 | 1,464 | 1,445 (98.7%) | 1,023 (69.9%) |
 | `102.21-<issue-date>.json` | 101 | 176 | 56 (31.8%) | 21 (11.9%) |
 
 Everything the parser could not settle is recorded with the reason it could not,
@@ -68,10 +99,9 @@ source is amended.
 **The package follows semver. The corpus carries the vintage.** The corpus file
 is named for the issue date it was built from, every record states that date as
 `source_issue_date` alongside its `vintage`, and every answer returns the
-vintage it was decided under. A corpus
-can therefore be used without the code and still say what it answers under, and
-an answer decided under an older nomenclature says as much instead of going
-quietly stale.
+vintage it was decided under. A corpus can therefore be used without the code
+and still say what it answers under, and an answer decided under an older
+nomenclature says as much instead of going quietly stale.
 
 ```json
 {
@@ -195,9 +225,10 @@ outright:
 > **will represent** the single material that imparts the essential character.*
 
 Judgement is only reached with two or more candidates, and even then only when
-they come from different countries. In all 19 curated cases where the shift definitely failed,
-exactly one material was in a disallowed provision, and the regulation therefore
-named the answer in every one. Domestic materials count here, unlike under (a)(3).
+they come from different countries. In all 19 curated cases where the shift
+definitely failed, exactly one material was in a disallowed provision, and the
+regulation therefore named the answer in every one. Domestic materials count
+here, unlike under (a)(3).
 
 `102.17` is applied where an `operation` is given. Repacking, dismantling, mere
 dilution, a change in end-use and a GRI 2(a) collection of parts confer no
@@ -230,10 +261,6 @@ Three outcomes and no others:
 ```
 
 ## Command line
-
-```
-pip install originshift
-```
 
 ```
 originshift resolve --good 8708.29 --inputs 7208.10,8708.99 --country VN
@@ -321,7 +348,7 @@ is never mistaken for a clean one.
 
 **This produces a determination. It never produces a certificate of origin**,
 and it does no preferential or FTA qualification. Both are out of scope by
-design. Nothing is stored between calls.
+design.
 
 ## What `unresolved` means
 
@@ -355,11 +382,10 @@ them. Both are returned with their text.
 
 **For textiles, `unresolved` without production facts is the normal case, by
 design.** Only 11.9% of 102.21 needs nothing but a classification, because
-textile origin turns on
-fabric-making, knitting and assembly. For chapters 50–63 the tool gives you a
-precise statement of *what you must establish*, drawn from the rule that applies
-to your code. That is worth having. The alternative is reading 102.21(e)(1)
-yourself.
+textile origin turns on fabric-making, knitting and assembly. For chapters
+50–63 the tool gives you a precise statement of *what you must establish*,
+drawn from the rule that applies to your code. The alternative is reading
+102.21(e)(1) yourself.
 
 ## Validation
 
@@ -369,7 +395,9 @@ python -m originshift.validate [--disagreements]
 
 Ground truth is CBP's own HQ rulings, which are binding determinations by
 the authority whose rules this corpus compiles. 312 HQ rulings cite 102.20; 228
-of them quote a rule, giving 254 quotations to score.
+of them quote a rule, giving 242 quotations to score. A ruling citing 102.20
+routinely quotes 102.21 as well, and a rule for a good 102.21 governs is scored
+against that corpus instead of counted against this one.
 
 Comparison is structural, because CBP quotes the regulation loosely: it
 pluralises "heading", writes headings in the HS dotted form (`48.17` for
@@ -377,9 +405,9 @@ pluralises "heading", writes headings in the HS dotted form (`48.17` for
 
 | Era of ruling | n | Coverage | Rule fidelity |
 |---|---|---|---|
-| 2020–2026 | 45 | **97.8%** | **79.5%** |
-| 2003–2019 | 28 | 85.7% | 59.3% |
-| 1994–2002 | 181 | 76.8% | 52.0% |
+| 2020–2026 | 45 | **97.8%** | **86.4%** |
+| 2003–2019 | 28 | 85.7% | 66.7% |
+| 1994–2002 | 169 | 82.2% | 67.3% |
 
 **Coverage** is how many quoted rules the corpus can place at all; **fidelity**
 is how many it holds as CBP stated them.
@@ -395,10 +423,14 @@ different legal test. They come to 44% of everything the extractor finds, and
 are excluded before scoring. A quotation is also cut where the rule ends, since
 one that runs on into CBP's prose picks up codes that are not part of it.
 
+The full scorecard — every denominator, the verdict breakdown, and each
+disagreement in full — is [docs/validation.md](docs/validation.md), written by
+the validator so it cannot drift from what the code measures.
+
 ## Design commitments
 
-**It never guesses.** Some rules name a good where you would expect a code, as
-in *"from feathers or down"*. Others turn on a fact no classification carries.
+**Some rules cannot be structured.** A few name a good where you would expect a
+code, as in *"from feathers or down"*. Others turn on a fact no classification carries.
 Either way the alternative is left unstructured, the reason is recorded, and the
 resolver abstains and says what it needs. An honest abstention tells you what to
 go and find out.
@@ -442,6 +474,11 @@ one resting on the eCFR:
 True
 ```
 
+**Nothing is stored between calls.** Resolution runs in your process, holds no
+state, and makes no network request. The corpus is read from disk and ships with
+the package. Fetching sources and rebuilding the corpus are separate commands you
+run deliberately.
+
 **Non-preferential only.** Preferential (trade-agreement) origin is out of
 scope, deliberately: `US9177286B2` runs to 2034 over bill-of-materials origin
 traversal with certificate output, and the EU already ships ROSA for free.
@@ -457,6 +494,8 @@ Compiling rules and resolving a good against one is not the claimed invention.
 
 ## Scope, precisely
 
+Stated in full, with the use statement, in [docs/scope.md](docs/scope.md).
+
 **19 CFR 102.0** confines Part 102 to USMCA and NAFTA country-of-origin
 **marking**, plus the "new or different article of commerce" test of the Morocco
 and Bahrain FTAs.
@@ -471,14 +510,31 @@ as to Israel. Not marking-only, not USMCA-only.
 |---|---|---|
 | Marking origin, USMCA/NAFTA goods | 19 CFR 102.20 | yes |
 | Textile and apparel origin, any country | 19 CFR 102.21 | yes |
-| **Section 301 / Section 232 origin** | common-law substantial transformation | **no** |
+| **Section 301 origin, textile and apparel goods** | 19 CFR 102.21 | **yes** |
+| **Section 301 / Section 232 origin, all other goods** | common-law substantial transformation | **no** |
 | **AD/CVD scope** | Commerce scope analysis | **no** |
 | Marking origin, other non-USMCA goods | common-law substantial transformation | **no** |
 | **Preferential / FTA qualification** | the agreement's own rules of origin | **no, deliberately** |
 
 Substantial transformation is case law. It has no rule table, and nothing this
-project could compile. A tool claiming to answer Section 301 origin out of Part
-102 would be wrong, and a licensed broker would know it.
+project could compile. For a good outside 102.21, a tool claiming to answer
+Section 301 origin out of Part 102 would be wrong, and a licensed broker would
+know it.
+
+For a textile or apparel good the answer inverts, on CBP's own authority.
+19 U.S.C. 3592 is Congress's expression of substantial transformation for these
+goods, and 19 CFR 102.21 implements it. In HQ H323925 (21 November 2022) CBP
+held pillows subject to Section 301 "because the pillows at issue are products
+of China, as determined by the rules of origin for textiles and apparel
+products set forth in § 102.21", and refused the importer's substantial
+transformation argument, holding that the authorities it relied on either
+concerned goods that were not textile or apparel products or predated 102.21's
+effective date. The origin this tool returns for a textile or apparel good is
+the origin the Chapter 99 provisions key off.
+
+Origin is one input. Whether a good is a textile or apparel product under
+102.21(b)(5), which Chapter 99 provision reaches it, whether an exclusion
+applies, and at what rate are all outside this tool.
 
 Textile origin turns on facts a classification does not carry. Whether the good
 is of staple fibers or of filaments. Where the fabric-making process happened.
@@ -486,15 +542,14 @@ Whether it was knit to shape.
 
 | Corpus | Parsed into structure | Decidable on codes alone |
 |---|---|---|
-| 102.20 | 1,441 / 1,455 = 99.0% | 1,018 / 1,455 = 70.0% |
+| 102.20 | 1,445 / 1,464 = 98.7% | 1,023 / 1,464 = 69.9% |
 | 102.21 | 56 / 176 = 31.8% | 21 / 176 = 11.9% |
 
 Read the second column as a property of the rule table. It describes the
 regulation and never the tool, counting rules that need nothing beyond a
 classification, and for textiles almost none do, because 102.21 is written
-around processes. It says nothing about how often you get an answer. Supply what
-the rules ask for and the curated cases resolve 13 of 13. It says how much of
-the work the codes can do alone.
+around processes. It says nothing about how often you get an answer. Supply
+what the rules ask for and the curated cases resolve 13 of 13.
 
 ## Development
 
@@ -516,8 +571,9 @@ Built corpora, reviewed overlays and the curated validation cases live in
 `src/originshift/data/` and ship with the package, so an install needs no
 checkout. Rebuilding from a newer issue of the regulation writes to your cache
 directory instead of into the installed package, and a corpus found there is
-preferred over the one that shipped. Anything written at runtime, meaning fetched sources and ingest
-staging, goes to the repository's `data/` in a checkout and to your cache
-directory (`XDG_CACHE_HOME`, else `~/.cache/originshift`) from an install, and
-never inside the installed package. Point `ORIGINSHIFT_OVERLAYS` at a directory to load your
-own overlays alongside the shipped ones.
+preferred over the one that shipped. Anything written at runtime, meaning
+fetched sources and ingest staging, goes to the repository's `data/` in a
+checkout and to your cache directory (`XDG_CACHE_HOME`, else
+`~/.cache/originshift`) from an install, and never inside the installed package.
+Point `ORIGINSHIFT_OVERLAYS` at a directory to load your own overlays alongside
+the shipped ones.

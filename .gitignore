@@ -16,3 +16,6 @@ data/cache/cross/
 
 # Internal planning document, not part of the package.
 originshift.md
+
+# Promotion research, not part of the package.
+research/
