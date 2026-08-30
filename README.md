@@ -24,8 +24,8 @@ If you import apparel, 102.21 is the half you want. If you file under USMCA,
 **Before adopting, read what Part 102 does not do.** Per **19 CFR 102.0** it does
 **not** decide Section 301 or Section 232 origin, and it does not decide AD/CVD
 scope. Those turn on the uncodified common-law substantial transformation
-test, which this does not implement and cannot, since it is case law rather than
-a rule table. [Scope, precisely](#scope-precisely) sets out the limits.
+test, which this does not implement and cannot, being case law and not a rule
+table. [Scope, precisely](#scope-precisely) sets out the limits.
 
 See [originshift.md](originshift.md) for the original plan, amended where its
 reasoning turned out to be wrong.
@@ -52,17 +52,17 @@ reasoning turned out to be wrong.
 python -m originshift.build_corpus
 ```
 
-Writes one file per corpus into `src/originshift/data/corpus/`, named for the
-eCFR issue date it was built from — pass `--corpus` to build just one:
+Writes one file per corpus into `src/originshift/data/corpus/`, each named for
+the eCFR issue date it was built from. Pass `--corpus` to build just one.
 
 | File | Rules | Alternatives | Parsed into structure | Decidable on codes alone |
 |---|---|---|---|---|
 | `102.20-<issue-date>.json` | 1,032 | 1,455 | 1,441 (99.0%) | 1,018 (70.0%) |
 | `102.21-<issue-date>.json` | 101 | 176 | 56 (31.8%) | 21 (11.9%) |
 
-Everything else is recorded with a reason rather than guessed at: a source
-naming a good instead of a code, a condition on the good, a rule that turns on
-where a process happened.
+Everything the parser could not settle is recorded with the reason it could not,
+whether that was a source naming a good instead of a code, a condition on the
+good, or a rule that turns on where a process happened.
 
 Every record carries its provenance: the source URL, the eCFR issue date, and
 the nomenclature vintage it answers under. A rule can be re-derived after the
@@ -149,9 +149,9 @@ provision that excludes it.
 | 102.21(c)(4) | `most_important_process` | `TextileFacts(most_important_process_in=…)` |
 | 102.21(c)(5) | `last_important_process` | `TextileFacts(last_important_process_in=…)` |
 
-Only the first two steps turn on codes. The rest turn on **where an operation
-happened**, which is why textiles abstain so often — and the abstention names
-which step it is waiting on.
+Only the first two steps turn on codes. The rest turn on where an operation
+happened, which is why textile goods abstain so often, and the abstention names
+the step it is waiting on.
 
 **Paragraph (e) has two tables, and the fibre decides which applies.** (e)(2)
 reaches headings 6213 and 6214 plus fourteen named subheadings:
@@ -178,7 +178,7 @@ neither table is picked and the resolver asks.
 ```
 
 (e)(2)(i) needs the dyeing and printing accompanied by **two or more** of nine
-named finishing operations — one does not carry it, and the count is the whole
+named finishing operations, so one will not carry it and the count is the whole
 test.
 
 **102.11(b) is mostly decidable.** 102.18(b)(1) confines the essential-character
@@ -192,7 +192,7 @@ outright:
 
 So judgement is only reached with two or more candidates, and even then not if
 they share a country. In all 19 curated cases where the shift definitely failed,
-exactly one material was in a disallowed provision — so the regulation named the
+exactly one material was in a disallowed provision, so the regulation named the
 answer in every one. Domestic materials count here, unlike under (a)(3).
 
 `102.17` is applied where an `operation` is given. Repacking, dismantling, mere
@@ -255,8 +255,8 @@ usually the question: what does this say about last quarter's entries.
 | `corpus` | force `102.20` or `102.21`; otherwise whichever has a rule |
 | `good_weight`, `material_weights` | for the 102.13(c) textile allowance, which is by weight |
 
-For textiles and apparel, named for what is on a spec sheet rather than for the
-rule they feed:
+For textiles and apparel. Each is named for what sits on a spec sheet rather
+than for the rule it feeds:
 
 | Column | |
 |---|---|
@@ -275,7 +275,7 @@ originshift resolve --good 6203.42 --inputs 5208.11 --country VN \
 ```
 
 Every output row carries `status`, `origin`, `basis`, `rule_id`, `rule_text`,
-`needed`, `vintage` and `source` — so a determination in a spreadsheet is as
+`needed`, `vintage` and `source`, so a determination in a spreadsheet is as
 traceable as one from the API. `source` reads `eCFR`, or names the document an
 overlaid rule came from.
 
@@ -316,8 +316,9 @@ parent records the component in `blocked_by`. An answer standing on an unknown
 is never mistaken for a clean one.
 
 **This produces a determination, not a certificate of origin**, and does no
-preferential or FTA qualification. Both are deliberately out of scope — see
-[the patent note](originshift.md). Nothing is stored between calls.
+preferential or FTA qualification. Both are deliberately out of scope, for the
+reasons set out in [the patent note](originshift.md), and nothing is stored
+between calls.
 
 ## What `unresolved` means
 
@@ -367,9 +368,9 @@ Ground truth is CBP's own HQ rulings, which are binding determinations by
 the authority whose rules this corpus compiles. 312 HQ rulings cite 102.20; 228
 of them quote a rule, giving 254 quotations to score.
 
-Comparison is structural rather than textual, because CBP quotes the regulation
-loosely. It pluralises "heading", writes headings in the HS dotted form (`48.17`
-for `4817`), and runs a quotation into its own prose.
+Comparison is structural, because CBP quotes the regulation loosely: it
+pluralises "heading", writes headings in the HS dotted form (`48.17` for
+`4817`), and runs a quotation into its own prose.
 
 | Era of ruling | n | Coverage | Rule fidelity |
 |---|---|---|---|
@@ -403,9 +404,9 @@ The regulation rewards that caution. One rule reads *"from any product other
 than edible meals and flours of Chapter 2"*. Read as a positive source, that
 becomes *must come from Chapter 2*, which is the exact inverse.
 
-**Defects in the source are reported, not corrected.** 102.20 contains
-transcription errors — the rule keyed `2824.10-2824.90` is written *"A change to
-subheading 2824.10 through **2924**.90"*, spanning a hundred headings it was
+**Defects in the source are reported, never corrected.** 102.20 contains
+transcription errors. The rule keyed `2824.10-2824.90` is written *"A change to
+subheading 2824.10 through **2924**.90"*, which spans a hundred headings it was
 never meant to reach, and the key `4441-4421` runs backwards. Repairing either
 would put words in the regulation's mouth; ignoring them lets one typo answer
 for a hundred headings. They ship in the corpus's `anomalies` list with the
@@ -414,7 +415,7 @@ verbatim text, and the consumer decides.
 **Rules the source does not carry can be fed in, and stay marked.** 102.21(e)(1)
 has **no entry for headings 6201 through 6208**, which is most apparel:
 overcoats, suits, jackets, trousers, shirts, dresses, blouses. CBP Dec. 22-25
-was never incorporated, and the eCFR records why — the revision *"could not be
+was never incorporated, and the eCFR records why: the revision *"could not be
 incorporated due to inaccurate amendatory instruction."* The text exists in the
 Federal Register.
 
@@ -424,8 +425,8 @@ python -m originshift.ingest extract 87-FR-68356.pdf --origin "87 FR 68356" --na
 python -m originshift.ingest compile cbp-dec-22-25 --reviewed-by "your name"
 ```
 
-Extraction never writes to a corpus — it writes a staging CSV for a person to
-check. Every document is hashed, and every rule carries where it came from and
+Extraction never writes to a corpus. It writes a staging CSV for a person to
+check, every document is hashed, and every rule carries where it came from and
 who read it, so an answer resting on a hand-fed document can always be told from
 one resting on the eCFR:
 
@@ -472,9 +473,9 @@ as to Israel. Not marking-only, not USMCA-only.
 | Marking origin, other non-USMCA goods | common-law substantial transformation | **no** |
 | **Preferential / FTA qualification** | the agreement's own rules of origin | **no, deliberately** |
 
-Substantial transformation is case law, not a rule table, so it is not something
-this project can compile. A tool that claimed to answer Section 301 origin from
-Part 102 would be wrong, and a licensed broker would know it.
+Substantial transformation is case law and not a rule table, so it is not
+something this project can compile. A tool claiming to answer Section 301 origin
+out of Part 102 would be wrong, and a licensed broker would know it.
 
 Textile origin turns on facts a classification does not carry. Whether the good
 is of staple fibers or of filaments. Where the fabric-making process happened.
@@ -508,19 +509,19 @@ are committed, so everything else runs on a clone.
 
 Built corpora, reviewed overlays and the curated validation cases live in
 `src/originshift/data/` and ship with the package, so an install works without a
-checkout. Anything written at runtime — fetched sources, ingest staging — goes
-to the repository's `data/` in a checkout and to your cache directory
-(`XDG_CACHE_HOME`, else `~/.cache/originshift`) from an install; never inside
-the installed package. Point `ORIGINSHIFT_OVERLAYS` at a directory to load your
+checkout. Anything written at runtime, meaning fetched sources and ingest
+staging, goes to the repository's `data/` in a checkout and to your cache
+directory (`XDG_CACHE_HOME`, else `~/.cache/originshift`) from an install, and
+never inside the installed package. Point `ORIGINSHIFT_OVERLAYS` at a directory to load your
 own overlays alongside the shipped ones.
 
 ## Releasing
 
 Not yet published. `python -m build` produces both artefacts and
-`python -m twine check dist/*` passes; version is `0.1.0`. Before uploading,
-fill in `[project.urls]` in `pyproject.toml` and the URL in `sources.USER_AGENT`
-— both are deliberately absent rather than pointing somewhere that does not
-resolve.
+`python -m twine check dist/*` passes; version is `0.1.0`. Before uploading, fill
+in `[project.urls]` in `pyproject.toml` and the URL in `sources.USER_AGENT`.
+Both are absent deliberately, because a link that does not resolve is worse than
+no link.
 
 **The package follows semver; the corpus carries the vintage.** Every rule
 record states the `vintage` and the `source_issue_date` it was built from, the
