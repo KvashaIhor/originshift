@@ -7,7 +7,7 @@ from collections import Counter
 
 def test_corpus_size_is_stable(rules):
     assert len(rules) == 1032
-    assert sum(len(r.alternatives) for r in rules) == 1455
+    assert sum(len(r.alternatives) for r in rules) == 1464
 
 
 def test_worked_example_from_the_spec(by_htsus):
@@ -31,10 +31,17 @@ def test_alternatives_split_across_rows_are_rejoined(by_htsus):
 
 def test_enumerated_process_fragments_join_their_parent(by_htsus):
     # "(a) At least one of the following processes: (1) Beveling; ..." continues
-    # the alternative above it rather than standing as its own rule.
+    # the alternative it qualifies rather than standing as its own rule.
+    #
+    # 7301-7307 states two ways to satisfy it, joined by "or a change within
+    # heading 7307 …". Held as one alternative, "within heading 7307" — a
+    # hundred characters into the second — made the first read as
+    # `same_position` when it is `any_other`. They are separated; the process
+    # enumeration stays with the alternative it belongs to.
     rule = by_htsus["7301-7307"]
-    assert len(rule.alternatives) == 1
-    assert "Beveling" in rule.alternatives[0].text
+    assert len(rule.alternatives) == 2
+    assert "Beveling" in rule.alternatives[1].text
+    assert [s.kind for s in rule.alternatives[0].shift.sources] == ["any_other"]
 
 
 def test_exception_ranges_are_kept_as_ranges(by_htsus):
@@ -137,9 +144,53 @@ def test_no_alternative_is_left_unable_to_match(rules):
                 assert alt.target.ranges, f"{rule.rule_id}: {alt.text[:80]}"
 
 
+def test_a_compound_statement_splits_into_the_rules_it_states():
+    """A phrase in the second branch must not decide the kind of the first."""
+    from originshift.parse_102 import split_alternatives
+
+    pieces = split_alternatives(
+        "A change to heading 7301 through 7307 from any other heading, "
+        "including another heading within that group, or a change within "
+        "heading 7307 from fitting forgings to fittings by: (a) Beveling."
+    )
+    assert len(pieces) == 2
+    assert pieces[0].startswith("A change to heading 7301")
+    assert pieces[1].startswith("a change within heading 7307")
+    # Splitting is a fixed point: a piece holds no further top-level branch.
+    assert all(len(split_alternatives(p)) == 1 for p in pieces)
+
+
+def test_a_single_alternative_is_returned_untouched():
+    """Trimming a rule that states one alternative would edit its verbatim text."""
+    from originshift.parse_102 import split_alternatives
+
+    text = "A change to subheading 8708.29 from any other subheading, except from subheading 8708.95."
+    assert split_alternatives(text) == [text]
+
+
+def test_an_or_that_joins_codes_is_not_a_branch():
+    from originshift.parse_102 import split_alternatives
+
+    text = "A change to subheading 2106.90 from any other subheading, except from heading 0401 or 2202."
+    assert split_alternatives(text) == [text]
+
+
+def test_cbp_writes_ranges_with_a_dash_and_the_regulation_writes_through():
+    """Only where a level word introduces it: a bare 1994-2002 is a span of years."""
+    from originshift.parse_102 import _ranges
+
+    assert [str(r) for r in _ranges("heading 8701-8705")] == ["8701-8705"]
+    assert [str(r) for r in _ranges("heading 8701 - 8705")] == ["8701-8705"]
+    assert [str(r) for r in _ranges("the 1994-2002 period")] == ["1994"]
+    assert _ranges("more than 20-30 percent") == []
+
+
 def test_descriptive_rules_abstain_rather_than_guess(rules):
     unstructured = [a for r in rules for a in r.alternatives if not a.structured]
-    assert len(unstructured) == 14
+    # Separating compound alternatives raised this from 14. A process clause
+    # absorbed into a shift alternative used to be counted as structured while
+    # corrupting the shift it was absorbed into.
+    assert len(unstructured) == 19
     assert all(a.unparsed_reason for a in unstructured)
 
 

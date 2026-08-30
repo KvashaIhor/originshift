@@ -37,7 +37,11 @@ LEVEL_WORD = r"chapters?|headings?|subheadings?"
 _RANGE = re.compile(
     rf"(?:(?P<lvl>{LEVEL_WORD})\s+)?"
     rf"(?P<start>{CODE})"
-    rf"(?:\s*(?:through|to)\s*(?P<end>{CODE}))?",
+    rf"(?:\s*(?:through|to)\s*(?P<end>{CODE})"
+    # CBP writes ranges with a dash where the regulation writes "through".
+    # Only honoured where a level word introduces the range, because a bare
+    # "1994-2002" in a ruling's prose is a span of years, not of headings.
+    rf"|\s*[-\u2013]\s*(?P<dashed>{CODE}))?",
     re.I,
 )
 class _Span:
@@ -103,8 +107,11 @@ def _ranges(text: str) -> list[CodeRange]:
             continue
         if re.match(r"\s*(?:%|percent|per\s*cent)", text[m.end() :], re.I):
             continue  # a quantity, not a code
+        raw_end = m.group("end")
+        if raw_end is None and m.group("dashed") and lvl:
+            raw_end = m.group("dashed")
         start = _pad_chapter(raw_start)
-        end = _pad_chapter(m.group("end")) if m.group("end") else None
+        end = _pad_chapter(raw_end) if raw_end else None
         try:
             found.append(CodeRange.parse(start, end))
         except ValueError:
@@ -242,6 +249,39 @@ def _parse_target(text: str) -> tuple[Target, str | None]:
     else:
         desc = text.strip(" ,") or None
     return Target(ranges=ranges, description=desc, excluding_description=excluding), None
+
+
+def split_alternatives(text: str) -> list[str]:
+    """Split a compound statement into the alternatives it actually states.
+
+    102.20 writes some rules as one run of prose: "A change to X from Y, or a
+    change within Z from ...". Read as a single alternative, a phrase belonging
+    to the second decides the kind of the first — 7301 through 7307 was held
+    `same_position` because "within heading 7307" sits a hundred characters into
+    a clause that is a separate rule.
+
+    Only a top-level "or a change" splits. One inside parentheses belongs to an
+    enumerated process list, and an "or" not followed by "a change" is joining
+    codes in an exception.
+    """
+    depth = 0
+    out: list[str] = []
+    start = 0
+    for m in re.finditer(r"[()]|[;,]?\s*\bor\s+(?=a\s+change\b)", text, re.I):
+        token = m.group(0)
+        if token == "(":
+            depth += 1
+        elif token == ")":
+            depth = max(0, depth - 1)
+        elif depth == 0:
+            out.append(text[start : m.start()])
+            start = m.end()
+    out.append(text[start:])
+    if len(out) == 1:
+        # Nothing was split, so nothing is trimmed. A rule that states one
+        # alternative must come back exactly as it went in.
+        return [text]
+    return [p.strip(" ,.;") for p in out if p.strip(" ,.;")]
 
 
 def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
@@ -446,7 +486,11 @@ def parse(xml_text: str, *, vintage: str, source_url: str) -> list[Rule]:
                 regime=REGIME,
                 htsus=g["htsus"],
                 scope=scope,
-                alternatives=[parse_alternative(b, scope) for b in branches],
+                alternatives=[
+                    parse_alternative(piece, scope)
+                    for b in branches
+                    for piece in split_alternatives(b)
+                ],
                 section=g["section"],
                 text=" ".join(branches),
                 vintage=vintage,
