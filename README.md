@@ -312,8 +312,8 @@ parent records the component in `blocked_by`. An answer standing on an unknown
 is never mistaken for a clean one.
 
 **This produces a determination. It never produces a certificate of origin**,
-and it does no preferential or FTA qualification. Both are deliberately out of scope and nothing is stored
-between calls.
+and it does no preferential or FTA qualification. Both are out of scope by
+design. Nothing is stored between calls.
 
 ## What `unresolved` means
 

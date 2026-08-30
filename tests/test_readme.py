@@ -228,10 +228,9 @@ def test_the_package_declares_its_types():
     assert (paths.PACKAGE_DATA.parent / "py.typed").exists()
 
 
-def test_the_plan_and_the_readme_agree_on_the_version_scheme():
-    """originshift.md promised a package version tied to nomenclature vintage.
-    What was built puts the vintage on the data, which is the better place —
-    the plan is amended to say so rather than left contradicting the code."""
-    plan = (ROOT / "originshift.md").read_text(encoding="utf-8")
-    assert "Version scheme — amended" in plan
-    assert "originshift-2026.1" in plan  # the original promise is still shown
+def test_the_readme_states_where_the_vintage_lives():
+    """The package follows semver and the corpus carries the vintage, so a
+    corpus used without the code still says what it answers under."""
+    text = README.read_text(encoding="utf-8")
+    assert "semver" in text
+    assert "source_issue_date" in text
