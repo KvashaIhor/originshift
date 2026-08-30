@@ -87,3 +87,18 @@ def test_the_missing_apparel_headings_are_reported(rules_21):
     assert gap["kind"] == "missing_from_source"
     assert "6201" in gap["detail"] and "87 FR 68356" in gap["detail"]
     assert not any(r.htsus == "6201-6208" for r in rules_21)
+
+
+def test_rules_keyed_to_ten_digit_spans_reach_their_whole_scope(by_key):
+    """"6209.20.1000 through 6209.20.5035" was read as two disjoint points
+    because the code pattern capped at eight digits, so babies' garments in the
+    middle of the span had no rule at all and (c)(2) was skipped for them."""
+    import sys
+    from pathlib import Path
+
+    sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
+    from originshift.corpus import Corpus
+
+    corpus = Corpus.load(which="102.21")
+    for good in ("6209.20.1000", "6209.20.3020", "6209.30.3000", "6209.90.9000"):
+        assert corpus.candidates(good), f"{good} has no rule"

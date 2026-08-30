@@ -12,7 +12,7 @@ from typing import Literal
 
 from typing import TYPE_CHECKING
 
-from .corpus import Corpus, covered_by_102_21
+from .corpus import Corpus, coverage_caveats, covered_by_102_21
 from .grammar import Alternative, CodeRange, LEVEL_DIGITS, Rule, digits
 
 if TYPE_CHECKING:
@@ -130,6 +130,9 @@ class OriginResult:
     basis: str | None = None
     #: Materials set aside under 102.15, and why.
     disregarded: list[str] = field(default_factory=list)
+    #: Carve-outs in the part's own coverage that a classification cannot
+    #: settle, and which would send the good to the other part if they applied.
+    caveats: list[str] = field(default_factory=list)
     rule_id: str | None = None
     rule_text: str | None = None
     satisfied: bool | None = None
@@ -406,6 +409,7 @@ def resolve(
     result.disregarded = [
         f"{m.code}: {DISREGARDED_ROLES[m.role]}" for m in set_aside if m.role
     ]
+    result.caveats = coverage_caveats(good)
     return result
 
 

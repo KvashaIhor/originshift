@@ -29,7 +29,10 @@ DE_MINIMIS_WEIGHT = 0.07
 #: 102.21(c)(3)(ii) does not reach these, so a wholly-assembled good of one of
 #: them falls through to (c)(4) instead.
 _ASSEMBLY_EXCEPTED = [
-    ("chapter", "59"),
+    # 102.21(c)(3)(ii) excepts "fabrics of chapter 59" — not the whole chapter.
+    # Transmission belting of 5910 and machine clothing of 5911 are goods, not
+    # fabrics, and (c)(3)(ii) does reach them.
+    ("range", ("5901", "5909")),
     ("heading", "5609"),
     ("heading", "5807"),
     ("heading", "5811"),
@@ -361,7 +364,26 @@ def resolve_e2(good: str, country: str, facts: TextileFacts, corpus: Corpus):
     is_6117_10 = CodeRange.parse("6117.10").contains(good)
     knit = facts.conditions.get("knit to shape")
     parts = facts.conditions.get("two or more component parts")
-    special = is_6117_10 and (knit or parts)
+
+    # (e)(2)(ii) does not reach a 6117.10 good that is knit to shape or made of
+    # two or more parts — those take (e)(2)(iii). Until it is known which, (ii)
+    # cannot be applied: it follows the fabric-making country where (iii)
+    # follows the knitting or the assembly.
+    if is_6117_10 and knit is None and parts is None:
+        return OriginResult(
+            status="unresolved",
+            basis="process",
+            rule_id="102.21(e)(2)",
+            satisfied=None,
+            reason="insufficient_information",
+            needed=(
+                f"whether {good} is knit to shape or consists of two or more "
+                f"component parts. (e)(2)(ii) excepts those goods and (e)(2)(iii) "
+                f"takes them, and the two follow different operations"
+            ),
+            vintage=corpus.vintage,
+        )
+    special = is_6117_10 and bool(knit or parts)
 
     if not special:
         # (e)(2)(ii) — but it does not reach 6117.10 goods that are knit to
@@ -633,7 +655,26 @@ def resolve_textile(
     excepted = next(
         (r for r in _excepted_from_assembly() if r.contains(good)), None
     )
-    if facts.wholly_assembled_in and excepted is None:
+    # "if the good was not knit to shape and the good was wholly assembled".
+    # A caller who has said the good IS knit to shape has ruled (c)(3)(ii) out,
+    # whether or not they also named where it was knit.
+    knit_to_shape = facts.conditions.get("knit to shape")
+    if knit_to_shape and not facts.knit_to_shape_in:
+        return OriginResult(
+            status="unresolved",
+            basis="process",
+            rule_id="102.21(c)(3)(i)",
+            satisfied=None,
+            reason="insufficient_information",
+            needed=(
+                "the good is knit to shape, so 102.21(c)(3)(i) applies and "
+                "(c)(3)(ii) does not — what is needed is the single country in "
+                "which it was knit"
+            ),
+            vintage=corpus.vintage,
+            trace=findings,
+        )
+    if facts.wholly_assembled_in and excepted is None and not knit_to_shape:
         return OriginResult(
             status="resolved",
             origin=facts.wholly_assembled_in,

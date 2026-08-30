@@ -470,3 +470,65 @@ def test_c2_is_never_stepped_past_merely_because_a_later_fact_is_known(corpus_10
         textile=facts, corpus=corpus_102_21,
     )
     assert (settled.origin, settled.rule_id) == ("VN", "102.21(c)(3)(ii)")
+
+
+def test_e2_ii_is_not_applied_until_the_6117_10_question_is_settled(corpus_102_21):
+    """(e)(2)(ii) excepts 6117.10 goods that are knit to shape or of two or more
+    parts. It follows the fabric-making country; (e)(2)(iii) follows the
+    knitting or the assembly — different countries, so it cannot be guessed."""
+    unstated = resolve(
+        good="6117.10", inputs=[], country="VN", corpus=corpus_102_21,
+        textile=TextileFacts(excepted_fibre=False, process_in={"fabric-making process": "CN"}),
+    )
+    assert unstated.status == "unresolved"
+    assert "knit to shape" in unstated.needed
+
+    settled = resolve(
+        good="6117.10", inputs=[], country="VN", corpus=corpus_102_21,
+        textile=TextileFacts(
+            excepted_fibre=False,
+            conditions={"knit to shape": False, "two or more component parts": False},
+            process_in={"fabric-making process": "CN"},
+        ),
+    )
+    assert (settled.origin, settled.rule_id) == ("CN", "102.21(e)(2)(ii)")
+
+
+def test_c3_ii_does_not_reach_a_good_stated_knit_to_shape(corpus_102_21):
+    """(c)(3)(ii) applies "if the good was not knit to shape". The gate tested
+    whether a knitting country had been given, not the fact itself."""
+    r = resolve(
+        good="6110.20", inputs=[Material("6006.21", "CN")], country="VN",
+        corpus=corpus_102_21,
+        textile=TextileFacts(
+            c2_does_not_determine=True,
+            conditions={"knit to shape": True},
+            wholly_assembled_in="VN",
+        ),
+    )
+    assert r.status == "unresolved"
+    assert r.rule_id == "102.21(c)(3)(i)"
+    assert "where it was knit" in r.needed or "in which it was knit" in r.needed
+
+
+def test_only_fabrics_of_chapter_59_are_excepted_from_c3_ii(corpus_102_21):
+    """102.21(c)(3)(ii) excepts "fabrics of chapter 59" — not the chapter.
+    Transmission belting of 5910 and machine clothing of 5911 are goods."""
+    from originshift.textile import _excepted_from_assembly
+
+    excepted = _excepted_from_assembly()
+    assert any(r.contains("5903.10") for r in excepted)
+    for good in ("5910.00", "5911.31", "5911.90"):
+        assert not any(r.contains(good) for r in excepted), good
+
+
+def test_the_hair_net_carve_out_travels_with_the_answer(corpus_102_21):
+    """102.21(b)(5) reaches "6505.00 (except for hair-nets)". Hair-nets are
+    named, not coded, so no classification settles it — and a hair-net belongs
+    to 102.20. Neither guess is safe, so the caveat is reported."""
+    from originshift.corpus import covered_by_102_21
+
+    assert covered_by_102_21("6505.00")          # ordinary hats are 102.21's
+    r = resolve(good="6505.00", inputs=[Material("6001.10", "CN")], country="VN")
+    assert any("hair-nets" in c for c in r.caveats)
+    assert resolve(good="8708.29", inputs=[Material("7208.10", "CN")], country="VN").caveats == []

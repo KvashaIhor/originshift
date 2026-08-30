@@ -292,7 +292,7 @@
      },
      "target": {
       "ranges": [
-       "3921.90.25"
+       "3921.90.2550"
       ],
       "description": null,
       "excluding_description": null
@@ -4693,7 +4693,7 @@
      },
      "target": {
       "ranges": [
-       "6209.20.10"
+       "6209.20.1000-6209.20.5035"
       ],
       "description": "an assembled good of",
       "excluding_description": null
@@ -4741,7 +4741,7 @@
      },
      "target": {
       "ranges": [
-       "6209.20.10"
+       "6209.20.1000"
       ],
       "description": null,
       "excluding_description": null
@@ -4781,7 +4781,7 @@
      },
      "target": {
       "ranges": [
-       "6209.20.50"
+       "6209.20.5045-6209.90.9000"
       ],
       "description": "an assembled good of",
       "excluding_description": null
@@ -4830,7 +4830,7 @@
      },
      "target": {
       "ranges": [
-       "6209.20.50"
+       "6209.20.5045-6209.90.9000"
       ],
       "description": null,
       "excluding_description": null
@@ -6821,7 +6821,7 @@
      },
      "target": {
       "ranges": [
-       "9612.10.90"
+       "9612.10.9010"
       ],
       "description": null,
       "excluding_description": null

@@ -197,6 +197,10 @@ def covered_goods(xml_text: str) -> tuple[list[CodeRange], list[str]]:
             notes.append(text)
             continue
         if m.group("note"):
+            # "6505.00 (except for hair-nets of subheading 6505.00)". The
+            # carve-out names a good, not a code, so no classification settles
+            # it — the range stays covered and the exception travels with the
+            # corpus for a consumer to apply.
             notes.append(f"{start}: {m.group('note')}")
     return ranges, notes
 

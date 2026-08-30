@@ -31,7 +31,7 @@ REGIME = "US"
 
 # A code as it appears in the text: 4-digit heading, 6-digit subheading with a dot,
 # 8-digit tariff item, or a bare 1-2 digit chapter.
-CODE = r"\d{4}(?:\.\d{2}(?:\.\d{2})?)?|\d{1,2}"
+CODE = r"\d{4}(?:\.\d{2}(?:\.\d{2,4})?)?|\d{1,2}"
 LEVEL_WORD = r"chapters?|headings?|subheadings?"
 
 _RANGE = re.compile(

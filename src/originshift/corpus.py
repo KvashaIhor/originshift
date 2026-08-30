@@ -55,6 +55,35 @@ def covered_by_102_21(code: str) -> bool:
     return any(r.contains(code) for r in textile_coverage())
 
 
+@lru_cache(maxsize=1)
+def _coverage_notes() -> tuple[str, ...]:
+    builds = sorted(CORPUS_DIR.glob("102.21-*.json"))
+    if not builds:
+        return ()
+    data = json.loads(builds[-1].read_text(encoding="utf-8"))
+    return tuple(data.get("covers_notes") or ())
+
+
+def coverage_caveats(code: str) -> list[str]:
+    """Carve-outs in 102.21's coverage that a classification cannot settle.
+
+    102.21(b)(5) reaches "6505.00 (except for hair-nets of subheading 6505.00)".
+    Hair-nets are named, not coded, so no code decides it — a hair-net belongs to
+    102.20, whose rule reads "A change to hair-nets of subheading 6505.00 from
+    any other subheading". The caveat travels with the answer rather than being
+    resolved by a guess either way.
+    """
+    out = []
+    for note in _coverage_notes():
+        head = note.split(":", 1)[0].strip()
+        try:
+            if _range(head).contains(code):
+                out.append(f"102.21(b)(5) reaches {note}")
+        except (ValueError, IndexError):
+            continue
+    return out
+
+
 def _range(text: str) -> CodeRange:
     start, _, end = text.partition("-")
     return CodeRange.parse(start, end or None)
