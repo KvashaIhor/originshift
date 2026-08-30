@@ -182,3 +182,114 @@ def test_a_non_textile_good_still_takes_102_11(corpus):
     """Routing must not have captured everything."""
     r = resolve(good="8708.29", inputs=[], country="VN", wholly_obtained=True, corpus=corpus)
     assert r.rule_id == "102.11(a)(1)"
+
+
+# ---- found by validating against CROSS -------------------------------------
+
+
+def test_c2_is_met_by_a_process_requirement_not_only_a_shift(corpus_102_21):
+    """102.21(c)(2) confers origin where each foreign material "underwent an
+    applicable change in tariff classification, and/or met any other
+    requirement, specified for the good in paragraph (e)".
+
+    Most of 102.21 states its requirement as a process. Testing only the shift
+    made (c)(2) unreachable for those goods however much the user knew — and
+    CBP applied (c)(2) in 33 of the 57 rulings that apply one step.
+    """
+    r = resolve(
+        good="6301.30",
+        inputs=[Material("5205.11", "CN")],
+        country="VN",
+        textile=TextileFacts(process_in={"fabric-making process": "IN"}),
+        corpus=corpus_102_21,
+    )
+    assert r.status == "resolved"
+    assert (r.origin, r.basis) == ("IN", "process")
+    assert r.rule_id == "102.21(e)(1)/6301-6306"
+    assert "102.21(c)(2)" in r.reason
+
+
+def test_a_proviso_naming_a_process_counts_the_same(corpus_102_21):
+    """"provided that the change is the result of the good being wholly
+    assembled in a single country" is a requirement of (e)(1) like any other."""
+    r = resolve(
+        good="6203.42",
+        inputs=[Material("5208.11", "CN")],
+        country="VN",
+        textile=TextileFacts(
+            conditions={"two or more component parts": True},
+            process_in={"wholly assembled": "VN"},
+        ),
+        corpus=corpus_102_21,
+    )
+    assert (r.status, r.origin) == ("resolved", "VN")
+
+
+def test_a_condition_stated_in_codes_is_settled_from_the_code(corpus_102_21):
+    """Asking the user whether their good is in heading 6302 through 6304 would
+    be asking for what the classification already says."""
+    from originshift.textile import _condition_holds
+
+    condition = "the good is not goods of heading 6302 through 6304"
+    assert _condition_holds(condition, TextileFacts(), "6301.30") is True
+    assert _condition_holds(condition, TextileFacts(), "6303.92") is False
+
+
+def test_an_e2_carve_out_is_narrower_than_the_headings_it_names(corpus_102_21):
+    """102.21(e)(2) reaches those headings *except* goods of cotton, of wool, or
+    a blend 16 percent or more cotton. Reading the carve-out as the whole
+    heading excluded goods from the rule that reaches them — 6213, 6214, 6303,
+    6304 and 9404.90, all common."""
+    from originshift.textile import _condition_holds
+
+    condition = (
+        "the good is not goods of heading 6213 through 6214 provided for in "
+        "paragraph (e)(2) of this section"
+    )
+    # not settleable from the code alone: it turns on fibre content
+    assert _condition_holds(condition, TextileFacts(), "6214.10") is None
+    assert _condition_holds(condition, TextileFacts(conditions={"of cotton": True}), "6214.10") is True
+
+
+def test_a_cotton_scarf_is_reached_by_e_1(corpus_102_21):
+    r = resolve(
+        good="6214.20",
+        inputs=[Material("5208.11", "CN")],
+        country="VN",
+        textile=TextileFacts(
+            conditions={"of cotton": True},
+            process_in={"fabric-making process": "IN"},
+        ),
+        corpus=corpus_102_21,
+    )
+    assert (r.status, r.origin) == ("resolved", "IN")
+
+
+def test_a_good_governed_by_e_2_is_declined_not_guessed(corpus_102_21):
+    """(e)(2) is not compiled. Answering such a good under (e)(1) would apply
+    the wrong rule."""
+    r = resolve(
+        good="6214.10",
+        inputs=[Material("5007.10", "CN")],
+        country="VN",
+        textile=TextileFacts(
+            conditions={"of cotton": False},
+            process_in={"fabric-making process": "IN"},
+        ),
+        corpus=corpus_102_21,
+    )
+    assert r.status == "unresolved"
+    assert r.reason == "out_of_scope"
+    assert "102.21(e)(2)" in r.needed
+
+
+def test_c2_is_not_stepped_past_while_it_could_still_be_met(corpus_102_21):
+    """(c)(3) is only reached where (c)(2) did not determine origin."""
+    r = resolve(
+        good="6301.30",
+        inputs=[Material("5205.11", "CN")],
+        country="VN",
+        corpus=corpus_102_21,
+    )
+    assert r.status == "unresolved"
+    assert "fabric-making process" in r.needed

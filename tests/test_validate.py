@@ -83,7 +83,8 @@ def report(corpus):
 
     if not (sources.CACHE / "cross").exists():
         pytest.skip("CROSS rulings not cached")
-    return validate.run(corpus)
+    # The cache holds both parts' rulings; score them apart.
+    return validate.run(corpus, only=validate.ruling_set("102.20"))
 
 
 def test_the_validation_set_is_the_expected_size(report):
@@ -101,3 +102,69 @@ def test_agreement_is_strongest_on_rulings_of_the_corpus_own_era(report):
     assert recent_fidelity > old_fidelity
     assert recent_coverage > 0.90
     assert recent_fidelity > 0.70
+
+
+# ---- 102.21 ----------------------------------------------------------------
+
+
+@pytest.fixture(scope="module")
+def report_21(corpus_102_21):
+    from originshift import parse_102_21, sources
+
+    if not validate.ruling_set("102.21"):
+        pytest.skip("102.21 rulings not cached")
+    return validate.run(
+        corpus_102_21,
+        attribution=validate.ATTRIBUTION_21,
+        only=validate.ruling_set("102.21"),
+        grammar=parse_102_21,
+    )
+
+
+def test_the_textile_set_is_the_expected_size(report_21):
+    assert report_21.rulings_examined == 554
+    assert 80 <= len(report_21.cases) <= 130
+
+
+def test_textile_fidelity_holds(report_21):
+    assert report_21.coverage > 0.85
+    assert report_21.fidelity > 0.60
+
+
+def test_the_hierarchy_restatements_are_not_scored_as_e1_rules(corpus_102_21):
+    """102.21(c)(1) to (c)(5) are quoted constantly in these rulings. They are
+    not entries in the (e)(1) table, and scoring them there measured the wrong
+    thing — it put fidelity 30 points low."""
+    hierarchy = (
+        "If the good was knit to shape, the country of origin of the good is "
+        "the single country, territory, or insular possession in which the good "
+        "was knit."
+    )
+    assert validate.quoted_rules(
+        "Under 19 CFR 102.21, " + hierarchy, validate.ATTRIBUTION_21
+    ) == []
+
+
+def test_where_cbp_reached_c2_this_corpus_can_too(corpus_102_21):
+    """The failure that matters: a requirement CBP satisfied that this corpus
+    offers no route to. Before the (c)(2) process fix this was 2 of 26."""
+    cases = validate.steps(corpus_102_21)
+    two = [c for c in cases if c.step == "2" and c.reachable is not None]
+    assert len(two) >= 20
+    reachable = [c for c in two if c.reachable]
+    assert len(reachable) / len(two) > 0.90
+
+
+def test_a_ruling_covering_several_scenarios_is_not_scored(corpus_102_21):
+    """It has no single answer to compare against."""
+    assert validate.applied_step(
+        "In Scenario 1 the country of origin is China pursuant to 19 CFR "
+        "102.21(c)(4)."
+    ) is None
+
+
+def test_a_recited_step_is_not_read_as_an_applied_one(corpus_102_21):
+    assert validate.applied_step(
+        "Section 102.21(c)(2) states that where the country of origin cannot "
+        "be determined under paragraph (c)(1), the country of origin is ..."
+    ) is None

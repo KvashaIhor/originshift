@@ -336,6 +336,23 @@ This is load-bearing. One rule reads *"from any product other than edible meals
 and flours of Chapter 2"*. Read carelessly, that becomes *must come from Chapter
 2* — the exact inverse. The parser abstains instead, and a test pins it.
 
+**Validating against CBP finds what reading your own parser cannot.** Scoring
+102.21 against 554 rulings turned up two defects that every parser-level test
+had passed:
+
+- **102.21(c)(2) was unreachable for most of the corpus.** It confers origin
+  where each foreign material *"underwent an applicable change in tariff
+  classification, **and/or met any other requirement**, specified for the good
+  in paragraph (e)"* — and most of 102.21 states its requirement as a process,
+  not a change of code. Testing only the shift meant (c)(2) could never be
+  satisfied for those goods however much the user knew. CBP applied (c)(2) in 33
+  of 57 rulings; this corpus could reach it in 2 of 26.
+- **An (e)(2) carve-out was read as the whole heading.** 102.21(e)(2) reaches
+  headings 6213, 6214, 6303, 6304 and subheading 9404.90 *except* goods of
+  cotton, of wool, or a blend 16% or more cotton — so a cotton scarf of 6214 is
+  governed by (e)(1) after all. Reading the carve-out broadly excluded common
+  goods from the rule that reaches them.
+
 **Defects in the source are reported, not corrected.** 102.20 contains
 transcription errors — the rule keyed `2824.10-2824.90` is written *"A change to
 subheading 2824.10 through **2924**.90"*, spanning a hundred headings it was
