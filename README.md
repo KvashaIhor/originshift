@@ -424,7 +424,7 @@ are excluded before scoring. A quotation is also cut where the rule ends, since
 one that runs on into CBP's prose picks up codes that are not part of it.
 
 The full scorecard — every denominator, the verdict breakdown, and each
-disagreement in full — is [docs/validation.md](docs/validation.md), written by
+disagreement in full — is [docs/validation.md](https://github.com/KvashaIhor/originshift/blob/main/docs/validation.md), written by
 the validator so it cannot drift from what the code measures.
 
 ## Design commitments
@@ -494,7 +494,7 @@ Compiling rules and resolving a good against one is not the claimed invention.
 
 ## Scope, precisely
 
-Stated in full, with the use statement, in [docs/scope.md](docs/scope.md).
+Stated in full, with the use statement, in [docs/scope.md](https://github.com/KvashaIhor/originshift/blob/main/docs/scope.md).
 
 **19 CFR 102.0** confines Part 102 to USMCA and NAFTA country-of-origin
 **marking**, plus the "new or different article of commerce" test of the Morocco

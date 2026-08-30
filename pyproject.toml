@@ -10,9 +10,16 @@ keywords = ["customs", "rules-of-origin", "trade-compliance", "hs-codes", "cbp",
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Legal Industry",
+  "Intended Audience :: Financial and Insurance Industry",
+  "Intended Audience :: Manufacturing",
   "Intended Audience :: Developers",
   "Topic :: Office/Business",
+  "Topic :: Scientific/Engineering :: Information Analysis",
   "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Typing :: Typed",
 ]
 # certifi only: python.org builds ship no usable trust store, and every source
 # this package reads is fetched over HTTPS from a government endpoint.
@@ -22,6 +29,8 @@ dependencies = ["certifi"]
 Homepage = "https://github.com/KvashaIhor/originshift"
 Source = "https://github.com/KvashaIhor/originshift"
 Issues = "https://github.com/KvashaIhor/originshift/issues"
+Documentation = "https://github.com/KvashaIhor/originshift/blob/main/docs/scope.md"
+Changelog = "https://github.com/KvashaIhor/originshift/releases"
 
 [project.scripts]
 originshift = "originshift.cli:main"
