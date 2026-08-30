@@ -26,10 +26,11 @@ def _version() -> str:
         return "dev"
 
 
-#: Sent to public government endpoints. No URL until the repository has a home:
-#: a user agent pointing somewhere that does not resolve is worse than one that
-#: only names the tool.
-USER_AGENT = f"originshift/{_version()}"
+#: Sent to public government endpoints, so it names the tool and where to
+#: complain about it.
+USER_AGENT = (
+    f"originshift/{_version()} (+https://github.com/KvashaIhor/originshift)"
+)
 
 
 @dataclass(frozen=True)

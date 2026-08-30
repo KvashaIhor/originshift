@@ -65,6 +65,14 @@ Every record carries its provenance: the source URL, the eCFR issue date, and
 the nomenclature vintage it answers under. A rule can be re-derived after the
 source is amended.
 
+**The package follows semver. The corpus carries the vintage.** The corpus file
+is named for the issue date it was built from, every record states that date as
+`source_issue_date` alongside its `vintage`, and every answer returns the
+vintage it was decided under. A corpus
+can therefore be used without the code and still say what it answers under, and
+an answer decided under an older nomenclature says as much instead of going
+quietly stale.
+
 ```json
 {
   "rule_id": "102.20/8708.29",
@@ -511,18 +519,3 @@ staging, goes to the repository's `data/` in a checkout and to your cache
 directory (`XDG_CACHE_HOME`, else `~/.cache/originshift`) from an install, and
 never inside the installed package. Point `ORIGINSHIFT_OVERLAYS` at a directory to load your
 own overlays alongside the shipped ones.
-
-## Releasing
-
-Not yet published. `python -m build` produces both artefacts and
-`python -m twine check dist/*` passes; version is `0.1.0`. Before uploading, fill
-in `[project.urls]` in `pyproject.toml` and the URL in `sources.USER_AGENT`.
-Both are absent deliberately, because a link that does not resolve is worse than
-no link.
-
-**The package follows semver; the corpus carries the vintage.** Every rule
-record states the `vintage` and the `source_issue_date` it was built from, the
-corpus file is named for that date, and every answer returns the vintage it was
-decided under. A corpus can therefore be used without the code and still say
-what it answers under, and an answer decided under an older nomenclature says as
-much instead of going quietly stale.

@@ -213,13 +213,16 @@ def test_the_documented_snippet_outputs_are_what_they_print(corpus):
     assert "('IT', '102.21(e)(2)(i)')" in README.read_text(encoding="utf-8")
 
 
-def test_the_user_agent_names_a_version_that_exists():
-    """It said 0.0.1 and pointed at a URL that does not resolve — while
-    pyproject deliberately omits that same URL for exactly that reason."""
+def test_the_user_agent_names_the_version_and_the_project():
+    """It goes to public government endpoints, so it should say what is calling
+    and where to complain about it, at a version that exists."""
+    import tomllib
+
     from originshift import sources
 
     assert "0.0.1" not in sources.USER_AGENT
-    assert "http" not in sources.USER_AGENT
+    urls = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["urls"]
+    assert urls["Homepage"] in sources.USER_AGENT
 
 
 def test_the_package_declares_its_types():

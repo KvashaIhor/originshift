@@ -18,11 +18,10 @@ classifiers = [
 # this package reads is fetched over HTTPS from a government endpoint.
 dependencies = ["certifi"]
 
-# [project.urls]
-# Fill in once the repository has a home. Publishing metadata that points at a
-# URL which does not resolve is worse than publishing none.
-# Homepage = "..."
-# Source = "..."
+[project.urls]
+Homepage = "https://github.com/KvashaIhor/originshift"
+Source = "https://github.com/KvashaIhor/originshift"
+Issues = "https://github.com/KvashaIhor/originshift/issues"
 
 [project.scripts]
 originshift = "originshift.cli:main"
