@@ -1,6 +1,11 @@
 # GitHub keeps fourteen days of traffic data and then discards it. Referrers
 # are the only passive signal that names where readers come from, so they are
 # snapshotted daily and committed. The file is the record; GitHub is not.
+#
+# The traffic API refuses the default GITHUB_TOKEN with 403 whatever the
+# workflow permissions say — it wants a user token with push access. Create a
+# personal access token (classic, `repo` scope, or fine-grained with
+# Administration: read) and store it as the TRAFFIC_TOKEN repository secret.
 name: traffic
 
 on:
@@ -18,10 +23,15 @@ jobs:
       - uses: actions/checkout@v4
       - name: Snapshot traffic
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.TRAFFIC_TOKEN }}
           REPO: ${{ github.repository }}
         run: |
           set -euo pipefail
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "::error::TRAFFIC_TOKEN is not set. The traffic API rejects the" \
+                 "default GITHUB_TOKEN. See the comment at the top of this file."
+            exit 1
+          fi
           for ep in views clones; do
             gh api "repos/$REPO/traffic/$ep" > "/tmp/$ep.json"
           done
