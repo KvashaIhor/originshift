@@ -12,7 +12,7 @@ from typing import Literal
 
 from typing import TYPE_CHECKING
 
-from .corpus import Corpus
+from .corpus import Corpus, covered_by_102_21
 from .grammar import Alternative, CodeRange, LEVEL_DIGITS, Rule, digits
 
 if TYPE_CHECKING:
@@ -26,7 +26,10 @@ Outcome = Literal["shifted", "not_shifted", "excluded", "needs_judgement"]
 NON_QUALIFYING = {
     "change_in_end_use": "a change in end-use (102.17(a))",
     "dismantling": "dismantling or disassembly (102.17(b))",
-    "simple_packing": "simple packing, repacking or retail packaging (102.17(c))",
+    "simple_packing": (
+        "simple packing, repacking or retail packaging without more than minor "
+        "processing (102.17(c))"
+    ),
     "mere_dilution": "mere dilution with water or another substance (102.17(d))",
     "gri_2a_collection": (
         "collecting parts that are classifiable as the assembled good under "
@@ -244,7 +247,7 @@ def _evaluate(rule: Rule, alt: Alternative, good: str, materials: list[str]) -> 
 
 def _de_minimis_limit(good: str) -> float | None:
     """The 102.13 allowance for a good, or None where 102.13(b) withholds it."""
-    chapter = digits(good)[:2]
+    chapter = digits(good)[:2].zfill(2)
     if chapter in NO_DE_MINIMIS_CHAPTERS:
         return None
     return DE_MINIMIS_CHAPTER_22 if chapter == "22" else DE_MINIMIS
@@ -360,8 +363,11 @@ def resolve(
     # 102.11 governs goods "other than textile and apparel products covered by
     # § 102.21", so a covered good takes 102.21(c) instead. Citing 102.11 for a
     # hat or a seat belt would cite a provision that excludes it.
-    if corpus.reaches(good):
+    if covered_by_102_21(good):
         from .textile import TextileFacts, resolve_textile
+
+        if corpus.name != "19-CFR-102.21":
+            corpus = Corpus.load(which="102.21")
 
         return resolve_textile(
             good,

@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
+from functools import lru_cache
 from pathlib import Path
 
 from .grammar import (
@@ -31,6 +32,26 @@ OVERLAY_DIR = PACKAGE_DATA / "overlays"
 
 #: Somewhere for a user's own overlays, kept apart from the shipped ones.
 USER_OVERLAYS_ENV = "ORIGINSHIFT_OVERLAYS"
+
+
+@lru_cache(maxsize=1)
+def textile_coverage() -> tuple[CodeRange, ...]:
+    """What 102.21 reaches, per 102.21(b)(5).
+
+    Which hierarchy governs a good is a question about 102.21's coverage, not
+    about whichever corpus the caller happens to have loaded. Asking a 102.20
+    corpus returns nothing, and the good is then answered under a part that
+    excludes it — so this is read from the 102.21 corpus whatever is loaded.
+    """
+    builds = sorted(CORPUS_DIR.glob("102.21-*.json"))
+    if not builds:
+        return ()
+    data = json.loads(builds[-1].read_text(encoding="utf-8"))
+    return tuple(_range(x) for x in data.get("covers") or ())
+
+
+def covered_by_102_21(code: str) -> bool:
+    return any(r.contains(code) for r in textile_coverage())
 
 
 def _range(text: str) -> CodeRange:
@@ -97,12 +118,7 @@ class Corpus:
     overlaid: dict[str, dict] = field(default_factory=dict)
 
     def reaches(self, code: str) -> bool:
-        """Is this good one the part governs?
-
-        102.11 applies to goods "other than textile and apparel products covered
-        by 102.21", so answering a hat under 102.11 would cite a provision that
-        excludes it.
-        """
+        """Is this good one the part governs, per its own coverage list?"""
         return any(r.contains(code) for r in self.covers)
 
     def provenance_of(self, rule_id: str) -> dict | None:

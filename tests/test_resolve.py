@@ -97,11 +97,12 @@ def test_a_disjunction_is_satisfied_by_any_one_alternative(corpus):
     assert any(f.satisfied is False for f in r.trace)  # another alternative failed
 
 
-def test_a_textile_good_is_referred_to_102_21(corpus):
+def test_a_textile_good_is_answered_under_102_21(corpus):
+    """It used to be *referred* to 102.21 and left there. It is now routed to
+    the part that governs it and answered — or asked for the facts (c) needs."""
     r = resolve(good="6203.42", inputs=["5208.11"], country="VN", corpus=corpus)
-    assert r.status == "unresolved"
-    assert r.reason == "no_rule_for_this_classification"
-    assert "102.21" in r.needed
+    assert (r.rule_id or "").startswith("102.21")
+    assert not (r.rule_id or "").startswith("102.20")
 
 
 def test_no_materials_is_referred_to_102_11(corpus):

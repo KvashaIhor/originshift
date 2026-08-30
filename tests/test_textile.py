@@ -18,6 +18,31 @@ def test_a_covered_good_is_not_answered_under_102_11(corpus_102_21):
     assert not (r.rule_id or "").startswith("102.11")
 
 
+def test_routing_holds_on_the_default_path_not_only_with_the_textile_corpus():
+    """Which part governs is a question about 102.21's coverage, not about the
+    corpus the caller happened to load.
+
+    Asking a 102.20 corpus returned nothing, so every 102.21 good outside
+    chapters 50-63 was answered under 102.20 — 9113.90.40 came back "resolved,
+    102.20/9113" under a section that excludes it. The test that was meant to
+    catch this passed a 102.21 corpus in, so it only ever exercised the path
+    that worked.
+    """
+    for good, material in (
+        ("9113.90.40", "5806.32"),   # watch straps of textile
+        ("9612.10.9010", "5407.10"),  # typewriter ribbons
+        ("8708.21", "5407.10"),       # seat belts
+        ("6505.00", "6001.10"),       # hats
+    ):
+        r = resolve(good=good, inputs=[Material(material, "CN")], country="MX")
+        assert not (r.rule_id or "").startswith("102.20"), f"{good} answered under 102.20"
+
+
+def test_a_non_textile_good_is_not_swept_into_102_21():
+    r = resolve(good="8708.29", inputs=[Material("7208.10", "CN")], country="MX")
+    assert r.rule_id == "102.20/8708.29"
+
+
 def test_coverage_follows_102_21_b_5_not_just_the_chapters(corpus_102_21):
     """102.21 reaches beyond chapters 50-63: seat belts, hats, umbrellas."""
     assert corpus_102_21.reaches("6203.42")     # apparel
@@ -248,7 +273,7 @@ def test_an_e2_carve_out_is_narrower_than_the_headings_it_names(corpus_102_21):
     )
     # not settleable from the code alone: it turns on fibre content
     assert _condition_holds(condition, TextileFacts(), "6214.10") is None
-    assert _condition_holds(condition, TextileFacts(conditions={"of cotton": True}), "6214.10") is True
+    assert _condition_holds(condition, TextileFacts(excepted_fibre=True), "6214.10") is True
 
 
 def test_a_cotton_scarf_is_reached_by_e_1(corpus_102_21):
@@ -273,7 +298,7 @@ def test_a_good_governed_by_e_2_takes_e_2(corpus_102_21):
         inputs=[Material("5007.10", "CN")],
         country="VN",
         textile=TextileFacts(
-            conditions={"of cotton": False},
+            excepted_fibre=False,
             process_in={"fabric-making process": "IN"},
         ),
         corpus=corpus_102_21,
@@ -289,7 +314,7 @@ def test_e2_i_needs_two_or_more_finishing_operations(corpus_102_21):
     """"both dyed and printed when accompanied by two or more of the following
     finishing operations" — the count is the whole test."""
     facts = TextileFacts(
-        conditions={"of cotton": False},
+        excepted_fibre=False,
         dyed_and_printed_in="IT",
         finishing_operations=("bleaching", "napping"),
     )
@@ -304,7 +329,7 @@ def test_e2_i_needs_two_or_more_finishing_operations(corpus_102_21):
 
 def test_an_operation_not_on_the_list_does_not_count(corpus_102_21):
     facts = TextileFacts(
-        conditions={"of cotton": False},
+        excepted_fibre=False,
         dyed_and_printed_in="IT",
         finishing_operations=("bleaching", "ironing", "folding"),
     )
@@ -320,7 +345,7 @@ def test_e2_ii_does_not_reach_the_6117_10_goods_e2_iii_takes(corpus_102_21):
         inputs=[],
         country="VN",
         textile=TextileFacts(
-            conditions={"of cotton": False, "knit to shape": True},
+            excepted_fibre=False, conditions={"knit to shape": True},
             process_in={"fabric-making process": "CN"},
         ),
         corpus=corpus_102_21,
@@ -337,7 +362,7 @@ def test_e2_i_is_reached_before_e2_iii(corpus_102_21):
         inputs=[],
         country="VN",
         textile=TextileFacts(
-            conditions={"of cotton": False, "knit to shape": True},
+            excepted_fibre=False, conditions={"knit to shape": True},
             dyed_and_printed_in="IT",
             finishing_operations=("bleaching", "fulling"),
             process_in={"knit": "BD"},
@@ -353,7 +378,7 @@ def test_e2_iii_a_follows_where_the_components_were_knit(corpus_102_21):
         inputs=[],
         country="VN",
         textile=TextileFacts(
-            conditions={"of cotton": False, "knit to shape": True},
+            excepted_fibre=False, conditions={"knit to shape": True},
             process_in={"knit": "BD"},
         ),
         corpus=corpus_102_21,
@@ -367,8 +392,8 @@ def test_e2_iii_b_follows_where_the_good_was_wholly_assembled(corpus_102_21):
         inputs=[],
         country="VN",
         textile=TextileFacts(
+            excepted_fibre=False,
             conditions={
-                "of cotton": False,
                 "knit to shape": False,
                 "two or more component parts": True,
             },
@@ -384,10 +409,18 @@ def test_the_fibre_decides_which_table_applies(corpus_102_21):
     (e)(2)'s."""
     from originshift.textile import e2_governs
 
-    assert e2_governs("6214.10", TextileFacts(conditions={"of cotton": True})) is False
-    assert e2_governs("6214.10", TextileFacts(conditions={"of cotton": False})) is True
+    assert e2_governs("6214.10", TextileFacts(excepted_fibre=True)) is False
+    assert e2_governs("6214.10", TextileFacts(excepted_fibre=False)) is True
     assert e2_governs("6214.10", TextileFacts()) is None      # not stated
     assert e2_governs("6203.42", TextileFacts()) is False     # not a listed good
+
+    # The carve-out is one question with three limbs. Answering only one of
+    # them settles nothing: "of cotton: False" for a wool scarf must not put it
+    # in (e)(2), and dict order must not decide which limb is read.
+    assert e2_governs("6214.10", TextileFacts(conditions={"of cotton": False})) is None
+    assert e2_governs(
+        "6214.10", TextileFacts(conditions={"of cotton": False, "of wool": True})
+    ) is False
 
 
 def test_with_the_fibre_unstated_neither_table_is_picked(corpus_102_21):

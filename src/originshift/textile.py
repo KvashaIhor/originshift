@@ -106,6 +106,10 @@ class TextileFacts:
     #: Where the last important assembly or manufacturing process occurred —
     #: 102.21(c)(5).
     last_important_process_in: str | None = None
+    #: Is the good of cotton, of wool, or a blend 16 percent or more cotton by
+    #: weight? That one question decides whether 102.21(e)(2) takes the good or
+    #: (e)(1) keeps it. True keeps it with (e)(1).
+    excepted_fibre: bool | None = None
     #: Where the fabric was both dyed and printed — 102.21(e)(2)(i).
     dyed_and_printed_in: str | None = None
     #: Which finishing operations accompanied it. (e)(2)(i) requires two or
@@ -154,7 +158,12 @@ _CODE_CONDITION = re.compile(
 #: heading excludes goods from the rule that reaches them.
 _E2_CROSS_REFERENCE = re.compile(r"paragraph \(e\)\(2\)", re.I)
 
-#: What settles it: the fibre the good is made of.
+#: The carve-out is one question with three limbs, so it is stated as one fact.
+#: Three separate keys let a caller answer "of cotton: False" for a wool scarf
+#: and be told (e)(2) governs it, and let dict order decide which limb was read.
+EXCEPTED_FIBRE = "of cotton, of wool, or a blend 16 percent or more cotton"
+
+#: Older callers may state the limbs separately; all three must then be settled.
 FIBRE_KEYS = ("of cotton", "of wool", "cotton blend")
 
 #: 102.21(e)(2) governs these, and only where the good is not of cotton, not of
@@ -206,11 +215,22 @@ def e2_governs(good: str, facts: "TextileFacts") -> bool | None:
     """
     if not any(r.contains(good) for r in _e2_ranges()):
         return False
-    for phrase, held in facts.conditions.items():
-        if phrase.lower() in FIBRE_KEYS:
-            # Of cotton or of wool: (e)(2) does not reach it.
-            return not held
-    return None
+    if facts.excepted_fibre is not None:
+        return not facts.excepted_fibre
+    stated = {
+        phrase.lower(): held
+        for phrase, held in facts.conditions.items()
+        if phrase.lower() in FIBRE_KEYS
+    }
+    if not stated:
+        return None
+    # Of cotton, OR of wool, OR a blend 16 percent or more cotton — any one of
+    # them keeps the good with (e)(1). Returning on the first key stated let
+    # dict order decide it: {"of cotton": False, "of wool": True} said (e)(2).
+    if any(stated.values()):
+        return False
+    # All three limbs must be settled before (e)(2) can be ruled in.
+    return True if len(stated) == len(FIBRE_KEYS) else None
 
 
 def _condition_holds(
@@ -245,10 +265,8 @@ def _condition_holds(
                     return False
 
     if references_e2:
-        for phrase, held in facts.conditions.items():
-            if phrase.lower() in condition.lower() or phrase.lower() in FIBRE_KEYS:
-                return held
-        return None
+        governs = e2_governs(good, facts) if good else None
+        return None if governs is None else not governs
 
     low = condition.lower()
     for phrase, held in facts.conditions.items():
@@ -276,9 +294,11 @@ def resolve_e2(good: str, country: str, facts: TextileFacts, corpus: Corpus):
     asks: list[str] = []
 
     # (e)(2)(i) dyed and printed, with two or more finishing operations
-    accompanying = [
-        op for op in facts.finishing_operations if op.lower() in FINISHING_OPERATIONS
-    ]
+    # "two or more of the following finishing operations" — two different ones.
+    # Counting a list let ("bleaching", "bleaching") satisfy it.
+    accompanying = sorted(
+        {op.lower() for op in facts.finishing_operations if op.lower() in FINISHING_OPERATIONS}
+    )
     if facts.dyed_and_printed_in and len(accompanying) >= 2:
         return resolved(
             facts.dyed_and_printed_in,
