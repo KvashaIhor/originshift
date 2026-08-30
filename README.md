@@ -27,9 +27,6 @@ scope. Those turn on the uncodified common-law substantial transformation
 test, which this does not implement and cannot, being case law and not a rule
 table. [Scope, precisely](#scope-precisely) sets out the limits.
 
-See [originshift.md](originshift.md) for the original plan, amended where its
-reasoning turned out to be wrong.
-
 ## What is here
 
 | Component | State |
@@ -120,7 +117,7 @@ useful and inflates it for nothing.
 ```
 
 **Which hierarchy applies is decided first.** 102.11 governs goods *"other than
-textile and apparel products covered by § 102.21"*, so a covered good takes
+textile and apparel products covered by § 102.21"*. A covered good takes
 102.21(c) instead. Coverage runs wider than chapters 50–63: hats, umbrellas and
 car seat belts are all 102.21's. Citing 102.11 for one of them would cite a
 provision that excludes it.
@@ -134,7 +131,7 @@ provision that excludes it.
 | 102.11(a)(3) | `tariff_shift` | the classifications |
 | 102.13 | `tariff_shift_de_minimis` | material values and `good_value` |
 | 102.11(b)(1) | `essential_character` | the materials' countries |
-| 102.11(b)(2), (c), (d) | — | commingled stock, sets, minor processing: named, not decided |
+| 102.11(b)(2), (c), (d) | — | commingled stock, sets, minor processing: named without being decided |
 
 ### Textile and apparel goods — the 102.21(c) hierarchy
 
@@ -143,7 +140,7 @@ provision that excludes it.
 | 102.21(c)(1) | `wholly_obtained` | `wholly_obtained=True` |
 | 102.21(c)(2) via (e)(1) | `tariff_shift` / `process` | the classifications, or where a named process happened |
 | 102.21(c)(2) via (e)(2) | `process` | the fibre, then where the good was dyed and printed, knit, or assembled |
-| 102.13(c) | `tariff_shift_de_minimis` | material **weights** and `good_weight` — 7% of weight, not value |
+| 102.13(c) | `tariff_shift_de_minimis` | material **weights** and `good_weight` — 7% by weight |
 | 102.21(c)(3)(i) | `knit_to_shape` | `TextileFacts(knit_to_shape_in=…)` |
 | 102.21(c)(3)(ii) | `wholly_assembled` | `TextileFacts(wholly_assembled_in=…)`, and the good not one of the headings (c)(3)(ii) excepts |
 | 102.21(c)(4) | `most_important_process` | `TextileFacts(most_important_process_in=…)` |
@@ -178,8 +175,7 @@ neither table is picked and the resolver asks.
 ```
 
 (e)(2)(i) needs the dyeing and printing accompanied by **two or more** of nine
-named finishing operations, so one will not carry it and the count is the whole
-test.
+named finishing operations. One will not carry it. The count is the whole test.
 
 **102.11(b) is mostly decidable.** 102.18(b)(1) confines the essential-character
 candidates to materials sitting in a provision from which change is not allowed,
@@ -190,10 +186,10 @@ outright:
 > which a change in tariff classification is not allowed … then that material
 > **will represent** the single material that imparts the essential character.*
 
-So judgement is only reached with two or more candidates, and even then not if
-they share a country. In all 19 curated cases where the shift definitely failed,
-exactly one material was in a disallowed provision, so the regulation named the
-answer in every one. Domestic materials count here, unlike under (a)(3).
+Judgement is only reached with two or more candidates, and even then only when
+they come from different countries. In all 19 curated cases where the shift definitely failed,
+exactly one material was in a disallowed provision, and the regulation therefore
+named the answer in every one. Domestic materials count here, unlike under (a)(3).
 
 `102.17` is applied where an `operation` is given. Repacking, dismantling, mere
 dilution, a change in end-use and a GRI 2(a) collection of parts confer no
@@ -255,8 +251,8 @@ usually the question: what does this say about last quarter's entries.
 | `corpus` | force `102.20` or `102.21`; otherwise whichever has a rule |
 | `good_weight`, `material_weights` | for the 102.13(c) textile allowance, which is by weight |
 
-For textiles and apparel. Each is named for what sits on a spec sheet rather
-than for the rule it feeds:
+For textiles and apparel. Each is named for what sits on a spec sheet, leaving
+you free to ignore which rule it feeds:
 
 | Column | |
 |---|---|
@@ -275,8 +271,8 @@ originshift resolve --good 6203.42 --inputs 5208.11 --country VN \
 ```
 
 Every output row carries `status`, `origin`, `basis`, `rule_id`, `rule_text`,
-`needed`, `vintage` and `source`, so a determination in a spreadsheet is as
-traceable as one from the API. `source` reads `eCFR`, or names the document an
+`needed`, `vintage` and `source`. A determination in a spreadsheet is therefore
+as traceable as one from the API. `source` reads `eCFR`, or names the document an
 overlaid rule came from.
 
 Worked files: `examples/entries.csv`, `examples/apparel.csv`,
@@ -315,9 +311,8 @@ The resolver reads that as foreign, which is the conservative default, and the
 parent records the component in `blocked_by`. An answer standing on an unknown
 is never mistaken for a clean one.
 
-**This produces a determination, not a certificate of origin**, and does no
-preferential or FTA qualification. Both are deliberately out of scope, for the
-reasons set out in [the patent note](originshift.md), and nothing is stored
+**This produces a determination. It never produces a certificate of origin**,
+and it does no preferential or FTA qualification. Both are deliberately out of scope and nothing is stored
 between calls.
 
 ## What `unresolved` means
@@ -353,10 +348,10 @@ them. Both are returned with their text.
 **For textiles, `unresolved` without production facts is the normal case, by
 design.** Only 11.9% of 102.21 needs nothing but a classification, because
 textile origin turns on
-fabric-making, knitting and assembly. So for chapters 50–63 this is less an
-oracle than a precise statement of *what you must establish*, drawn from the
-rule that applies to your code. That is worth having: the alternative is reading
-102.21(e)(1) yourself.
+fabric-making, knitting and assembly. For chapters 50–63 the tool gives you a
+precise statement of *what you must establish*, drawn from the rule that applies
+to your code. That is worth having. The alternative is reading 102.21(e)(1)
+yourself.
 
 ## Validation
 
@@ -381,10 +376,10 @@ pluralises "heading", writes headings in the HS dotted form (`48.17` for
 **Coverage** is how many quoted rules the corpus can place at all; **fidelity**
 is how many it holds as CBP stated them.
 
-Agreement falling away with age is the reason for pinning a vintage, not a
-defect. The corpus answers under HTSUS 2026, and HS renumbering moves the codes
-out from under older rulings: CBP's 2025 quotation of `9401.90` has no counterpart because
-HS 2022 split it into `9401.91` through `9401.99`.
+Agreement falls away with the age of the ruling, which is why a vintage is
+pinned at all. The corpus answers under HTSUS 2026, and HS renumbering moves the
+codes out from under older rulings. CBP's 2025 quotation of `9401.90` has no
+counterpart once HS 2022 has split it into `9401.91` through `9401.99`.
 
 Two things shape that number. Rulings citing 102.20 routinely also quote **USMCA
 and NAFTA preferential rules**, which are worded almost identically and are a
@@ -427,7 +422,7 @@ python -m originshift.ingest compile cbp-dec-22-25 --reviewed-by "your name"
 
 Extraction never writes to a corpus. It writes a staging CSV for a person to
 check, every document is hashed, and every rule carries where it came from and
-who read it, so an answer resting on a hand-fed document can always be told from
+who read it. An answer resting on a hand-fed document can always be told from
 one resting on the eCFR:
 
 ```python
@@ -473,9 +468,9 @@ as to Israel. Not marking-only, not USMCA-only.
 | Marking origin, other non-USMCA goods | common-law substantial transformation | **no** |
 | **Preferential / FTA qualification** | the agreement's own rules of origin | **no, deliberately** |
 
-Substantial transformation is case law and not a rule table, so it is not
-something this project can compile. A tool claiming to answer Section 301 origin
-out of Part 102 would be wrong, and a licensed broker would know it.
+Substantial transformation is case law. It has no rule table, and nothing this
+project could compile. A tool claiming to answer Section 301 origin out of Part
+102 would be wrong, and a licensed broker would know it.
 
 Textile origin turns on facts a classification does not carry. Whether the good
 is of staple fibers or of filaments. Where the fabric-making process happened.
@@ -486,10 +481,12 @@ Whether it was knit to shape.
 | 102.20 | 1,441 / 1,455 = 99.0% | 1,018 / 1,455 = 70.0% |
 | 102.21 | 56 / 176 = 31.8% | 21 / 176 = 11.9% |
 
-Read the second column as a property of the rule table, not of the tool. It counts rules that need nothing beyond a classification — and for
-textiles almost none do, because 102.21 is written around processes. It is not
-how often you get an answer: supply what the rules ask for and the curated cases
-resolve 13 of 13. It is how much of the work the codes can do on their own.
+Read the second column as a property of the rule table. It describes the
+regulation and never the tool, counting rules that need nothing beyond a
+classification, and for textiles almost none do, because 102.21 is written
+around processes. It says nothing about how often you get an answer. Supply what
+the rules ask for and the curated cases resolve 13 of 13. It says how much of
+the work the codes can do alone.
 
 ## Development
 
@@ -505,10 +502,10 @@ python -m originshift.validate         # score them against CBP's rulings
 The 789 CROSS rulings the validation measures are scored over are **not
 committed**, being 12 MB the package never reads. Until they are fetched, those
 tests skip and say so. The pinned regulation snapshot and the two ruling indices
-are committed, so everything else runs on a clone.
+are committed, which is enough for everything else to run on a clone.
 
 Built corpora, reviewed overlays and the curated validation cases live in
-`src/originshift/data/` and ship with the package, so an install works without a
+`src/originshift/data/` and ship with the package. An install works without a
 checkout. Anything written at runtime, meaning fetched sources and ingest
 staging, goes to the repository's `data/` in a checkout and to your cache
 directory (`XDG_CACHE_HOME`, else `~/.cache/originshift`) from an install, and
@@ -526,6 +523,6 @@ no link.
 **The package follows semver; the corpus carries the vintage.** Every rule
 record states the `vintage` and the `source_issue_date` it was built from, the
 corpus file is named for that date, and every answer returns the vintage it was
-decided under. So a corpus can be used without the code and still say what it
-answers under, and an answer decided under an older nomenclature says so rather
-than going quietly stale.
+decided under. A corpus can therefore be used without the code and still say
+what it answers under, and an answer decided under an older nomenclature says as
+much instead of going quietly stale.
