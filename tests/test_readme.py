@@ -143,7 +143,7 @@ def test_the_stated_corpus_figures_are_current(corpus, corpus_102_21):
     from originshift.corpus import CORPUS_DIR
 
     text = README.read_text(encoding="utf-8")
-    rows = _table_rows(text, "Answerable from codes alone")
+    rows = _table_rows(text, "Decidable on codes alone")
     assert rows, "the corpus table is gone"
 
     for which in ("102.20", "102.21"):

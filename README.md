@@ -55,13 +55,13 @@ reasoning turned out to be wrong.
 python -m originshift.build_corpus
 ```
 
-Writes one file per corpus, named for its eCFR issue date — pass `--corpus` to
-build just one:
+Writes one file per corpus into `src/originshift/data/corpus/`, named for the
+eCFR issue date it was built from — pass `--corpus` to build just one:
 
-| File | Rules | Alternatives | Parsed into structure | Answerable from codes alone |
+| File | Rules | Alternatives | Parsed into structure | Decidable on codes alone |
 |---|---|---|---|---|
-| `data/corpus/102.20-<issue-date>.json` | 1,032 | 1,455 | 1,441 (99.0%) | 1,018 (70.0%) |
-| `data/corpus/102.21-<issue-date>.json` | 101 | 176 | 56 (31.8%) | 21 (11.9%) |
+| `102.20-<issue-date>.json` | 1,032 | 1,455 | 1,441 (99.0%) | 1,018 (70.0%) |
+| `102.21-<issue-date>.json` | 101 | 176 | 56 (31.8%) | 21 (11.9%) |
 
 Everything else is recorded with a reason rather than guessed at: a source
 naming a good instead of a code, a condition on the good, a rule that turns on
@@ -272,14 +272,13 @@ originshift resolve --good 6203.42 --inputs 5208.11 --country VN \
 #   6203.42  →  RESOLVED   VN   102.21(e)(1)/6201-6208
 ```
 
-There is a worked `examples/apparel.csv`.
-
 Every output row carries `status`, `origin`, `basis`, `rule_id`, `rule_text`,
 `needed`, `vintage` and `source` — so a determination in a spreadsheet is as
 traceable as one from the API. `source` reads `eCFR`, or names the document an
 overlaid rule came from.
 
-There is a worked `examples/entries.csv` and `examples/assembly.json`.
+Worked files: `examples/entries.csv`, `examples/apparel.csv`,
+`examples/assembly.json`.
 
 ## Bills of materials
 
@@ -376,45 +375,28 @@ for `4817`), and runs quotations into its own prose.
 **Coverage** is how many quoted rules the corpus can place at all; **fidelity**
 is how many it holds as CBP stated them.
 
-Agreement falling away with age is the versioning argument (§7), not a defect.
-The corpus answers under HTSUS 2026, and HS renumbering moves the codes out from
-under older rulings: CBP's 2025 quotation of `9401.90` has no counterpart because
+Agreement falling away with age is the reason for pinning a vintage, not a
+defect. The corpus answers under HTSUS 2026, and HS renumbering moves the codes
+out from under older rulings: CBP's 2025 quotation of `9401.90` has no counterpart because
 HS 2022 split it into `9401.91` through `9401.99`.
 
-Two things had to be got right before the numbers meant anything, and both are
-pinned by tests. Rulings that cite 102.20 routinely also quote **USMCA and NAFTA
-preferential rules**, worded almost identically, scored
-against the wrong legal test — **44% of everything the extractor finds** — until
-they were excluded. And a quotation that runs past its closing punctuation
-absorbs codes from CBP's following prose.
+Two things shape the number and are worth knowing. Rulings that cite 102.20
+routinely also quote **USMCA and NAFTA preferential rules**, worded almost
+identically and a different legal test — **44% of everything the extractor
+finds**, excluded before scoring. And a quotation is cut where the rule ends,
+since one that runs into CBP's prose picks up codes that are not part of it.
 
 ## Design commitments
 
 **It never guesses.** Where a rule names a good rather than a code — *"from
-mustard flour or meal"*, *"from feathers or down"* — the alternative is marked
-`descriptive_source` and left unstructured. An honest abstention tells the user
-what to go and find out; a confident wrong answer does not.
+mustard flour or meal"*, *"from feathers or down"* — or turns on a fact a
+classification does not carry, the alternative is left unstructured with the
+reason recorded, and the resolver abstains naming what it needs. An honest
+abstention tells you what to go and find out; a confident wrong answer does not.
 
-This is load-bearing. One rule reads *"from any product other than edible meals
-and flours of Chapter 2"*. Read carelessly, that becomes *must come from Chapter
-2* — the exact inverse. The parser abstains instead, and a test pins it.
-
-**Validating against CBP finds what reading your own parser cannot.** Scoring
-102.21 against 554 rulings turned up two defects that every parser-level test
-had passed:
-
-- **102.21(c)(2) was unreachable for most of the corpus.** It confers origin
-  where each foreign material *"underwent an applicable change in tariff
-  classification, **and/or met any other requirement**, specified for the good
-  in paragraph (e)"* — and most of 102.21 states its requirement as a process,
-  not a change of code. Testing only the shift meant (c)(2) could never be
-  satisfied for those goods however much the user knew. CBP applied (c)(2) in 33
-  of 57 rulings; this corpus could reach it in 2 of 26.
-- **An (e)(2) carve-out was read as the whole heading.** 102.21(e)(2) reaches
-  headings 6213, 6214, 6303, 6304 and subheading 9404.90 *except* goods of
-  cotton, of wool, or a blend 16% or more cotton — so a cotton scarf of 6214 is
-  governed by (e)(1) after all. Reading the carve-out broadly excluded common
-  goods from the rule that reaches them.
+The regulation rewards the caution. One rule reads *"from any product other than
+edible meals and flours of Chapter 2"* — read as a positive source that becomes
+*must come from Chapter 2*, the exact inverse.
 
 **Defects in the source are reported, not corrected.** 102.20 contains
 transcription errors — the rule keyed `2824.10-2824.90` is written *"A change to
@@ -495,7 +477,7 @@ happened, whether it was knit to shape. So for chapters 50–63 the tool is less
 an oracle than a precise statement of *what you must establish*, drawn from the
 rule that applies to your code.
 
-| Corpus | Parsed into structure | Decidable on codes with no other fact |
+| Corpus | Parsed into structure | Decidable on codes alone |
 |---|---|---|
 | 102.20 | 1,441 / 1,455 = 99.0% | 1,018 / 1,455 = 70.0% |
 | 102.21 | 56 / 176 = 31.8% | 21 / 176 = 11.9% |
@@ -517,7 +499,7 @@ python -m originshift.build_corpus     # rebuild both corpora from the eCFR
 python -m originshift.validate         # score them against CBP's rulings
 ```
 
-The 866 CROSS rulings the validation measures are scored over are **not
+The 789 CROSS rulings the validation measures are scored over are **not
 committed** — they are 12 MB the package never reads. Until they are fetched
 those tests skip, saying so. What *is* committed is the pinned regulation
 snapshot and the two ruling indices, so everything else runs on a clone.
