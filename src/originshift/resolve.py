@@ -53,6 +53,28 @@ DE_MINIMIS = 0.07
 DE_MINIMIS_CHAPTER_22 = 0.10
 
 
+#: 102.15(a). A material in one of these roles is disregarded when testing
+#: whether the good undergoes the applicable change. Role is a fact about how
+#: the material is used, not something its classification says.
+DISREGARDED_ROLES = {
+    "retail_packaging": (
+        "packaging materials and containers in which the good is packaged for "
+        "retail sale, classified with the good (102.15(a)(1))"
+    ),
+    "accessory": (
+        "accessories, spare parts or tools delivered with the good, classified "
+        "with it and shipped with it (102.15(a)(2))"
+    ),
+    "packing": (
+        "packing materials and containers in which the good is packed for "
+        "shipment (102.15(a)(3))"
+    ),
+    "indirect": "indirect materials (102.15(a)(4))",
+}
+
+Role = Literal["retail_packaging", "accessory", "packing", "indirect"]
+
+
 @dataclass
 class Material:
     """A material incorporated into the good.
@@ -67,6 +89,12 @@ class Material:
     value: float | None = None
     #: Only for 102.13(c), the textile de minimis, which is by weight.
     weight: float | None = None
+    #: A 102.15 role, if the material has one. Retail packaging classified with
+    #: the good can never shift, so left as an ordinary material it always fails
+    #: and then becomes the single material in a disallowed provision — which
+    #: 102.18(b)(1)(iii) makes the essential-character material. The packaging
+    #: would decide the origin of the goods inside it.
+    role: Role | None = None
 
     @classmethod
     def of(cls, item: "str | Material") -> "Material":
@@ -100,6 +128,8 @@ class OriginResult:
     #: Which rule carried the answer: wholly_obtained, exclusively_domestic,
     #: tariff_shift, or tariff_shift_de_minimis.
     basis: str | None = None
+    #: Materials set aside under 102.15, and why.
+    disregarded: list[str] = field(default_factory=list)
     rule_id: str | None = None
     rule_text: str | None = None
     satisfied: bool | None = None
@@ -351,6 +381,35 @@ def _essential_character(
 
 
 def resolve(
+    good: str,
+    inputs: list[str] | list[Material],
+    country: str,
+    **kwargs,
+) -> OriginResult:
+    """Decide whether `country` confers origin on `good`, and cite the rule.
+
+    See `_resolve` for the hierarchy. This wrapper sets aside the materials
+    102.15 says to disregard and records them on whatever result comes back, so
+    no exit path can quietly lose that they were set aside.
+    """
+    materials = [Material.of(m) for m in inputs]
+    for m in materials:
+        if m.role is not None and m.role not in DISREGARDED_ROLES:
+            raise ValueError(
+                f"unknown 102.15 role {m.role!r}; expected one of "
+                + ", ".join(sorted(DISREGARDED_ROLES))
+            )
+    kept = [m for m in materials if m.role is None]
+    set_aside = [m for m in materials if m.role is not None]
+
+    result = _resolve(good, kept, country, **kwargs)
+    result.disregarded = [
+        f"{m.code}: {DISREGARDED_ROLES[m.role]}" for m in set_aside if m.role
+    ]
+    return result
+
+
+def _resolve(
     good: str,
     inputs: list[str] | list[Material],
     country: str,

@@ -205,3 +205,66 @@ def test_a_set_is_excepted_from_102_11_b(corpus):
     assert r.status == "unresolved"
     assert "102.11(c)" in r.needed
     assert "102.18(b)(1)(iii)" not in r.needed
+
+
+# ---- 102.15 disregarded materials -------------------------------------------
+
+
+def test_retail_packaging_does_not_decide_the_origin_of_what_is_inside_it(corpus):
+    """102.15(a)(1). Packaging classified with the good can never shift, so left
+    as an ordinary material it always fails, becomes the single material in a
+    provision from which change is not allowed, and 102.18(b)(1)(iii) then makes
+    it the essential-character material.
+
+    Italian cosmetics from French bulk in Chinese retail packaging came back as
+    a good of China.
+    """
+    materials = [Material("3304.10", "FR"), Material("3304.99", "CN")]
+    undeclared = resolve(good="3304.99", inputs=materials, country="IT", corpus=corpus)
+    assert undeclared.origin == "CN"  # what the caller gets if they say nothing
+
+    declared = resolve(
+        good="3304.99",
+        inputs=[Material("3304.10", "FR"), Material("3304.99", "CN", role="retail_packaging")],
+        country="IT",
+        corpus=corpus,
+    )
+    assert declared.origin == "IT"
+    assert declared.rule_id.startswith("102.20/")
+
+
+def test_every_102_15_role_is_disregarded(corpus):
+    for role in ("retail_packaging", "accessory", "packing", "indirect"):
+        r = resolve(
+            good="8708.29",
+            inputs=[Material("7208.10", "KR"), Material("8708.29", "CN", role=role)],
+            country="VN",
+            corpus=corpus,
+        )
+        assert r.origin == "VN", f"{role} was not disregarded"
+        assert r.disregarded and "102.15" in r.disregarded[0]
+
+
+def test_setting_aside_a_material_is_always_recorded(corpus):
+    """It changes the answer, so it must be visible however the result came out."""
+    r = resolve(
+        good="8708.29",
+        inputs=[Material("7208.10", "KR"), Material("4819.10", "CN", role="packing")],
+        country="VN",
+        corpus=corpus,
+    )
+    assert r.status == "resolved"
+    assert r.disregarded == [
+        "4819.10: packing materials and containers in which the good is packed "
+        "for shipment (102.15(a)(3))"
+    ]
+
+
+def test_an_unrecognised_role_is_refused_not_ignored(corpus):
+    with pytest.raises(ValueError, match="unknown 102.15 role"):
+        resolve(
+            good="8708.29",
+            inputs=[Material("7208.10", "KR", role="widget")],
+            country="VN",
+            corpus=corpus,
+        )
