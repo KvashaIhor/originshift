@@ -29,6 +29,12 @@ from .grammar import (
 #: hole in the law rather than in the tooling.
 PACKAGE_DATA = Path(__file__).resolve().parent / "data"
 CORPUS_DIR = PACKAGE_DATA / "corpus"
+
+#: A corpus the user has rebuilt against a newer issue of the regulation, which
+#: is preferred over the one that shipped.
+from . import paths as _paths  # noqa: E402  (module-level path constants)
+
+CORPUS_DIRS = (_paths.CORPUS_OUT, CORPUS_DIR)
 OVERLAY_DIR = PACKAGE_DATA / "overlays"
 
 #: Somewhere for a user's own overlays, kept apart from the shipped ones.
@@ -197,13 +203,18 @@ class Corpus:
     ) -> Corpus:
         """Load a corpus, defaulting to the most recent build of `which`."""
         if path is None:
-            builds = sorted(CORPUS_DIR.glob(f"{which}-*.json"))
+            # A rebuilt corpus wins over the shipped one, and within either the
+            # latest issue date wins.
+            builds = [
+                b for d in CORPUS_DIRS if d.exists()
+                for b in sorted(d.glob(f"{which}-*.json"))
+            ]
             if not builds:
                 raise FileNotFoundError(
-                    f"no {which} corpus in {CORPUS_DIR}; run "
-                    f"python -m originshift.build_corpus"
+                    f"no {which} corpus in {' or '.join(str(d) for d in CORPUS_DIRS)}; "
+                    f"run python -m originshift.build_corpus"
                 )
-            path = builds[-1]
+            path = max(builds, key=lambda b: (b.stem, b.parent == CORPUS_DIRS[0]))
         corpus = cls.from_dict(json.loads(Path(path).read_text(encoding="utf-8")))
         if overlays:
             corpus.apply_overlays()

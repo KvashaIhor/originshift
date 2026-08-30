@@ -19,8 +19,10 @@ from . import paths
 from . import parse_102, parse_102_21, sources
 from .grammar import Rule, digits
 
-#: Written inside the package, so a built corpus ships with an install.
-OUT = paths.PACKAGE_DATA / "corpus"
+#: Where a rebuild is written. In a checkout that is the package's own data
+#: directory, so the corpus ships with the next release; from an install it is
+#: the user's, because site-packages is not theirs to write to.
+OUT = paths.PACKAGE_DATA / "corpus" if paths._IN_CHECKOUT else paths.CORPUS_OUT
 
 #: 102.20 is written against the HTSUS, which tracks an HS edition. Stated
 #: explicitly so a consumer can tell whether the corpus matches their codes.

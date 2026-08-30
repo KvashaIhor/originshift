@@ -513,8 +513,10 @@ tests skip and say so. The pinned regulation snapshot and the two ruling indices
 are committed, which is enough for everything else to run on a clone.
 
 Built corpora, reviewed overlays and the curated validation cases live in
-`src/originshift/data/` and ship with the package. An install works without a
-checkout. Anything written at runtime, meaning fetched sources and ingest
+`src/originshift/data/` and ship with the package, so an install needs no
+checkout. Rebuilding from a newer issue of the regulation writes to your cache
+directory instead of into the installed package, and a corpus found there is
+preferred over the one that shipped. Anything written at runtime, meaning fetched sources and ingest
 staging, goes to the repository's `data/` in a checkout and to your cache
 directory (`XDG_CACHE_HOME`, else `~/.cache/originshift`) from an install, and
 never inside the installed package. Point `ORIGINSHIFT_OVERLAYS` at a directory to load your

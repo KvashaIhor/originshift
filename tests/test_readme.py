@@ -237,3 +237,23 @@ def test_the_readme_states_where_the_vintage_lives():
     text = README.read_text(encoding="utf-8")
     assert "semver" in text
     assert "source_issue_date" in text
+
+
+def test_a_rebuild_never_writes_into_an_installed_package():
+    """The corpus ships inside the package and must be rebuilt outside it. An
+    installed package is not the user's to modify, may not be writable, and is
+    replaced on upgrade — so the documented refresh command would fail, or
+    silently lose its work."""
+    from originshift import build_corpus, paths
+
+    if paths._IN_CHECKOUT:
+        assert build_corpus.OUT == paths.PACKAGE_DATA / "corpus"
+    else:  # pragma: no cover - exercised by the install test below
+        assert paths.PACKAGE_DATA not in build_corpus.OUT.parents
+
+
+def test_a_rebuilt_corpus_is_preferred_over_the_shipped_one():
+    from originshift.corpus import CORPUS_DIR, CORPUS_DIRS
+    from originshift import paths
+
+    assert CORPUS_DIRS == (paths.CORPUS_OUT, CORPUS_DIR)

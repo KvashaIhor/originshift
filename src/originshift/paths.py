@@ -43,6 +43,11 @@ def writable(name: str) -> Path:
     return root / name
 
 
+#: A corpus the user has rebuilt. Takes precedence over the shipped one, and is
+#: written here rather than into PACKAGE_DATA: an installed package is not the
+#: user's to modify, may not be writable at all, and is replaced on upgrade.
+CORPUS_OUT = writable("corpus")
+
 #: Source documents fetched from eCFR and CROSS.
 CACHE = writable("cache")
 #: Extractions awaiting review, from originshift.ingest.
