@@ -135,7 +135,8 @@ excludes it.
 | Step | Basis | Needs |
 |---|---|---|
 | 102.21(c)(1) | `wholly_obtained` | `wholly_obtained=True` |
-| 102.21(c)(2) | `tariff_shift` | the classifications |
+| 102.21(c)(2) via (e)(1) | `tariff_shift` / `process` | the classifications, or where a named process happened |
+| 102.21(c)(2) via (e)(2) | `process` | the fibre, then where the good was dyed and printed, knit, or assembled |
 | 102.13(c) | `tariff_shift_de_minimis` | material **weights** and `good_weight` — 7% of weight, not value |
 | 102.21(c)(3)(i) | `knit_to_shape` | `TextileFacts(knit_to_shape_in=…)` |
 | 102.21(c)(3)(ii) | `wholly_assembled` | `TextileFacts(wholly_assembled_in=…)`, and the good not one of the headings (c)(3)(ii) excepts |
@@ -145,6 +146,27 @@ excludes it.
 Only the first two steps turn on codes. The rest turn on **where an operation
 happened**, which is why textiles abstain so often — and the abstention names
 which step it is waiting on.
+
+**Paragraph (e) has two tables, and the fibre decides which applies.** (e)(2)
+takes headings 6213 and 6214 and a list of subheadings including 6117.10,
+6302.22 and 9404.90.85 — *except* goods of cotton, of wool, or a blend 16% or
+more cotton by weight, which stay with (e)(1). So a silk scarf of 6214 is
+(e)(2)'s and a cotton one is (e)(1)'s. With the fibre unstated, neither table is
+picked and the question is named.
+
+```python
+>>> from originshift.textile import TextileFacts
+>>> r = resolve(good="6214.10", inputs=[], country="VN",
+...             textile=TextileFacts(conditions={"of cotton": False},
+...                                  dyed_and_printed_in="IT",
+...                                  finishing_operations=("bleaching", "napping")))
+>>> r.origin, r.rule_id
+('IT', '102.21(e)(2)(i)')
+```
+
+(e)(2)(i) needs the dyeing and printing accompanied by **two or more** of nine
+named finishing operations — one does not carry it, and the count is the whole
+test.
 
 **102.11(b) is more decidable than it looks.** Essential character sounds like a
 judgement, but 102.18(b)(1) confines the candidates to materials sitting in a

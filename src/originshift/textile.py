@@ -106,6 +106,11 @@ class TextileFacts:
     #: Where the last important assembly or manufacturing process occurred —
     #: 102.21(c)(5).
     last_important_process_in: str | None = None
+    #: Where the fabric was both dyed and printed — 102.21(e)(2)(i).
+    dyed_and_printed_in: str | None = None
+    #: Which finishing operations accompanied it. (e)(2)(i) requires two or
+    #: more, so the count is the test and a single one does not carry it.
+    finishing_operations: tuple[str, ...] = ()
 
 
 def de_minimis_by_weight(
@@ -152,6 +157,61 @@ _E2_CROSS_REFERENCE = re.compile(r"paragraph \(e\)\(2\)", re.I)
 #: What settles it: the fibre the good is made of.
 FIBRE_KEYS = ("of cotton", "of wool", "cotton blend")
 
+#: 102.21(e)(2) governs these, and only where the good is not of cotton, not of
+#: wool, and not a blend 16 percent or more cotton by weight. Anything else in
+#: these headings stays with (e)(1).
+E2_GOODS = (
+    "6213",
+    "6214",
+    "6117.10",
+    "6302.22",
+    "6302.29",
+    "6302.53",
+    "6302.59",
+    "6302.93",
+    "6302.99",
+    "6303.92",
+    "6303.99",
+    "6304.19",
+    "6304.93",
+    "6304.99",
+    "9404.90.85",
+    "9404.90.95",
+)
+
+#: 102.21(e)(2)(i) needs the dyeing and printing to be accompanied by two or
+#: more of these. One is not enough, and the count is the whole test.
+FINISHING_OPERATIONS = (
+    "bleaching",
+    "shrinking",
+    "fulling",
+    "napping",
+    "decating",
+    "permanent stiffening",
+    "weighting",
+    "permanent embossing",
+    "moireing",
+)
+
+
+def _e2_ranges() -> list[CodeRange]:
+    return [CodeRange.parse(c) for c in E2_GOODS]
+
+
+def e2_governs(good: str, facts: "TextileFacts") -> bool | None:
+    """Does 102.21(e)(2) take this good, rather than the (e)(1) table?
+
+    Returns None where the fibre has not been stated, since that is what
+    decides it — a cotton scarf of 6214 stays with (e)(1).
+    """
+    if not any(r.contains(good) for r in _e2_ranges()):
+        return False
+    for phrase, held in facts.conditions.items():
+        if phrase.lower() in FIBRE_KEYS:
+            # Of cotton or of wool: (e)(2) does not reach it.
+            return not held
+    return None
+
 
 def _condition_holds(
     condition: str | None, facts: TextileFacts, good: str | None = None
@@ -195,6 +255,117 @@ def _condition_holds(
         if phrase.lower() in low:
             return held
     return None
+
+
+def resolve_e2(good: str, country: str, facts: TextileFacts, corpus: Corpus):
+    """102.21(e)(2), for the listed goods that are not of cotton or of wool."""
+    from .resolve import OriginResult
+
+    def resolved(origin, rule_id, text, why):
+        return OriginResult(
+            status="resolved",
+            origin=origin,
+            basis="process",
+            rule_id=rule_id,
+            rule_text=text,
+            satisfied=True,
+            reason=why,
+            vintage=corpus.vintage,
+        )
+
+    asks: list[str] = []
+
+    # (e)(2)(i) dyed and printed, with two or more finishing operations
+    accompanying = [
+        op for op in facts.finishing_operations if op.lower() in FINISHING_OPERATIONS
+    ]
+    if facts.dyed_and_printed_in and len(accompanying) >= 2:
+        return resolved(
+            facts.dyed_and_printed_in,
+            "102.21(e)(2)(i)",
+            "The country of origin of the good is the country in which the fabric "
+            "comprising the good was both dyed and printed when accompanied by two "
+            "or more of the following finishing operations: "
+            + ", ".join(FINISHING_OPERATIONS),
+            f"dyed and printed in {facts.dyed_and_printed_in}, accompanied by "
+            + ", ".join(accompanying),
+        )
+    if facts.dyed_and_printed_in and len(accompanying) < 2:
+        asks.append(
+            f"(e)(2)(i) needs the dyeing and printing accompanied by two or more of "
+            f"{', '.join(FINISHING_OPERATIONS)}; {len(accompanying)} given"
+        )
+    else:
+        asks.append("where the fabric was both dyed and printed, and with which "
+                    "finishing operations (e)(2)(i)")
+
+    is_6117_10 = CodeRange.parse("6117.10").contains(good)
+    knit = facts.conditions.get("knit to shape")
+    parts = facts.conditions.get("two or more component parts")
+    special = is_6117_10 and (knit or parts)
+
+    if not special:
+        # (e)(2)(ii) — but it does not reach 6117.10 goods that are knit to
+        # shape or made of two or more parts; those take (e)(2)(iii).
+        where = facts.process_in.get("fabric-making process")
+        if where:
+            return resolved(
+                where,
+                "102.21(e)(2)(ii)",
+                "If the country of origin cannot be determined under (e)(2)(i), "
+                "the country of origin is the country in which the fabric "
+                "comprising the good was formed by a fabric-making process.",
+                f"the fabric-making process occurred in {where}",
+            )
+        if is_6117_10 and knit is None and parts is None:
+            asks.append(
+                "whether the good is knit to shape or consists of two or more "
+                "component parts, which decides (e)(2)(ii) against (e)(2)(iii)"
+            )
+        asks.append("where the fabric-making process occurred (e)(2)(ii)")
+    else:
+        # (e)(2)(iii), for 6117.10 only
+        if knit:
+            where = facts.process_in.get("knit")
+            if where:
+                return resolved(
+                    where,
+                    "102.21(e)(2)(iii)(A)",
+                    "If the good is knit to shape, the country of origin is the "
+                    "country in which a change to subheading 6117.10 from yarn "
+                    "occurs, provided that the knit to shape components are knit "
+                    "in a single country.",
+                    f"knit from yarn in {where}",
+                )
+            asks.append("where the knit to shape components were knit (e)(2)(iii)(A)")
+        else:
+            where = facts.process_in.get("wholly assembled")
+            if where:
+                return resolved(
+                    where,
+                    "102.21(e)(2)(iii)(B)",
+                    "If the good is not knit to shape and consists of two or more "
+                    "component parts, the country of origin is the country in "
+                    "which a change to an assembled good of subheading 6117.10 "
+                    "from unassembled components occurs, provided that the change "
+                    "is the result of the good being wholly assembled in a single "
+                    "country.",
+                    f"wholly assembled in {where}",
+                )
+            asks.append("where the good was wholly assembled (e)(2)(iii)(B)")
+
+    return OriginResult(
+        status="unresolved",
+        basis="process",
+        rule_id="102.21(e)(2)",
+        satisfied=None,
+        reason="insufficient_information",
+        needed=(
+            f"102.21(e)(2) governs {good}, and it turns on where operations "
+            f"happened: " + "; ".join(asks)
+        ),
+        vintage=corpus.vintage,
+    )
 
 
 def resolve_textile(
@@ -247,6 +418,12 @@ def resolve_textile(
             satisfied=True,
             vintage=corpus.vintage,
         )
+
+    # Paragraph (e) has two tables. (e)(2) takes the listed goods unless they
+    # are of cotton or of wool, in which case (e)(1) keeps them.
+    takes_e2 = e2_governs(good, facts)
+    if takes_e2:
+        return resolve_e2(good, country, facts, corpus)
 
     # (c)(2) each foreign material underwent the change specified in (e)(1),
     # "and/or met any other requirement" there. A process rule is met by stating
@@ -423,20 +600,6 @@ def resolve_textile(
                 "assembly or manufacturing process occurred."
             ),
             satisfied=True,
-            vintage=corpus.vintage,
-            trace=findings,
-        )
-
-    if governed_by_e2:
-        return OriginResult(
-            status="unresolved",
-            reason="out_of_scope",
-            needed=(
-                f"102.21(e)(2) governs {good} — it sets a dyed-and-printed rule "
-                f"for these headings other than goods of cotton or of wool — and "
-                f"this corpus compiles (e)(1) only, so the rule must be read "
-                f"directly at 19 CFR 102.21(e)(2)"
-            ),
             vintage=corpus.vintage,
             trace=findings,
         )

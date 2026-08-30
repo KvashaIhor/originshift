@@ -265,9 +265,9 @@ def test_a_cotton_scarf_is_reached_by_e_1(corpus_102_21):
     assert (r.status, r.origin) == ("resolved", "IN")
 
 
-def test_a_good_governed_by_e_2_is_declined_not_guessed(corpus_102_21):
-    """(e)(2) is not compiled. Answering such a good under (e)(1) would apply
-    the wrong rule."""
+def test_a_good_governed_by_e_2_takes_e_2(corpus_102_21):
+    """A silk scarf of 6214 is (e)(2)'s; answering it from the (e)(1) table
+    would apply the wrong rule."""
     r = resolve(
         good="6214.10",
         inputs=[Material("5007.10", "CN")],
@@ -278,9 +278,128 @@ def test_a_good_governed_by_e_2_is_declined_not_guessed(corpus_102_21):
         ),
         corpus=corpus_102_21,
     )
+    assert r.status == "resolved"
+    assert (r.origin, r.rule_id) == ("IN", "102.21(e)(2)(ii)")
+
+
+# ---- 102.21(e)(2), the dyed-and-printed regime -----------------------------
+
+
+def test_e2_i_needs_two_or_more_finishing_operations(corpus_102_21):
+    """"both dyed and printed when accompanied by two or more of the following
+    finishing operations" — the count is the whole test."""
+    facts = TextileFacts(
+        conditions={"of cotton": False},
+        dyed_and_printed_in="IT",
+        finishing_operations=("bleaching", "napping"),
+    )
+    r = resolve(good="6214.10", inputs=[], country="VN", textile=facts, corpus=corpus_102_21)
+    assert (r.status, r.origin, r.rule_id) == ("resolved", "IT", "102.21(e)(2)(i)")
+
+    facts.finishing_operations = ("bleaching",)
+    one = resolve(good="6214.10", inputs=[], country="VN", textile=facts, corpus=corpus_102_21)
+    assert one.status == "unresolved"
+    assert "two or more" in one.needed
+
+
+def test_an_operation_not_on_the_list_does_not_count(corpus_102_21):
+    facts = TextileFacts(
+        conditions={"of cotton": False},
+        dyed_and_printed_in="IT",
+        finishing_operations=("bleaching", "ironing", "folding"),
+    )
+    r = resolve(good="6214.10", inputs=[], country="VN", textile=facts, corpus=corpus_102_21)
     assert r.status == "unresolved"
-    assert r.reason == "out_of_scope"
-    assert "102.21(e)(2)" in r.needed
+
+
+def test_e2_ii_does_not_reach_the_6117_10_goods_e2_iii_takes(corpus_102_21):
+    """(e)(2)(ii) applies "except for goods of subheading 6117.10 that are knit
+    to shape or consist of two or more component parts"."""
+    r = resolve(
+        good="6117.10",
+        inputs=[],
+        country="VN",
+        textile=TextileFacts(
+            conditions={"of cotton": False, "knit to shape": True},
+            process_in={"fabric-making process": "CN"},
+        ),
+        corpus=corpus_102_21,
+    )
+    assert r.origin != "CN"
+    assert r.rule_id != "102.21(e)(2)(ii)"
+
+
+def test_e2_i_is_reached_before_e2_iii(corpus_102_21):
+    """(iii) applies only "if the country of origin cannot be determined under
+    paragraph (e)(2)(i)"."""
+    r = resolve(
+        good="6117.10",
+        inputs=[],
+        country="VN",
+        textile=TextileFacts(
+            conditions={"of cotton": False, "knit to shape": True},
+            dyed_and_printed_in="IT",
+            finishing_operations=("bleaching", "fulling"),
+            process_in={"knit": "BD"},
+        ),
+        corpus=corpus_102_21,
+    )
+    assert (r.origin, r.rule_id) == ("IT", "102.21(e)(2)(i)")
+
+
+def test_e2_iii_a_follows_where_the_components_were_knit(corpus_102_21):
+    r = resolve(
+        good="6117.10",
+        inputs=[],
+        country="VN",
+        textile=TextileFacts(
+            conditions={"of cotton": False, "knit to shape": True},
+            process_in={"knit": "BD"},
+        ),
+        corpus=corpus_102_21,
+    )
+    assert (r.origin, r.rule_id) == ("BD", "102.21(e)(2)(iii)(A)")
+
+
+def test_e2_iii_b_follows_where_the_good_was_wholly_assembled(corpus_102_21):
+    r = resolve(
+        good="6117.10",
+        inputs=[],
+        country="VN",
+        textile=TextileFacts(
+            conditions={
+                "of cotton": False,
+                "knit to shape": False,
+                "two or more component parts": True,
+            },
+            process_in={"wholly assembled": "VN"},
+        ),
+        corpus=corpus_102_21,
+    )
+    assert (r.origin, r.rule_id) == ("VN", "102.21(e)(2)(iii)(B)")
+
+
+def test_the_fibre_decides_which_table_applies(corpus_102_21):
+    """Of cotton or of wool keeps the good with (e)(1); anything else is
+    (e)(2)'s."""
+    from originshift.textile import e2_governs
+
+    assert e2_governs("6214.10", TextileFacts(conditions={"of cotton": True})) is False
+    assert e2_governs("6214.10", TextileFacts(conditions={"of cotton": False})) is True
+    assert e2_governs("6214.10", TextileFacts()) is None      # not stated
+    assert e2_governs("6203.42", TextileFacts()) is False     # not a listed good
+
+
+def test_with_the_fibre_unstated_neither_table_is_picked(corpus_102_21):
+    r = resolve(
+        good="6214.10",
+        inputs=[],
+        country="VN",
+        textile=TextileFacts(process_in={"fabric-making process": "CN"}),
+        corpus=corpus_102_21,
+    )
+    assert r.status == "unresolved"
+    assert "cotton" in r.needed
 
 
 def test_c2_is_not_stepped_past_while_it_could_still_be_met(corpus_102_21):

@@ -360,7 +360,13 @@ def steps(corpus: Corpus, cache_dir: Path | None = None) -> list[StepCase]:
     scale — but it catches the failure that matters: a rule CBP could satisfy
     that this corpus offers no route to.
     """
-    from .textile import TextileFacts, _condition_holds, _process_named
+    from .textile import (
+        E2_GOODS,
+        TextileFacts,
+        _condition_holds,
+        _e2_ranges,
+        _process_named,
+    )
 
     cache_dir = cache_dir or (sources.CACHE / "cross")
     only = ruling_set("102.21") or set()
@@ -379,7 +385,9 @@ def steps(corpus: Corpus, cache_dir: Path | None = None) -> list[StepCase]:
         good = next((c for c in codes if corpus.reaches(c)), None)
         reachable = None
         if good:
-            reachable = any(
+            # (c)(2) is met by a requirement in either table, so a good (e)(2)
+            # takes has a route through it even where (e)(1) offers none.
+            reachable = any(r.contains(good) for r in _e2_ranges()) or any(
                 (alt.structured or _process_named(alt.text))
                 for _, alt in corpus.candidates(good)
                 if _condition_holds(alt.condition, TextileFacts(), good) is not False
