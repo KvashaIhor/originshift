@@ -6,10 +6,17 @@ legally from?" and cites the rule it used.
 Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage.
 **The smaller one has far the wider reach:**
 
-| Corpus | Governs | Rules | Answerable from codes alone |
-|---|---|---|---|
-| **102.21** | **Every textile and apparel import, from any country** — 102.21(a) controls their origin *"for purposes of the Customs laws"*, except as to Israel | 101 (+1 overlay) | 31.8% |
-| **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 | 99.0% |
+| Corpus | Governs | Rules | Parsed into structure | Answerable from codes alone |
+|---|---|---|---|---|
+| **102.21** | **Every textile and apparel import, from any country** — 102.21(a) controls their origin *"for purposes of the Customs laws"*, except as to Israel | 101 (+1 overlay) | 31.8% | **11.9%** |
+| **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 | 99.0% | **70.0%** |
+
+Those two columns are not the same claim, and only the second one is about what
+you get back. **Parsed into structure** is how much of the table the parser read
+completely. **Answerable from codes alone** is how much of it yields an answer
+without a fact the classifications do not carry — a value threshold, a named
+process, whether a good is of cotton. The rest abstains and says which fact it
+needs, which is the point.
 
 If you import apparel, **102.21 is why this exists** — a sector where origin
 fraud, transshipment and forced-labour enforcement are all live. If you file
@@ -49,10 +56,10 @@ python -m originshift.build_corpus
 Writes one file per corpus, named for its eCFR issue date — pass `--corpus` to
 build just one:
 
-| File | Rules | Alternatives | Answerable from codes alone |
-|---|---|---|---|
-| `data/corpus/102.20-<issue-date>.json` | 1,032 | 1,455 | 1,441 (99.0%) |
-| `data/corpus/102.21-<issue-date>.json` | 101 | 176 | 56 (31.8%) |
+| File | Rules | Alternatives | Parsed into structure | Answerable from codes alone |
+|---|---|---|---|---|
+| `data/corpus/102.20-<issue-date>.json` | 1,032 | 1,455 | 1,441 (99.0%) | 1,018 (70.0%) |
+| `data/corpus/102.21-<issue-date>.json` | 101 | 176 | 56 (31.8%) | 21 (11.9%) |
 
 Everything else is recorded with a reason rather than guessed at: a source
 naming a good instead of a code, a condition on the good, a rule that turns on
@@ -148,16 +155,18 @@ happened**, which is why textiles abstain so often — and the abstention names
 which step it is waiting on.
 
 **Paragraph (e) has two tables, and the fibre decides which applies.** (e)(2)
-takes headings 6213 and 6214 and a list of subheadings including 6117.10,
-6302.22 and 9404.90.85 — *except* goods of cotton, of wool, or a blend 16% or
-more cotton by weight, which stay with (e)(1). So a silk scarf of 6214 is
-(e)(2)'s and a cotton one is (e)(1)'s. With the fibre unstated, neither table is
+takes headings **6213 and 6214** and fourteen named **subheadings** — 6117.10,
+6302.22, 6302.29, 6302.53, 6302.59, 6302.93, 6302.99, 6303.92, 6303.99, 6304.19,
+6304.93, 6304.99, 9404.90.85 and 9404.90.95 — and only those, *except* goods of
+cotton, of wool, or a blend 16% or more cotton by weight, which stay with (e)(1).
+So a silk scarf of 6214 is (e)(2)'s and a cotton one is (e)(1)'s, while 6302.10
+and 6304.20 are (e)(1)'s outright. With the fibre unstated, neither table is
 picked and the question is named.
 
 ```python
 >>> from originshift.textile import TextileFacts
 >>> r = resolve(good="6214.10", inputs=[], country="VN",
-...             textile=TextileFacts(conditions={"of cotton": False},
+...             textile=TextileFacts(excepted_fibre=False,
 ...                                  dyed_and_printed_in="IT",
 ...                                  finishing_operations=("bleaching", "napping")))
 >>> r.origin, r.rule_id
@@ -257,15 +266,21 @@ originshift bom examples/assembly.json
 ```
 
 ```
+5/5 nodes settled
 8708.29  (door assembly, produced in Mexico) — MX
    rule 102.20/8708.29: A change to subheading 8708.29 from any other subheading, except…
    basis tariff_shift_de_minimis
   8708.99  (bracket subassembly, produced in Mexico) — MX
      rule 102.20/8708.99: A change to subheading 8708.99 from any other subheading, except…
-  7208.10  (hot-rolled steel coil) — KR (given)
+     basis tariff_shift
+    7208.10  (hot-rolled steel coil) — KR (given)
   7208.10  (steel panel) — JP (given)
   8708.95  (airbag component) — CN (given)
 ```
+
+The steel coil is indented under the bracket subassembly because that is where
+it sits: the bracket's origin is settled first, and the door assembly's rule is
+then applied against the result.
 
 Origin is settled bottom-up, because whether a subassembly is foreign to the
 country of final production decides whether the finished good's rule is met. A
@@ -308,8 +323,8 @@ one of a short list:
 `ambiguous` is rarer and means two rules both apply and the corpus does not rank
 them. Both are returned with their text.
 
-**For textiles, `unresolved` is the normal case, by design.** Only 31.8% of
-102.21 is answerable from classifications, because textile origin turns on
+**For textiles, `unresolved` is the normal case, by design.** Only 11.9% of
+102.21 yields an answer from classifications alone, because textile origin turns on
 fabric-making, knitting and assembly. So for chapters 50–63 this is less an
 oracle than a precise statement of *what you must establish*, drawn from the
 rule that applies to your code. That is worth having: the alternative is reading
@@ -323,15 +338,15 @@ python -m originshift.validate [--disagreements]
 
 Ground truth is **CBP's own HQ rulings** — binding determinations by the
 authority whose rules this corpus compiles. 312 HQ rulings cite 102.20; 228 of
-them quote a rule, giving 252 quotations to score. Comparison is structural, not
+them quote a rule, giving 254 quotations to score. Comparison is structural, not
 textual: CBP pluralises "heading", writes headings in HS dotted form (`48.17`
 for `4817`), and runs quotations into its own prose.
 
 | Era of ruling | n | Coverage | Rule fidelity |
 |---|---|---|---|
-| 2020–2026 | 45 | **97.8%** | **77.3%** |
+| 2020–2026 | 45 | **97.8%** | **79.5%** |
 | 2003–2019 | 28 | 85.7% | 59.3% |
-| 1994–2002 | 179 | 77.7% | 50.3% |
+| 1994–2002 | 181 | 76.8% | 52.0% |
 
 **Coverage** is how many quoted rules the corpus can place at all; **fidelity**
 is how many it holds as CBP stated them.
@@ -343,9 +358,10 @@ HS 2022 split it into `9401.91` through `9401.99`.
 
 Two things had to be got right before the numbers meant anything, and both are
 pinned by tests. Rulings that cite 102.20 routinely also quote **USMCA and NAFTA
-preferential rules**, worded almost identically — 30% of quotations, scored
-against the wrong legal test until they were excluded. And a quotation that runs
-past its closing punctuation absorbs codes from CBP's following prose.
+preferential rules**, worded almost identically, scored
+against the wrong legal test — **44% of everything the extractor finds** — until
+they were excluded. And a quotation that runs past its closing punctuation
+absorbs codes from CBP's following prose.
 
 ## Design commitments
 
@@ -402,6 +418,7 @@ who read it, so an answer resting on a hand-fed document can always be told from
 one resting on the eCFR:
 
 ```python
+>>> from originshift import Corpus
 >>> c = Corpus.load(which="102.21")
 >>> c.provenance_of("102.21(e)(1)/6201-6208")["origin"]
 '87 FR 68356 (CBP Dec. 22-25, 15 Nov 2022)'
@@ -452,6 +469,11 @@ the good is of staple fibers or filaments, where the fabric-making process
 happened, whether it was knit to shape. So for chapters 50–63 the tool is less
 an oracle than a precise statement of *what you must establish*, drawn from the
 rule that applies to your code.
+
+| Corpus | Parsed into structure | Answerable from codes alone |
+|---|---|---|
+| 102.20 | 1,441 / 1,455 = 99.0% | 1,018 / 1,455 = 70.0% |
+| 102.21 | 56 / 176 = 31.8% | 21 / 176 = 11.9% |
 
 ## Development
 

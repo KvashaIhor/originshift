@@ -109,3 +109,107 @@ def test_the_rulings_guard_says_what_to_run():
     source = inspect.getsource(validate.ruling_set)
     assert "raise RulingsNotFetched" in source
     assert "--fetch" in source
+
+
+def _table_rows(text: str, header_contains: str) -> list[list[str]]:
+    """The cells of the markdown table whose header carries a phrase.
+
+    Searching the whole document for a percentage has no teeth: a stale figure
+    in one table passes because the right figure appears in another. The number
+    has to be checked where it is claimed.
+    """
+    rows: list[list[str]] = []
+    in_table = False
+    for line in text.splitlines():
+        if line.startswith("|") and header_contains in line:
+            in_table = True
+            continue
+        if in_table:
+            if not line.startswith("|"):
+                break
+            cells = [c.strip() for c in line.strip("|").split("|")]
+            if set("".join(cells)) <= set("-: "):
+                continue
+            rows.append(cells)
+    return rows
+
+
+def test_the_stated_corpus_figures_are_current(corpus, corpus_102_21):
+    """Both figures, in the cells that claim them — not one relabelled as the
+    other. The "answerable from codes alone" column reported `fully_structured`,
+    a different and much larger number, in the document's first table."""
+    import json
+
+    from originshift.corpus import CORPUS_DIR
+
+    text = README.read_text(encoding="utf-8")
+    rows = _table_rows(text, "Answerable from codes alone")
+    assert rows, "the corpus table is gone"
+
+    for which in ("102.20", "102.21"):
+        path = sorted(CORPUS_DIR.glob(f"{which}-*.json"))[-1]
+        counts = json.loads(path.read_text(encoding="utf-8"))["counts"]
+        total = counts["alternatives"]
+        row = next(r for r in rows if which in r[0])
+        assert f"{counts['fully_structured'] / total:.1%}" in row[-2], row
+        assert f"{counts['decidable_from_codes'] / total:.1%}" in row[-1], row
+
+
+def test_the_stated_validation_numbers_are_current(corpus):
+    """Exact figures, not a loose band — three of them had drifted."""
+    from originshift import parse_102_21, validate
+    from originshift.corpus import Corpus
+
+    if not validate.rulings_available("102.20"):
+        pytest.skip("CROSS rulings not fetched; run validate --fetch")
+
+    text = README.read_text(encoding="utf-8")
+    report = validate.run(corpus, only=validate.ruling_set("102.20"))
+    assert str(len(report.cases)) in text, f"quotations are now {len(report.cases)}"
+    for era, (n, coverage, fidelity) in report.stratify().items():
+        assert str(n) in text, f"{era} n is now {n}"
+        assert f"{coverage:.1%}" in text, f"{era} coverage is now {coverage:.1%}"
+        assert f"{fidelity:.1%}" in text, f"{era} fidelity is now {fidelity:.1%}"
+
+
+def test_every_python_snippet_runs(corpus):
+    """A reader works down the page, so the snippets are executed in order in
+    one namespace — but each must supply the names it introduces."""
+    import re
+
+    text = README.read_text(encoding="utf-8")
+    namespace: dict = {}
+    ran = 0
+    for n, block in enumerate(re.findall(r"```python\n(.*?)```", text, re.S), 1):
+        code = "\n".join(
+            line[4:]
+            for line in block.splitlines()
+            if line.startswith(">>> ") or line.startswith("... ")
+        )
+        if not code.strip():
+            continue
+        try:
+            exec(compile(code, f"<README snippet {n}>", "exec"), namespace)
+        except Exception as exc:  # noqa: BLE001 - the failure is the finding
+            raise AssertionError(f"README snippet {n} does not run: {exc}") from exc
+        ran += 1
+    assert ran >= 5
+
+
+def test_the_documented_snippet_outputs_are_what_they_print(corpus):
+    """The flagship textile example printed a result the code did not produce."""
+    from originshift import resolve
+    from originshift.textile import TextileFacts
+
+    r = resolve(
+        good="6214.10",
+        inputs=[],
+        country="VN",
+        textile=TextileFacts(
+            excepted_fibre=False,
+            dyed_and_printed_in="IT",
+            finishing_operations=("bleaching", "napping"),
+        ),
+    )
+    assert (r.origin, r.rule_id) == ("IT", "102.21(e)(2)(i)")
+    assert "('IT', '102.21(e)(2)(i)')" in README.read_text(encoding="utf-8")
