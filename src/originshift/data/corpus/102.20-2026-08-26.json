@@ -12,16 +12,17 @@
  "vintage": "HTSUS-2026",
  "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-26/title-19.xml?part=102",
  "source_issue_date": "2026-08-26",
- "built_on": "2026-08-29",
+ "built_on": "2026-08-30",
  "counts": {
   "rules": 1032,
-  "alternatives": 1455,
-  "fully_structured": 1441,
-  "needs_judgement": 14,
-  "decidable_from_codes": 1018,
+  "alternatives": 1464,
+  "fully_structured": 1445,
+  "needs_judgement": 19,
+  "decidable_from_codes": 1023,
   "by_reason": {
    "descriptive_source": 10,
-   "reverse_phrasing": 3,
+   "reverse_phrasing": 7,
+   "not_a_shift": 1,
    "no_source_clause": 1
   }
  },
@@ -539,25 +540,14 @@
         "level": "chapter",
         "ranges": [],
         "outside_that_group": false,
-        "text": "any other chapter; or A change to smoked goods of heading 0306 from other goods of chapter 3"
-       },
-       {
-        "kind": "any_other",
-        "level": "chapter",
-        "ranges": [],
-        "outside_that_group": false,
-        "text": "from any other chapter"
+        "text": "any other chapter"
        }
       ],
-      "excluded": [
-       "16",
-       "0306",
-       "0306"
-      ],
+      "excluded": [],
       "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
-      "raw_source": "any other chapter; or A change to smoked goods of heading 0306 from other goods of chapter 3 or from any other chapter, except from chapter 16; or A change to any good of heading 0306 from a smoked good of heading 0306"
+      "raw_source": "any other chapter"
      },
      "target": {
       "ranges": [
@@ -567,7 +557,76 @@
       "description": null,
       "excluding_description": null
      },
-     "text": "A change to heading 0306, other than a change to smoked goods of heading 0306, from any other chapter; or A change to smoked goods of heading 0306 from other goods of chapter 3 or from any other chapter, except from chapter 16; or A change to any good of heading 0306 from a smoked good of heading 0306.",
+     "text": "A change to heading 0306, other than a change to smoked goods of heading 0306, from any other chapter",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "chapter",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "any other chapter"
+       }
+      ],
+      "excluded": [
+       "16"
+      ],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [],
+      "raw_source": "any other chapter, except from chapter 16"
+     },
+     "target": {
+      "ranges": [
+       "0306",
+       "03"
+      ],
+      "description": "smoked goods of",
+      "excluding_description": null
+     },
+     "text": "A change to smoked goods of heading 0306 from other goods of chapter 3 or from any other chapter, except from chapter 16",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "named",
+        "level": null,
+        "ranges": [
+         "0306"
+        ],
+        "outside_that_group": false,
+        "text": "a smoked good of heading 0306"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [],
+      "raw_source": "a smoked good of heading 0306"
+     },
+     "target": {
+      "ranges": [
+       "0306"
+      ],
+      "description": "any good of",
+      "excluding_description": null
+     },
+     "text": "A change to any good of heading 0306 from a smoked good of heading 0306",
      "residual": false,
      "condition": null,
      "sequence": null,
@@ -15822,16 +15881,14 @@
         "level": "subheading",
         "ranges": [],
         "outside_that_group": false,
-        "text": "any other subheading, including a change to phenol-alcohols of subheading 2907.29, from polyphenols of subheading 2907.29, or a change to polyphenols of subheading 2907.29 from phenol-alcohols of subheading 2907.29"
+        "text": "any other subheading, including a change to phenol-alcohols of subheading 2907.29, from polyphenols of subheading 2907.29"
        }
       ],
-      "excluded": [
-       "2707.99"
-      ],
+      "excluded": [],
       "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
-      "raw_source": "any other subheading, including a change to phenol-alcohols of subheading 2907.29, from polyphenols of subheading 2907.29, or a change to polyphenols of subheading 2907.29 from phenol-alcohols of subheading 2907.29, except a change from subheading 2707.99"
+      "raw_source": "any other subheading, including a change to phenol-alcohols of subheading 2907.29, from polyphenols of subheading 2907.29"
      },
      "target": {
       "ranges": [
@@ -15840,7 +15897,42 @@
       "description": null,
       "excluding_description": null
      },
-     "text": "A change to subheading 2907.29 from any other subheading, including a change to phenol-alcohols of subheading 2907.29, from polyphenols of subheading 2907.29, or a change to polyphenols of subheading 2907.29 from phenol-alcohols of subheading 2907.29, except a change from subheading 2707.99.",
+     "text": "A change to subheading 2907.29 from any other subheading, including a change to phenol-alcohols of subheading 2907.29, from polyphenols of subheading 2907.29",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "named",
+        "level": null,
+        "ranges": [
+         "2707.99"
+        ],
+        "outside_that_group": false,
+        "text": "subheading 2707.99"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [],
+      "raw_source": "subheading 2707.99"
+     },
+     "target": {
+      "ranges": [
+       "2907.29",
+       "2907.29"
+      ],
+      "description": "polyphenols of",
+      "excluding_description": null
+     },
+     "text": "a change to polyphenols of subheading 2907.29 from phenol-alcohols of subheading 2907.29, except a change from subheading 2707.99",
      "residual": false,
      "condition": null,
      "sequence": null,
@@ -24968,15 +25060,12 @@
       ],
       "excluded": [
        "28",
-       "3808.50",
-       "3808.99"
+       "3808.50"
       ],
       "excluded_when": [],
       "excluded_descriptions": [],
-      "provisos": [
-       "provided that the mixture is made from two or more active ingredients and a domestic active ingredient constitutes no less than 40 percent by weight of the total active ingredients, except from rodenticides or other pesticides classified in chapter 28 or 29 or subheading 3808.50"
-      ],
-      "raw_source": "any other subheading, except from rodenticides or other pesticides classified in chapter 28 or 29 or subheading 3808.50; or A change to a mixture of subheading 3808.99 from any other subheading"
+      "provisos": [],
+      "raw_source": "any other subheading, except from rodenticides or other pesticides classified in chapter 28 or 29 or subheading 3808.50"
      },
      "target": {
       "ranges": [
@@ -24985,7 +25074,41 @@
       "description": null,
       "excluding_description": null
      },
-     "text": "A change to subheading 3808.99 from any other subheading, except from rodenticides or other pesticides classified in chapter 28 or 29 or subheading 3808.50; or A change to a mixture of subheading 3808.99 from any other subheading, provided that the mixture is made from two or more active ingredients and a domestic active ingredient constitutes no less than 40 percent by weight of the total active ingredients, except from rodenticides or other pesticides classified in chapter 28 or 29 or subheading 3808.50.",
+     "text": "A change to subheading 3808.99 from any other subheading, except from rodenticides or other pesticides classified in chapter 28 or 29 or subheading 3808.50",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "subheading",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "any other subheading"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [
+       "provided that the mixture is made from two or more active ingredients and a domestic active ingredient constitutes no less than 40 percent by weight of the total active ingredients, except from rodenticides or other pesticides classified in chapter 28 or 29 or subheading 3808.50"
+      ],
+      "raw_source": "any other subheading"
+     },
+     "target": {
+      "ranges": [
+       "3808.99"
+      ],
+      "description": "a mixture of",
+      "excluding_description": null
+     },
+     "text": "A change to a mixture of subheading 3808.99 from any other subheading, provided that the mixture is made from two or more active ingredients and a domestic active ingredient constitutes no less than 40 percent by weight of the total active ingredients, except from rodenticides or other pesticides classified in chapter 28 or 29 or subheading 3808.50",
      "residual": false,
      "condition": null,
      "sequence": null,
@@ -35129,22 +35252,18 @@
      "shift": {
       "sources": [
        {
-        "kind": "same_position",
+        "kind": "any_other",
         "level": "heading",
-        "ranges": [
-         "7307"
-        ],
+        "ranges": [],
         "outside_that_group": false,
-        "text": "any other heading, including another heading within that group, or a change within heading 7307 from fitting forgings or flange forgings to fittings or flanges made ready for commercial use by: (a) At least one of the following processes: (1) Beveling; (2) Threading of the bore; (3) Center or step boring; and (b) At least two of the following processes: (1) Heat treating; (2) Recoining or resizing; (3) Taper boring; (4) Machining ends or surfaces"
+        "text": "any other heading, including another heading within that group"
        }
       ],
       "excluded": [],
       "excluded_when": [],
-      "excluded_descriptions": [
-       "a gasket face; (5) Drilling bolt holes; or (6) Burring or shot blasting"
-      ],
+      "excluded_descriptions": [],
       "provisos": [],
-      "raw_source": "any other heading, including another heading within that group, or a change within heading 7307 from fitting forgings or flange forgings to fittings or flanges made ready for commercial use by: (a) At least one of the following processes: (1) Beveling; (2) Threading of the bore; (3) Center or step boring; and (b) At least two of the following processes: (1) Heat treating; (2) Recoining or resizing; (3) Taper boring; (4) Machining ends or surfaces other than a gasket face; (5) Drilling bolt holes; or (6) Burring or shot blasting"
+      "raw_source": "any other heading, including another heading within that group"
      },
      "target": {
       "ranges": [
@@ -35153,12 +35272,23 @@
       "description": null,
       "excluding_description": null
      },
-     "text": "A change to heading 7301 through 7307 from any other heading, including another heading within that group, or a change within heading 7307 from fitting forgings or flange forgings to fittings or flanges made ready for commercial use by: (a) At least one of the following processes: (1) Beveling; (2) Threading of the bore; (3) Center or step boring; and (b) At least two of the following processes: (1) Heat treating; (2) Recoining or resizing; (3) Taper boring; (4) Machining ends or surfaces other than a gasket face; (5) Drilling bolt holes; or (6) Burring or shot blasting.",
+     "text": "A change to heading 7301 through 7307 from any other heading, including another heading within that group",
      "residual": false,
      "condition": null,
      "sequence": null,
      "is_fallback": false,
      "unparsed_reason": null
+    },
+    {
+     "kind": "process",
+     "shift": null,
+     "target": null,
+     "text": "a change within heading 7307 from fitting forgings or flange forgings to fittings or flanges made ready for commercial use by: (a) At least one of the following processes: (1) Beveling; (2) Threading of the bore; (3) Center or step boring; and (b) At least two of the following processes: (1) Heat treating; (2) Recoining or resizing; (3) Taper boring; (4) Machining ends or surfaces other than a gasket face; (5) Drilling bolt holes; or (6) Burring or shot blasting",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": "not_a_shift"
     }
    ],
    "section": "Section XV: Chapters 72 through 83",
@@ -49344,20 +49474,12 @@
        }
       ],
       "excluded": [
-       "8486.90",
-       "8466.10-8466.94"
+       "8486.90"
       ],
-      "excluded_when": [
-       {
-        "ranges": [
-         "8501"
-        ],
-        "when": "when resulting from simple assembly; or"
-       }
-      ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
-      "raw_source": "any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Machine-tools for working metal by forging, hammering or die forging (including presses), or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, or • Presses for metal or working metal carbides, of subheading 8486.90, or a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or"
+      "raw_source": "any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Machine-tools for working metal by forging, hammering or die forging (including presses), or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, or • Presses for metal or working metal carbides, of subheading 8486.90"
      },
      "target": {
       "ranges": [
@@ -49366,12 +49488,23 @@
       "description": "parts or accessories for machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass of",
       "excluding_description": null
      },
-     "text": "A change to parts or accessories for machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass of subheading 8486.90 from any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Machine-tools for working metal by forging, hammering or die forging (including presses), or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, or • Presses for metal or working metal carbides, of subheading 8486.90, or a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or",
+     "text": "A change to parts or accessories for machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass of subheading 8486.90 from any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Machine-tools for working metal by forging, hammering or die forging (including presses), or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, or • Presses for metal or working metal carbides, of subheading 8486.90",
      "residual": false,
      "condition": null,
      "sequence": null,
      "is_fallback": false,
      "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": null,
+     "target": null,
+     "text": "a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": "reverse_phrasing"
     },
     {
      "kind": "tariff_shift",
@@ -49388,20 +49521,12 @@
        }
       ],
       "excluded": [
-       "8486.90",
-       "8466.10-8466.94"
+       "8486.90"
       ],
-      "excluded_when": [
-       {
-        "ranges": [
-         "8501"
-        ],
-        "when": "when resulting from simple assembly; or"
-       }
-      ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
-      "raw_source": "any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or • Machine-tools for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or • Machine-tools for working metal by forging, hammering or die forging (including presses), or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, or of presses for working metal or metal carbides, of subheading 8486.90, or a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or"
+      "raw_source": "any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or • Machine-tools for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or • Machine-tools for working metal by forging, hammering or die forging (including presses), or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, or of presses for working metal or metal carbides, of subheading 8486.90"
      },
      "target": {
       "ranges": [
@@ -49410,12 +49535,23 @@
       "description": "parts or accessories of machine-tools (including machines for nailing, stapling, gluing or otherwise assembling) for working wood, cork, bone, hard rubber, hard plastics or similar hard materials of",
       "excluding_description": null
      },
-     "text": "A change to parts or accessories of machine-tools (including machines for nailing, stapling, gluing or otherwise assembling) for working wood, cork, bone, hard rubber, hard plastics or similar hard materials of subheading 8486.90 from any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or • Machine-tools for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or • Machine-tools for working metal by forging, hammering or die forging (including presses), or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, or of presses for working metal or metal carbides, of subheading 8486.90, or a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or",
+     "text": "A change to parts or accessories of machine-tools (including machines for nailing, stapling, gluing or otherwise assembling) for working wood, cork, bone, hard rubber, hard plastics or similar hard materials of subheading 8486.90 from any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or • Machine-tools for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or • Machine-tools for working metal by forging, hammering or die forging (including presses), or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, or of presses for working metal or metal carbides, of subheading 8486.90",
      "residual": false,
      "condition": null,
      "sequence": null,
      "is_fallback": false,
      "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": null,
+     "target": null,
+     "text": "a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": "reverse_phrasing"
     },
     {
      "kind": "tariff_shift",
@@ -49432,20 +49568,12 @@
        }
       ],
       "excluded": [
-       "8486.90",
-       "8466.10-8466.94"
+       "8486.90"
       ],
-      "excluded_when": [
-       {
-        "ranges": [
-         "8501"
-        ],
-        "when": "when resulting from simple assembly; or"
-       }
-      ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
-      "raw_source": "any other good of subheading 8486.90 except from parts or accessories of: • Machine-tools for working metal by forging, hammering or die forging, or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Presses for working metal or metal carbides, of subheading 8486.90, or a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or"
+      "raw_source": "any other good of subheading 8486.90 except from parts or accessories of: • Machine-tools for working metal by forging, hammering or die forging, or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Presses for working metal or metal carbides, of subheading 8486.90"
      },
      "target": {
       "ranges": [
@@ -49454,12 +49582,23 @@
       "description": "parts or accessories of machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or for drilling, boring, milling, threading or tapping by removing metal, or for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or to parts and accessories of machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or of lathes (including turning centers), for removing metal, of",
       "excluding_description": null
      },
-     "text": "A change to parts or accessories of machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or for drilling, boring, milling, threading or tapping by removing metal, or for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or to parts and accessories of machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or of lathes (including turning centers), for removing metal, of subheading 8486.90 from any other good of subheading 8486.90 except from parts or accessories of: • Machine-tools for working metal by forging, hammering or die forging, or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Presses for working metal or metal carbides, of subheading 8486.90, or a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or",
+     "text": "A change to parts or accessories of machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or for drilling, boring, milling, threading or tapping by removing metal, or for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or for working by removing metal or cermets, or to parts and accessories of machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or of lathes (including turning centers), for removing metal, of subheading 8486.90 from any other good of subheading 8486.90 except from parts or accessories of: • Machine-tools for working metal by forging, hammering or die forging, or • Machine-tools for working metal by bending, folding, straightening, flattening sheathing, punching or notching (including presses), or • Machine-tools for working metal or cermets, without removing material, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Presses for working metal or metal carbides, of subheading 8486.90",
      "residual": false,
      "condition": null,
      "sequence": null,
      "is_fallback": false,
      "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": null,
+     "target": null,
+     "text": "a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": "reverse_phrasing"
     },
     {
      "kind": "tariff_shift",
@@ -49476,20 +49615,12 @@
        }
       ],
       "excluded": [
-       "8486.90",
-       "8466.10-8466.94"
+       "8486.90"
       ],
-      "excluded_when": [
-       {
-        "ranges": [
-         "8501"
-        ],
-        "when": "when resulting from simple assembly; or"
-       }
-      ],
+      "excluded_when": [],
       "excluded_descriptions": [],
       "provisos": [],
-      "raw_source": "any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or • Machine-tools for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or • Machine-tools for working by removing metal or cermets, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or • Machine-tools for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, of subheading 8486.90, or a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or"
+      "raw_source": "any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or • Machine-tools for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or • Machine-tools for working by removing metal or cermets, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or • Machine-tools for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, of subheading 8486.90"
      },
      "target": {
       "ranges": [
@@ -49498,12 +49629,23 @@
       "description": "parts or accessories of machine-tools (including presses) for working metal by forging, hammering or die forging, or for working metal by bending, folding, straightening, flattening, sheathing, punching or notching (including presses), or for working metal or cermets, without removing material or to parts or accessories of presses for working metal carbide of",
       "excluding_description": null
      },
-     "text": "A change to parts or accessories of machine-tools (including presses) for working metal by forging, hammering or die forging, or for working metal by bending, folding, straightening, flattening, sheathing, punching or notching (including presses), or for working metal or cermets, without removing material or to parts or accessories of presses for working metal carbide of subheading 8486.90 from any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or • Machine-tools for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or • Machine-tools for working by removing metal or cermets, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or • Machine-tools for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, of subheading 8486.90, or a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or",
+     "text": "A change to parts or accessories of machine-tools (including presses) for working metal by forging, hammering or die forging, or for working metal by bending, folding, straightening, flattening, sheathing, punching or notching (including presses), or for working metal or cermets, without removing material or to parts or accessories of presses for working metal carbide of subheading 8486.90 from any other good of subheading 8486.90, except from parts or accessories of: • Machine-tools for working any material by the removal of material, by laser or other light or photon beam, ultrasonic, electro-discharge, electro-chemical, electron beam, ionic-beam or plasma arc processes, or • Machine-tools for drilling, boring, milling, threading or tapping by removing metal, or • Machine-tools for deburring, sharpening, grinding, honing, lapping, polishing or otherwise finishing metal or cermets by means of grinding stones, abrasives or polishing products, or • Machine-tools for planing, shaping, slotting, broaching, gear cutting, gear grinding or gear finishing, sawing, cutting-off, or • Machine-tools for working by removing metal or cermets, or • Machine-tools for working stone, ceramics, concrete, asbestos-cement or like minerals or for cold working glass, or • Machine-tools for working wood, cork, bone, hard rubber, hard plastics or similar hard materials (including machines for nailing, stapling, gluing or otherwise assembling), or • Machining centers, unit construction machines (single station) or multi-station transfer machines for working metal, or • Lathes (including turning centers), for removing metal, of subheading 8486.90",
      "residual": false,
      "condition": null,
      "sequence": null,
      "is_fallback": false,
      "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": null,
+     "target": null,
+     "text": "a change from any other subheading, except from subheading 8466.10 through 8466.94, and except from heading 8501 when resulting from simple assembly; or",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": "reverse_phrasing"
     },
     {
      "kind": "tariff_shift",
