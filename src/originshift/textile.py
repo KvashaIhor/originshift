@@ -1,10 +1,8 @@
 """The 102.21(c) hierarchy, for textile and apparel products.
 
 102.11 states in its first line that it governs goods **other than** textile and
-apparel products covered by 102.21. So a hat, a car seat belt or a pair of
-trousers answered under 102.11 would be answered under a provision that excludes
-it — and citing the wrong authority is the one failure this project cannot
-afford, being worse than saying nothing.
+apparel products covered by 102.21. A hat, a car seat belt or a pair of trousers
+answered under 102.11 would be answered under a provision that excludes it.
 
 102.21(c) runs five steps in sequence, and only the first two turn on
 classifications. The rest turn on where an operation happened: where the good
@@ -175,8 +173,7 @@ _CODE_CONDITION = re.compile(
 _E2_CROSS_REFERENCE = re.compile(r"paragraph \(e\)\(2\)", re.I)
 
 #: The carve-out is one question with three limbs, so it is stated as one fact.
-#: Three separate keys let a caller answer "of cotton: False" for a wool scarf
-#: and be told (e)(2) governs it, and let dict order decide which limb was read.
+#: Answering a single limb settles nothing: a wool scarf is not of cotton.
 EXCEPTED_FIBRE = "of cotton, of wool, or a blend 16 percent or more cotton"
 
 #: Older callers may state the limbs separately; all three must then be settled.
@@ -340,9 +337,8 @@ def resolve_e2(good: str, country: str, facts: TextileFacts, corpus: Corpus):
 
     asks: list[str] = []
 
-    # (e)(2)(i) dyed and printed, with two or more finishing operations
-    # "two or more of the following finishing operations" — two different ones.
-    # Counting a list let ("bleaching", "bleaching") satisfy it.
+    # (e)(2)(i): "two or more of the following finishing operations" means two
+    # different ones, so the set is load-bearing.
     accompanying = sorted(
         {op.lower() for op in facts.finishing_operations if op.lower() in FINISHING_OPERATIONS}
     )

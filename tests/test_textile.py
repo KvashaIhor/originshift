@@ -22,11 +22,9 @@ def test_routing_holds_on_the_default_path_not_only_with_the_textile_corpus():
     """Which part governs is a question about 102.21's coverage, not about the
     corpus the caller happened to load.
 
-    Asking a 102.20 corpus returned nothing, so every 102.21 good outside
-    chapters 50-63 was answered under 102.20 — 9113.90.40 came back "resolved,
-    102.20/9113" under a section that excludes it. The test that was meant to
-    catch this passed a 102.21 corpus in, so it only ever exercised the path
-    that worked.
+    A 102.20 corpus carries no textile coverage list, so asking it sends every
+    102.21 good outside chapters 50-63 to the wrong part. Pass no corpus here:
+    passing one in exercises only the path that already works.
     """
     for good, material in (
         ("9113.90.40", "5806.32"),   # watch straps of textile
@@ -452,9 +450,9 @@ def test_c2_is_never_stepped_past_merely_because_a_later_fact_is_known(corpus_10
     """(c)(3) applies "where the country of origin cannot be determined under
     (c)(1) or (2)". An unanswered question is not a finding.
 
-    Supplying an optional (c)(3) fact used to skip (c)(2) silently, changing
-    both the cited authority and the country with no flag that (c)(2) had never
-    been settled.
+    An optional (c)(3) fact must not skip (c)(2), which would change both the
+    cited authority and the country with nothing to say (c)(2) was never
+    settled.
     """
     facts = TextileFacts(wholly_assembled_in="VN")
     asked = resolve(

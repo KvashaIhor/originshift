@@ -339,9 +339,8 @@ def _de_minimis(
             f"chapter {digits(good)[:2]}"
         )
 
-    # Every material with a failing code, not one per code: two materials can
-    # share a classification, and collapsing them counted one value twice and
-    # lost the other.
+    # Every material with a failing code, not one per code — two materials can
+    # share a classification and both contribute their value.
     failed = set(_failing(finding))
     contributing = [m for m in materials if m.code in failed]
     values = [m.value for m in contributing]

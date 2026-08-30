@@ -98,8 +98,8 @@ def test_a_disjunction_is_satisfied_by_any_one_alternative(corpus):
 
 
 def test_a_textile_good_is_answered_under_102_21(corpus):
-    """It used to be *referred* to 102.21 and left there. It is now routed to
-    the part that governs it and answered — or asked for the facts (c) needs."""
+    """A textile good is routed to the part that governs it and answered there,
+    or asked for the facts 102.21(c) needs."""
     r = resolve(good="6203.42", inputs=["5208.11"], country="VN", corpus=corpus)
     assert (r.rule_id or "").startswith("102.21")
     assert not (r.rule_id or "").startswith("102.20")

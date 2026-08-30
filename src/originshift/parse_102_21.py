@@ -119,8 +119,8 @@ def parse_alternative(text: str, scope: list[CodeRange]) -> Alternative:
             kind="process",
             text=raw,
             # A process rule reaches the goods its row is keyed to. Without a
-            # target the index cannot find it, and a good it governs would be
-            # reported as having no rule at all — alarming, and wrong.
+            # target the index cannot find it, and a good it governs looks like
+            # a good with no rule.
             target=Target(ranges=_ranges(body) or list(scope)),
             unparsed_reason="process_rule",
         )

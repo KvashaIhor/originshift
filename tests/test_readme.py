@@ -68,10 +68,8 @@ def test_the_scope_limit_is_stated_before_the_usage(corpus):
 
 
 def test_the_corpus_round_trips_through_its_own_loader(corpus, corpus_102_21):
-    """A field added to the grammar but not to the loader is silently dropped on
-    load — it has happened twice (condition/sequence, then excluded_when), and
-    both times the corpus on disk was right while the object in memory was not.
-    """
+    """A field added to the grammar but not to the loader is dropped on load,
+    leaving the corpus on disk right and the object in memory wrong."""
     import json
 
     from originshift.corpus import CORPUS_DIR, Corpus

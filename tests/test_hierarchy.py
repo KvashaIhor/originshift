@@ -216,8 +216,8 @@ def test_retail_packaging_does_not_decide_the_origin_of_what_is_inside_it(corpus
     provision from which change is not allowed, and 102.18(b)(1)(iii) then makes
     it the essential-character material.
 
-    Italian cosmetics from French bulk in Chinese retail packaging came back as
-    a good of China.
+    Undeclared, Italian cosmetics made from French bulk in Chinese retail
+    packaging come out as a good of China.
     """
     materials = [Material("3304.10", "FR"), Material("3304.99", "CN")]
     undeclared = resolve(good="3304.99", inputs=materials, country="IT", corpus=corpus)

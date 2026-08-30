@@ -133,8 +133,8 @@ def test_textile_fidelity_holds(report_21):
 
 def test_the_hierarchy_restatements_are_not_scored_as_e1_rules(corpus_102_21):
     """102.21(c)(1) to (c)(5) are quoted constantly in these rulings. They are
-    not entries in the (e)(1) table, and scoring them there measured the wrong
-    thing — it put fidelity 30 points low."""
+    not entries in the (e)(1) table, and scoring them there measures the wrong
+    thing."""
     hierarchy = (
         "If the good was knit to shape, the country of origin of the good is "
         "the single country, territory, or insular possession in which the good "
@@ -147,7 +147,7 @@ def test_the_hierarchy_restatements_are_not_scored_as_e1_rules(corpus_102_21):
 
 def test_where_cbp_reached_c2_this_corpus_can_too(corpus_102_21):
     """The failure that matters: a requirement CBP satisfied that this corpus
-    offers no route to. Before the (c)(2) process fix this was 2 of 26."""
+    offers no route to."""
     if not validate.rulings_available("102.21"):
         pytest.skip("CROSS rulings not fetched; run validate --fetch")
     cases = validate.steps(corpus_102_21)

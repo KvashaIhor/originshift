@@ -146,8 +146,6 @@ def test_the_shipped_example_runs(corpus):
     assert bom.render(root)
 
 
-# ---- patent boundary, per the reading of US9177286B2 claim 1 ----------------
-
 
 def test_no_certificate_is_produced(corpus):
     """A certificate of origin is a preferential artifact, made to claim a
@@ -172,7 +170,6 @@ def test_nothing_is_stored_between_calls(corpus):
 
 
 def test_no_preferential_qualification(corpus):
-    """FTA qualification is the patent's home ground and out of scope."""
     root = resolve_bom(_tree(), corpus=corpus)
     bases = {n.result.basis for n in root.walk() if n.result}
     assert bases <= {
