@@ -422,14 +422,20 @@ def resolve_textile(
     # Paragraph (e) has two tables. (e)(2) takes the listed goods unless they
     # are of cotton or of wool, in which case (e)(1) keeps them.
     takes_e2 = e2_governs(good, facts)
+    e2_asks: list[str] = []
     if takes_e2:
-        return resolve_e2(good, country, facts, corpus)
+        answered = resolve_e2(good, country, facts, corpus)
+        if answered.status == "resolved":
+            return answered
+        # (c) is sequential. Where (e)(2) has not determined origin, (c)(3) to
+        # (c)(5) still apply — returning here would strand the good at (c)(2).
+        e2_asks.append(answered.needed or "")
 
     # (c)(2) each foreign material underwent the change specified in (e)(1),
     # "and/or met any other requirement" there. A process rule is met by stating
     # where the process happened, so it is as much a route to (c)(2) as a shift.
     findings: list[Finding] = []
-    candidates = corpus.candidates(good)
+    candidates = [] if takes_e2 else corpus.candidates(good)
     ordered = sorted(
         candidates, key=lambda rc: (rc[1].sequence or 0, rc[1].is_fallback)
     )
@@ -604,7 +610,8 @@ def resolve_textile(
             trace=findings,
         )
 
-    asks = ["whether the good was knit to shape, and where it was knit (c)(3)(i)"]
+    asks = list(e2_asks)
+    asks.append("whether the good was knit to shape, and where it was knit (c)(3)(i)")
     if excepted is not None:
         asks.append(
             f"(c)(3)(ii) does not reach {excepted}, so a wholly-assembled good of "
@@ -625,7 +632,7 @@ def resolve_textile(
         needed=(
             "102.21(c)(1) and (c)(2) did not determine origin. The rest of the "
             "hierarchy turns on where operations happened, not on codes: "
-            + "; ".join(asks)
+            + "; ".join(a for a in asks if a)
         ),
         vintage=corpus.vintage,
         trace=findings,

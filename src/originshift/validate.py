@@ -404,6 +404,99 @@ def steps(corpus: Corpus, cache_dir: Path | None = None) -> list[StepCase]:
     return out
 
 
+@dataclass
+class TextileCase:
+    ruling: str
+    year: int
+    cbp_step: str
+    cbp_country: str
+    our_step: str | None
+    our_country: str | None
+    detail: str
+
+    @property
+    def country_agrees(self) -> bool:
+        return self.our_country == self.cbp_country
+
+    @property
+    def step_agrees(self) -> bool:
+        return self.our_step == self.cbp_step
+
+
+#: rule_id -> the paragraph of 102.21(c) that carried the answer.
+_STEP_OF = {
+    "102.21(c)(1)": "1",
+    "102.21(c)(3)(i)": "3i",
+    "102.21(c)(3)(ii)": "3ii",
+    "102.21(c)(4)": "4",
+    "102.21(c)(5)": "5",
+}
+
+
+def _step_reached(result) -> str | None:
+    """Which paragraph the resolver landed on. Anything answered out of (e)(1)
+    or (e)(2) is (c)(2), since that is the step those tables serve."""
+    rule = result.rule_id or ""
+    if rule in _STEP_OF:
+        return _STEP_OF[rule]
+    if rule.startswith("102.21(e)"):
+        return "2"
+    return None
+
+
+def textiles(corpus: Corpus | None = None, path: Path | None = None) -> list[TextileCase]:
+    """Run the resolver over the curated textile cases and compare with CBP."""
+    from .resolve import resolve
+    from .textile import TextileFacts
+
+    corpus = corpus or Corpus.load(which="102.21")
+    path = path or (CASES / "textile-cases.json")
+    data = json.loads(path.read_text(encoding="utf-8"))
+
+    out: list[TextileCase] = []
+    for case in data["cases"]:
+        raw = dict(case.get("facts", {}))
+        wholly_obtained = raw.pop("wholly_obtained", False)
+        facts = TextileFacts(**raw)
+        result = resolve(
+            good=case["good"],
+            inputs=[],
+            country=case["country"],
+            wholly_obtained=wholly_obtained,
+            textile=facts,
+            corpus=corpus,
+        )
+        out.append(
+            TextileCase(
+                ruling=case["ruling"],
+                year=case["year"],
+                cbp_step=case["step"],
+                cbp_country=case["country"],
+                our_step=_step_reached(result),
+                our_country=result.origin,
+                detail=result.reason or result.needed or (result.rule_id or ""),
+            )
+        )
+    return out
+
+
+def report_textiles(cases: list[TextileCase]) -> None:
+    right = [c for c in cases if c.country_agrees]
+    same_step = [c for c in cases if c.step_agrees]
+    print(f"curated textile cases            : {len(cases)}")
+    print(f"   reached CBP's country         : {len(right)}/{len(cases)}")
+    print(f"   by the same paragraph of (c)  : {len(same_step)}/{len(cases)}")
+    for case in cases:
+        mark = "ok " if case.country_agrees else "NO "
+        step = "" if case.step_agrees else f"  [CBP (c)({case.cbp_step}), we (c)({case.our_step})]"
+        print(
+            f"   {mark}[{case.ruling} {case.year}] {case.cbp_country} / "
+            f"{case.our_country or '-'}{step}"
+        )
+        if not case.country_agrees:
+            print(f"        {case.detail[:150]}")
+
+
 def report_steps(cases: list[StepCase]) -> None:
     by_step = Counter(c.step for c in cases)
     print(f"rulings applying exactly one 102.21(c) step : {len(cases)}")
@@ -462,13 +555,13 @@ def main() -> None:
 
     from . import parse_102_21
 
-    textiles = Corpus.load(which="102.21")
+    corpus_21 = Corpus.load(which="102.21")
     print()
     print("=" * 74)
     print("102.21 — TEXTILES AND APPAREL")
     print("=" * 74)
     t = run(
-        textiles,
+        corpus_21,
         attribution=ATTRIBUTION_21,
         only=ruling_set("102.21"),
         grammar=parse_102_21,
@@ -479,7 +572,9 @@ def main() -> None:
     print(f"  coverage               : {t.coverage:.1%}")
     print(f"  rule fidelity          : {t.fidelity:.1%}")
     print()
-    report_steps(steps(textiles))
+    report_steps(steps(corpus_21))
+    print()
+    report_textiles(globals()["textiles"](corpus_21))
 
     if args.disagreements:
         print("\n" + "=" * 74)

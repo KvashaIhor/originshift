@@ -1,0 +1,58 @@
+{
+  "description": "Curated 102.21 cases: HQ rulings that apply exactly one paragraph of the 102.21(c) hierarchy, state the country they reached, and state the production facts the paragraph turns on.",
+  "selection": "Mechanical, then curated. Candidates are every HQ ruling citing 102.21 that applies exactly one (c) paragraph, is not multi-scenario, and states a holding country. Each was then read; those whose good's classification or production facts are not stated were dropped, and every remaining one was kept regardless of whether originshift agrees.",
+  "dropped": "561092 (decided under 19 CFR 12.130(c), not 102.21); 561954, 559899 (no single holding country — 'a Caribbean country'); 958964, 959417, 561967 (good's classification not stated); 559853 (several goods under one holding)",
+  "cases": [
+    {"ruling":"559354","year":1996,"step":"2","good":"6212.10","country":"MX",
+     "facts":{"conditions":{"two or more component parts":true},"process_in":{"wholly assembled":"MX"}},
+     "note":"bustier shipped as components to Mexico and wholly assembled there"},
+
+    {"ruling":"559411","year":1997,"step":"2","good":"6206.30","country":"MX",
+     "facts":{"conditions":{"two or more component parts":true},"process_in":{"wholly assembled":"MX"}},
+     "note":"chef's jacket wholly assembled in a single country (Mexico)"},
+
+    {"ruling":"560074","year":1996,"step":"2","good":"6117.80.90","country":"DO",
+     "facts":{"conditions":{"two or more component parts":true},"process_in":{"wholly assembled":"DO"}},
+     "note":"oversocks wholly assembled in the Dominican Republic"},
+
+    {"ruling":"561263","year":1999,"step":"2","good":"6203.42.4015","country":"HT",
+     "facts":{"conditions":{"two or more component parts":true},"process_in":{"wholly assembled":"HT"}},
+     "note":"pants sewn in Haiti from components cut in the Philippines"},
+
+    {"ruling":"959205","year":1996,"step":"2","good":"6303.92","country":"TW",
+     "facts":{"conditions":{"of cotton":false},"process_in":{"fabric-making process":"TW"}},
+     "note":"shower curtain; fabric formed by a fabric-making process in Taiwan. Of synthetic fibres, so under the current text 102.21(e)(2)(ii) reaches it rather than (e)(1) — the same operation, a different paragraph"},
+
+    {"ruling":"959275","year":1996,"step":"2","good":"6214.10","country":"CN",
+     "facts":{"conditions":{"of cotton":false},"process_in":{"fabric-making process":"CN"}},
+     "note":"100 percent silk scarves; fabric formed in China"},
+
+    {"ruling":"959368","year":1996,"step":"2","good":"6303.92.2000","country":"CA",
+     "facts":{"conditions":{"of cotton":false},"process_in":{"fabric-making process":"CA"}},
+     "note":"curtain panel of synthetic fibres; fabric formed in Canada"},
+
+    {"ruling":"959400","year":1997,"step":"1","good":"6307.90.9989","country":"KR",
+     "facts":{"wholly_obtained":true},
+     "note":"bag liners wholly obtained or produced in Korea"},
+
+    {"ruling":"560178","year":1996,"step":"3i","good":"6110.20","country":"CN",
+     "facts":{"knit_to_shape_in":"CN"},
+     "note":"sweater vests knit to shape in China, assembled in Hong Kong"},
+
+    {"ruling":"560044","year":1996,"step":"3ii","good":"6109.10.0012","country":"US",
+     "facts":{"wholly_assembled_in":"US"},
+     "note":"T-shirt wholly assembled in the United States"},
+
+    {"ruling":"959016","year":1996,"step":"4","good":"4202.92.20","country":"VN",
+     "facts":{"most_important_process_in":"VN"},
+     "note":"luggage not wholly assembled in a single country, so (c)(2) and (c)(3) do not reach it"},
+
+    {"ruling":"562423","year":2002,"step":"4","good":"6110.20.20","country":"Northern Mariana Islands",
+     "facts":{"most_important_process_in":"Northern Mariana Islands"},
+     "note":"women's pullovers"},
+
+    {"ruling":"959435","year":1996,"step":"5","good":"6214.10","country":"Hong Kong",
+     "facts":{"conditions":{"of cotton":false},"last_important_process_in":"Hong Kong"},
+     "note":"reversible scarf; no earlier paragraph determined origin"}
+  ]
+}

@@ -168,3 +168,51 @@ def test_a_recited_step_is_not_read_as_an_applied_one(corpus_102_21):
         "Section 102.21(c)(2) states that where the country of origin cannot "
         "be determined under paragraph (c)(1), the country of origin is ..."
     ) is None
+
+
+def test_e2_falls_through_when_it_does_not_determine(corpus_102_21):
+    """102.21(c) is sequential. Where (e)(2) has not settled origin, (c)(3) to
+    (c)(5) still apply — returning at (c)(2) strands the good.
+
+    HQ 959435 is the case: CBP reached (c)(5) for a silk scarf; we stopped dead.
+    """
+    from originshift.resolve import resolve
+    from originshift.textile import TextileFacts
+
+    r = resolve(
+        good="6214.10",
+        inputs=[],
+        country="VN",
+        textile=TextileFacts(
+            conditions={"of cotton": False}, last_important_process_in="Hong Kong"
+        ),
+        corpus=corpus_102_21,
+    )
+    assert r.status == "resolved"
+    assert (r.origin, r.rule_id) == ("Hong Kong", "102.21(c)(5)")
+
+
+@pytest.fixture(scope="module")
+def textile_cases(corpus_102_21):
+    path = validate.CASES / "textile-cases.json"
+    if not path.exists():
+        pytest.skip("curated textile cases not present")
+    return validate.textiles(corpus_102_21)
+
+
+def test_the_textile_set_is_intact(textile_cases):
+    assert len(textile_cases) == 13
+    steps = {c.cbp_step for c in textile_cases}
+    # every paragraph of the hierarchy is represented
+    assert steps == {"1", "2", "3i", "3ii", "4", "5"}
+
+
+def test_the_resolver_reaches_cbps_country_for_textiles(textile_cases):
+    wrong = [c for c in textile_cases if not c.country_agrees]
+    assert wrong == [], [(c.ruling, c.cbp_country, c.our_country) for c in wrong]
+
+
+def test_it_gets_there_by_the_paragraph_cbp_used(textile_cases):
+    """The country alone is not enough — a broker has to cite the step."""
+    wrong = [c for c in textile_cases if not c.step_agrees]
+    assert wrong == [], [(c.ruling, c.cbp_step, c.our_step) for c in wrong]
