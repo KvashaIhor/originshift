@@ -534,5 +534,13 @@ own overlays alongside the shipped ones.
 
 Not yet published. `python -m build` produces both artefacts and
 `python -m twine check dist/*` passes; version is `0.1.0`. Before uploading,
-fill in `[project.urls]` in `pyproject.toml` — it is commented out rather than
-pointing at a URL that does not resolve.
+fill in `[project.urls]` in `pyproject.toml` and the URL in `sources.USER_AGENT`
+— both are deliberately absent rather than pointing somewhere that does not
+resolve.
+
+**The package follows semver; the corpus carries the vintage.** Every rule
+record states the `vintage` and the `source_issue_date` it was built from, the
+corpus file is named for that date, and every answer returns the vintage it was
+decided under. So a corpus can be used without the code and still say what it
+answers under, and an answer decided under an older nomenclature says so rather
+than going quietly stale.

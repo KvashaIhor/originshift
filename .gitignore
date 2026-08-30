@@ -13,4 +13,3 @@ build/
 # The rulings themselves are ~12 MB the package never reads; fetch them with
 #   python -m originshift.validate --fetch
 data/cache/cross/
-data/staging/

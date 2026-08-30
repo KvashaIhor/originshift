@@ -213,3 +213,27 @@ def test_the_documented_snippet_outputs_are_what_they_print(corpus):
     )
     assert (r.origin, r.rule_id) == ("IT", "102.21(e)(2)(i)")
     assert "('IT', '102.21(e)(2)(i)')" in README.read_text(encoding="utf-8")
+
+
+def test_the_user_agent_names_a_version_that_exists():
+    """It said 0.0.1 and pointed at a URL that does not resolve — while
+    pyproject deliberately omits that same URL for exactly that reason."""
+    from originshift import sources
+
+    assert "0.0.1" not in sources.USER_AGENT
+    assert "http" not in sources.USER_AGENT
+
+
+def test_the_package_declares_its_types():
+    from originshift import paths
+
+    assert (paths.PACKAGE_DATA.parent / "py.typed").exists()
+
+
+def test_the_plan_and_the_readme_agree_on_the_version_scheme():
+    """originshift.md promised a package version tied to nomenclature vintage.
+    What was built puts the vintage on the data, which is the better place —
+    the plan is amended to say so rather than left contradicting the code."""
+    plan = (ROOT / "originshift.md").read_text(encoding="utf-8")
+    assert "Version scheme — amended" in plan
+    assert "originshift-2026.1" in plan  # the original promise is still shown

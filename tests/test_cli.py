@@ -193,3 +193,40 @@ def test_the_needed_message_does_not_speak_python_at_a_cli_user(capsys):
         capsys,
     )
     assert "TextileFacts" not in out.out
+
+
+def test_bom_error_paths_report_rather_than_traceback(tmp_path, capsys):
+    """A stack trace is not an error message. The CSV path already did this."""
+    missing = run(["bom", str(tmp_path / "nope.json")], capsys)
+    assert missing[0] == 1
+    assert "no such file" in missing[1].err
+    assert "Traceback" not in missing[1].err
+
+    malformed = tmp_path / "bad.json"
+    malformed.write_text('{"nogood": 1}', encoding="utf-8")
+    bad = run(["bom", str(malformed)], capsys)
+    assert bad[0] == 1
+    assert "every node needs a 'good' field" in bad[1].err
+
+    invalid = tmp_path / "broken.json"
+    invalid.write_text("{", encoding="utf-8")
+    broken = run(["bom", str(invalid)], capsys)
+    assert broken[0] == 1
+    assert "not valid JSON" in broken[1].err
+
+
+def test_exit_codes_are_documented_and_distinguish_unresolved_from_error(capsys):
+    """unresolved is an outcome, and the README says so at length. A script
+    needs to be able to tell it from a failure."""
+    from originshift import cli
+
+    assert "0 resolved, 2 unresolved" in cli.__doc__
+
+    resolved = run(
+        ["resolve", "--good", "8708.29", "--inputs", "7208.10", "--country", "VN"], capsys
+    )
+    unresolved = run(
+        ["resolve", "--good", "8708.29", "--inputs", "8708.95", "--country", "VN"], capsys
+    )
+    assert resolved[0] == 0
+    assert unresolved[0] == 2       # not 1, which is reserved for real errors

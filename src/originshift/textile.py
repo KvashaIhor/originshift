@@ -528,14 +528,9 @@ def resolve_textile(
     # Only foreign materials are tested; a domestic one has nothing to shift.
     foreign = [m for m in materials if m.country is None or m.country != country]
 
-    governed_by_e2 = False
     for rule, alt in ordered:
         holds = _condition_holds(alt.condition, facts, good)
         if holds is False:
-            if _E2_CROSS_REFERENCE.search(alt.condition or ""):
-                # The caller has said the good is not of cotton or wool, so
-                # 102.21(e)(2) takes it and (e)(1) does not.
-                governed_by_e2 = True
             continue
         if holds is None:
             unmet_conditions.append(

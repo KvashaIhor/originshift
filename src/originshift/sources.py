@@ -17,7 +17,19 @@ from pathlib import Path
 ECFR = "https://www.ecfr.gov/api/versioner/v1"
 CACHE = paths.CACHE
 
-USER_AGENT = "originshift/0.0.1 (+https://github.com/originshift/originshift)"
+def _version() -> str:
+    from importlib.metadata import PackageNotFoundError, version
+
+    try:
+        return version("originshift")
+    except PackageNotFoundError:  # running from a checkout without an install
+        return "dev"
+
+
+#: Sent to public government endpoints. No URL until the repository has a home:
+#: a user agent pointing somewhere that does not resolve is worse than one that
+#: only names the tool.
+USER_AGENT = f"originshift/{_version()}"
 
 
 @dataclass(frozen=True)

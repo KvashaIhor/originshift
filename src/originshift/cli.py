@@ -5,6 +5,10 @@
     originshift bom assembly.json
     originshift rule 6203.42 --corpus 102.21
 
+Exit codes for a single lookup: 0 resolved, 2 unresolved or ambiguous, 1 a real
+error. A batch always exits 0 if it ran — unresolved rows are an outcome, not a
+failure, and the results file says which they are.
+
 The batch path is the one that matters. The question an adopter actually has is
 "what does this say about last quarter's entries", not "what about this one
 good", so `--csv` reads a file of entries and writes a file of determinations
@@ -303,7 +307,23 @@ def cmd_bom(args: argparse.Namespace) -> int:
 
     from .bom import Node, render, resolve_bom
 
-    tree = Node.from_dict(json.loads(Path(args.file).read_text(encoding="utf-8")))
+    path = Path(args.file)
+    if not path.exists():
+        print(f"no such file: {path}", file=sys.stderr)
+        return 1
+    try:
+        tree = Node.from_dict(json.loads(path.read_text(encoding="utf-8")))
+    except json.JSONDecodeError as exc:
+        print(f"{path} is not valid JSON: {exc}", file=sys.stderr)
+        return 1
+    except KeyError as exc:
+        print(
+            f"{path}: every node needs a {exc} field. A node is "
+            f'{{"good": "<HS code>", "country": "<where it is from, or where it '
+            f'was produced>", "components": [...]}}',
+            file=sys.stderr,
+        )
+        return 1
     corpus = Corpus.load(which=args.corpus) if args.corpus else None
     root = resolve_bom(tree, corpus=corpus)
 

@@ -422,7 +422,6 @@ def steps(corpus: Corpus, cache_dir: Path | None = None) -> list[StepCase]:
     that this corpus offers no route to.
     """
     from .textile import (
-        E2_GOODS,
         TextileFacts,
         _condition_holds,
         _e2_ranges,
