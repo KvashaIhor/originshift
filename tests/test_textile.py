@@ -65,7 +65,7 @@ def test_knit_to_shape_cites_c_3_i(corpus_102_21):
         good="6110.20",
         inputs=[Material("5205.11", "CN")],
         country="VN",
-        textile=TextileFacts(knit_to_shape_in="VN"),
+        textile=TextileFacts(c2_does_not_determine=True, knit_to_shape_in="VN"),
         corpus=corpus_102_21,
     )
     assert (r.origin, r.rule_id, r.basis) == ("VN", "102.21(c)(3)(i)", "knit_to_shape")
@@ -76,7 +76,7 @@ def test_wholly_assembled_cites_c_3_ii(corpus_102_21):
         good="6203.42",
         inputs=[Material("5208.11", "CN")],
         country="VN",
-        textile=TextileFacts(wholly_assembled_in="VN"),
+        textile=TextileFacts(c2_does_not_determine=True, wholly_assembled_in="VN"),
         corpus=corpus_102_21,
     )
     assert (r.origin, r.rule_id) == ("VN", "102.21(c)(3)(ii)")
@@ -84,7 +84,7 @@ def test_wholly_assembled_cites_c_3_ii(corpus_102_21):
 
 def test_an_excepted_heading_falls_past_c_3_ii(corpus_102_21):
     """(c)(3)(ii) does not reach heading 6214, so assembly does not settle it."""
-    facts = TextileFacts(wholly_assembled_in="VN")
+    facts = TextileFacts(c2_does_not_determine=True, wholly_assembled_in="VN")
     r = resolve(
         good="6214.10", inputs=[Material("5007.10", "CN")], country="VN",
         textile=facts, corpus=corpus_102_21,
@@ -106,7 +106,8 @@ def test_the_steps_run_in_order(corpus_102_21):
         good="6110.20",
         inputs=[Material("5205.11", "CN")],
         country="VN",
-        textile=TextileFacts(knit_to_shape_in="BD", most_important_process_in="VN"),
+        textile=TextileFacts(c2_does_not_determine=True, knit_to_shape_in="BD",
+                             most_important_process_in="VN"),
         corpus=corpus_102_21,
     )
     assert r.origin == "BD"
@@ -118,7 +119,7 @@ def test_last_important_process_is_the_final_step(corpus_102_21):
         good="6214.10",
         inputs=[Material("5007.10", "CN")],
         country="VN",
-        textile=TextileFacts(last_important_process_in="IN"),
+        textile=TextileFacts(c2_does_not_determine=True, last_important_process_in="IN"),
         corpus=corpus_102_21,
     )
     assert (r.origin, r.rule_id) == ("IN", "102.21(c)(5)")
@@ -445,3 +446,27 @@ def test_c2_is_not_stepped_past_while_it_could_still_be_met(corpus_102_21):
     )
     assert r.status == "unresolved"
     assert "fabric-making process" in r.needed
+
+
+def test_c2_is_never_stepped_past_merely_because_a_later_fact_is_known(corpus_102_21):
+    """(c)(3) applies "where the country of origin cannot be determined under
+    (c)(1) or (2)". An unanswered question is not a finding.
+
+    Supplying an optional (c)(3) fact used to skip (c)(2) silently, changing
+    both the cited authority and the country with no flag that (c)(2) had never
+    been settled.
+    """
+    facts = TextileFacts(wholly_assembled_in="VN")
+    asked = resolve(
+        good="6203.42", inputs=[Material("5208.11", "CN")], country="VN",
+        textile=facts, corpus=corpus_102_21,
+    )
+    assert asked.status == "unresolved"
+    assert "(e)(1)" in asked.needed or "102.21(c)(2)" in asked.needed
+
+    facts.c2_does_not_determine = True
+    settled = resolve(
+        good="6203.42", inputs=[Material("5208.11", "CN")], country="VN",
+        textile=facts, corpus=corpus_102_21,
+    )
+    assert (settled.origin, settled.rule_id) == ("VN", "102.21(c)(3)(ii)")

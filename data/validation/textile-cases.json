@@ -127,9 +127,10 @@
    "good": "6110.20",
    "country": "CN",
    "facts": {
-    "knit_to_shape_in": "CN"
+    "knit_to_shape_in": "CN",
+    "c2_does_not_determine": true
    },
-   "note": "sweater vests knit to shape in China, assembled in Hong Kong"
+   "note": "sweater vests knit to shape in China, assembled in Hong Kong \u2014 CBP: 'the tariff shift rule is not met and Section 102.21(c)(2) is inapplicable'"
   },
   {
    "ruling": "560044",
@@ -138,9 +139,10 @@
    "good": "6109.10.0012",
    "country": "US",
    "facts": {
-    "wholly_assembled_in": "US"
+    "wholly_assembled_in": "US",
+    "c2_does_not_determine": true
    },
-   "note": "T-shirt wholly assembled in the United States"
+   "note": "T-shirt wholly assembled in the United States \u2014 CBP: 'As none of the rules cited above apply ... country of origin cannot be determined under 19 CFR 102.21(c)(2)'"
   },
   {
    "ruling": "959016",
@@ -160,9 +162,10 @@
    "good": "6110.20.20",
    "country": "Northern Mariana Islands",
    "facts": {
-    "most_important_process_in": "Northern Mariana Islands"
+    "most_important_process_in": "Northern Mariana Islands",
+    "c2_does_not_determine": true
    },
-   "note": "women's pullovers"
+   "note": "women's pullovers \u2014 CBP applied (c)(4), which is reached only once (c)(1) to (c)(3) have not determined origin"
   },
   {
    "ruling": "959435",
@@ -176,5 +179,6 @@
    },
    "note": "reversible scarf; no earlier paragraph determined origin"
   }
- ]
+ ],
+ "c2_finding": "Where a case sets c2_does_not_determine, the ruling itself records that finding; the flag carries CBP's determination, not an assumption of ours."
 }

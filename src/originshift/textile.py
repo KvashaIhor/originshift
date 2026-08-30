@@ -110,6 +110,14 @@ class TextileFacts:
     #: weight? That one question decides whether 102.21(e)(2) takes the good or
     #: (e)(1) keeps it. True keeps it with (e)(1).
     excepted_fibre: bool | None = None
+    #: Set where the user has determined that 102.21(c)(2) does not settle
+    #: origin — that no rule in paragraph (e) is met on the facts.
+    #:
+    #: (c)(3) applies "where the country of origin cannot be determined under
+    #: (c)(1) or (2)", and an unanswered question is not the same as a finding.
+    #: Without this the resolver asks for the (c)(2) facts rather than stepping
+    #: past them, because (c)(2) and (c)(3) routinely give different countries.
+    c2_does_not_determine: bool = False
     #: Where the fabric was both dyed and printed — 102.21(e)(2)(i).
     dyed_and_printed_in: str | None = None
     #: Which finishing operations accompanied it. (e)(2)(i) requires two or
@@ -583,14 +591,11 @@ def resolve_textile(
                 trace=findings,
             )
 
-    # An (e)(1) rule that could still be met, if the caller settled the fact it
-    # is gated on, must not be stepped past: (c)(3) is only reached where (c)(2)
-    # did not determine origin.
-    if unmet_conditions and not any(
-        getattr(facts, name) for name in ("knit_to_shape_in", "wholly_assembled_in",
-                                          "most_important_process_in",
-                                          "last_important_process_in")
-    ):
+    # (c)(3) applies "where the country of origin cannot be determined under
+    # (c)(1) or (2)". An unanswered question is not the same as cannot be
+    # determined, so an (e)(1) rule that could still be met is never stepped
+    # past — however many later facts the caller happens to have supplied.
+    if unmet_conditions and not facts.c2_does_not_determine:
         return OriginResult(
             status="unresolved",
             basis="tariff_shift",

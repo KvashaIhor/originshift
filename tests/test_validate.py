@@ -184,7 +184,9 @@ def test_e2_falls_through_when_it_does_not_determine(corpus_102_21):
         inputs=[],
         country="VN",
         textile=TextileFacts(
-            conditions={"of cotton": False}, last_important_process_in="Hong Kong"
+            excepted_fibre=False,
+            c2_does_not_determine=True,
+            last_important_process_in="Hong Kong",
         ),
         corpus=corpus_102_21,
     )
