@@ -107,6 +107,34 @@ def _materials(row: dict) -> list[Material]:
     ]
 
 
+def _conditions(given: list[str] | None) -> dict[str, bool]:
+    """Read `--condition "phrase=yes"` into the mapping TextileFacts wants.
+
+    A malformed one is refused rather than dropped: silently ignoring a stated
+    fact would let the resolver abstain as though it had never been given, and
+    an abstention the user thinks they answered is worse than one they know
+    they did not.
+    """
+    yes = {"1", "true", "yes", "y"}
+    no = {"0", "false", "no", "n"}
+    out: dict[str, bool] = {}
+    for item in given or []:
+        phrase, sep, value = item.rpartition("=")
+        if not sep or not phrase.strip():
+            raise SystemExit(f"--condition wants PHRASE=yes|no, got {item!r}")
+        v = value.strip().lower()
+        # Checked against both sets rather than passed to _flag, which answers
+        # a bool for anything: a mistyped "mabye" would come back False and
+        # assert that the good is NOT of staple fibers. A stated fact silently
+        # inverted is the one outcome this tool must never produce.
+        if v not in yes and v not in no:
+            raise SystemExit(
+                f"--condition {phrase.strip()!r} wants yes or no, got {value!r}"
+            )
+        out[phrase.strip()] = v in yes
+    return out
+
+
 def _textile_facts(row: dict):
     """Build the 102.21 facts from the spec-sheet columns, or None if none given."""
     from .textile import TextileFacts
@@ -124,6 +152,14 @@ def _textile_facts(row: dict):
         conditions["knit to shape"] = _flag(given["knit_to_shape"])
     if given["component_parts"]:
         conditions["two or more component parts"] = _flag(given["component_parts"])
+    # 102.21 states fifty-eight distinct conditions and the named columns above
+    # reach two of them. The rest — of staple fibers, of wool or of fine animal
+    # hair, and the twenty-five that appear once each — had no way in at all,
+    # so the questions the resolver asks for could not be answered. A condition
+    # is keyed on a substring of the rule's own wording, which is what
+    # `questions` prints.
+    for phrase, held in (row.get("conditions") or {}).items():
+        conditions[phrase] = held
 
     # One column feeds the rule wherever the regulation asks for that operation.
     process_in: dict[str, str] = {}
@@ -266,6 +302,7 @@ def cmd_resolve(args: argparse.Namespace) -> int:
         "fibre": args.fibre or "",
         "knit_to_shape": args.knit_to_shape or "",
         "component_parts": args.component_parts or "",
+        "conditions": _conditions(getattr(args, "condition", None)),
         "knit_in": args.knit_in or "",
         "assembled_in": args.assembled_in or "",
         "fabric_made_in": args.fabric_made_in or "",
@@ -377,6 +414,42 @@ def cmd_rule(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_questions(args: argparse.Namespace) -> int:
+    """What this good has to be asked, and nothing more.
+
+    The resolver already names the fact it is missing, one at a time. For a
+    single good that is the right shape; for eighty line items it is eighty
+    questionnaires. This asks the rules instead, once, and puts the questions
+    in the order that settles the most soonest.
+    """
+    from .questions import questions_for
+
+    corpus = Corpus.load(which="102.21")
+    if not corpus.candidates(args.good):
+        print(f"102.21 has no rule for {args.good}", file=sys.stderr)
+        return 1
+
+    asked = questions_for(args.good, corpus)
+    if not asked:
+        print(f"{args.good}: nothing to ask — the rules reaching it decide on codes alone.")
+        return 0
+
+    print(f"{args.good} — {len(asked)} question(s), most-settling first\n")
+    for n, q in enumerate(asked, 1):
+        settles = f"settles {q.weight} alternative(s)" if q.weight else "a process rule"
+        print(f"  {n}. {q.prompt}")
+        print(f"     [{q.kind}, {settles}]")
+        if q.kind == "condition" and q.key != q.prompt:
+            print(f"     answer with: --condition \"{q.key}=yes|no\"")
+        elif q.kind == "fibre":
+            print("     answer with: --fibre cotton|wool|cotton-blend|other")
+        print()
+    print("Answer them on the resolve command and it stops asking as soon as the")
+    print("good resolves. An unanswered question is not a guess: the determination")
+    print("stays unresolved and names what is still missing.")
+    return 0
+
+
 def cmd_corpora(args: argparse.Namespace) -> int:
     for name in ("102.20", "102.21"):
         try:
@@ -456,10 +529,26 @@ def build_parser() -> argparse.ArgumentParser:
     b.add_argument("--json", action="store_true", help="machine-readable output")
     b.set_defaults(func=cmd_bom)
 
+    r.add_argument(
+        "--condition",
+        action="append",
+        metavar="PHRASE=yes|no",
+        help="state a 102.21 condition in the rule's own words, e.g. "
+        "--condition \"of staple fibers=yes\". Repeatable. "
+        "`originshift questions --good CODE` prints the ones a good turns on.",
+    )
+
     q = sub.add_parser("rule", help="show the rule covering a code")
     q.add_argument("code")
     q.add_argument("--corpus", default="102.20", choices=["102.20", "102.21"])
     q.set_defaults(func=cmd_rule)
+
+    qq = sub.add_parser(
+        "questions",
+        help="the facts a textile good turns on, ordered so the fewest settle it",
+    )
+    qq.add_argument("--good", required=True, help="HS code of the finished article")
+    qq.set_defaults(func=cmd_questions)
 
     c = sub.add_parser("corpora", help="what is built, and where it came from")
     c.set_defaults(func=cmd_corpora)

@@ -350,6 +350,52 @@ is never mistaken for a clean one.
 and it does no preferential or FTA qualification. Both are out of scope by
 design.
 
+## Asking once instead of eighty times
+
+`unresolved` names the fact it is missing, one at a time. For a single good that
+is the right shape. For eighty line items it is eighty questionnaires, which is
+the actual job.
+
+```
+originshift questions --good 6110.20
+```
+
+```
+6110.20 — 2 question(s), most-settling first
+
+  1. Was the good knit to shape?
+     [condition, settles 3 alternative(s)]
+     answer with: --condition "knit to shape=yes|no"
+
+  2. Does the good consist of two or more component parts?
+     [condition, settles 2 alternative(s)]
+     answer with: --condition "two or more component parts=yes|no"
+```
+
+The questions come from the rules that reach the good, and the order is measured
+rather than fixed: a question settling three alternatives is asked before one
+settling two, for that good. **37 goods are asked nothing at all** — the rules
+reaching them decide on codes alone, which is an answer and not a failure to
+find questions.
+
+Four questions carry most of it. Staple fibre or filament, two or more component
+parts, wool or fine animal hair, and knit to shape settle **73.8%** of the
+conditioned alternatives in 102.21; adding the fibre question that decides
+between (e)(1) and (e)(2) brings it to **76.6%**. The remaining 25 predicates
+appear once each and are asked in the regulation's own words.
+
+A condition is stated in the wording the rule uses:
+
+```
+originshift resolve --good 6203.42 --inputs 5208.11 --country VN \
+    --fibre cotton --condition "two or more component parts=yes" --assembled-in VN
+```
+
+**A value that is neither yes nor no is refused, never coerced.** `--condition
+"of staple fibers=mabye"` is an error, because reading it as `no` would assert
+that the good is not of staple fibers and hand back a determination resting on a
+fact nobody stated.
+
 ## What `unresolved` means
 
 **`unresolved` means the rules do not decide the question on what you gave.**
