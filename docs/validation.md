@@ -1,6 +1,6 @@
 # Validation scorecard
 
-Generated 2026-08-30 by `python -m originshift.validate --emit`.
+Generated 2026-09-01 by `python -m originshift.validate --emit`.
 Corpus `HTSUS-2026`, from eCFR issue `2026-08-26`.
 
 Ground truth is CBP's own HQ rulings, which are binding determinations by

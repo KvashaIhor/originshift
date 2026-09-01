@@ -24,7 +24,7 @@ Two corpora, both compiled from the eCFR and pinned to a nomenclature vintage.
 | Corpus | Governs | Rules | You supply | Scored against CBP |
 |---|---|---|---|---|
 | **102.21** | **Every textile and apparel import, from any country** — 102.21(a) controls their origin *"for purposes of the Customs laws"*, except as to Israel | 101 (+1 overlay) | codes **and production facts** | **13/13** country, 13/13 paragraph |
-| **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 | codes | **22/22** shift, 8/8 country |
+| **102.20** | Country-of-origin **marking** for goods of Canada and Mexico, under USMCA and NAFTA | 1,032 (+2 overlay) | codes | **22/22** shift, 8/8 country |
 
 CBP's own ruling database cites 102.21 in 3,310 rulings and 102.20 in 909.
 
@@ -453,6 +453,19 @@ overcoats, suits, jackets, trousers, shirts, dresses, blouses. CBP Dec. 22-25
 was never incorporated, and the eCFR records why: the revision *"could not be
 incorporated due to inaccurate amendatory instruction."* The text exists in the
 Federal Register.
+
+**That document dropped three rules, not one.** The same technical correction
+also failed to incorporate `2707.10-2707.99` in 102.20(e) — oils from coal tar —
+and `6812.99` in 102.20(l), articles of asbestos, each annotated the same way.
+Three chapters, two sections, one document, and the codified text has carried
+the holes since November 2022. All three are supplied as reviewed overlays, so
+102.20 answers under **1,034** rules where the eCFR alone carries 1,032.
+
+One thing in the recovered 6812.99 rule reads like a defect and is not: it ends
+*"except from subheading 6812.80 and 6812.99"*, excepting a subheading from
+itself. That is CBP's wording, checked character by character against 87 FR
+68340. Correcting it would put words in the regulation's mouth, which is the one
+thing this project does not do.
 
 ```
 python -m originshift.ingest extract 87-FR-68356.pdf --origin "87 FR 68356" --name cbp-dec-22-25

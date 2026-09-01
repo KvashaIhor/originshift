@@ -1,0 +1,341 @@
+{
+ "overlay": "cbp-dec-22-25-102-20",
+ "extends": "19-CFR-102.20",
+ "authority": "102.20",
+ "provenance": {
+  "method": "file",
+  "origin": "87 FR 68340 (CBP Dec. 22-25, 15 Nov 2022)",
+  "retrieved": "2026-09-01",
+  "sha256": "afeb4319687a006605c640ba34b79d42fe14b05bdc125ab84f28b9a2b1565cf0",
+  "extractor": "fr_text",
+  "reviewed_by": "Ihor Kvasha — checked against 87 FR 68340, 1 Sep 2026",
+  "note": "read from fr-2022-23329.txt. The 6812.99 rule ends \"except from subheading 6812.80 and 6812.99\", excepting a subheading from itself. That is CBP's wording, checked character by character against 87 FR 68340; it is not an extraction artifact and must not be corrected."
+ },
+ "rules": [
+  {
+   "rule_id": "102.20/2707.10-2707.99",
+   "regime": "US",
+   "htsus": "2707.10-2707.99",
+   "scope": [
+    "2707.10-2707.99"
+   ],
+   "alternatives": [
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "heading",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "any other heading"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [],
+      "raw_source": "any other heading"
+     },
+     "target": {
+      "ranges": [
+       "2707.10-2707.99"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
+     "text": "A change to subheading 2707.10 through 2707.99 from any other heading",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "subheading",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "any other subheading"
+       },
+       {
+        "kind": "same_position",
+        "level": "subheading",
+        "ranges": [
+         "2707.99"
+        ],
+        "outside_that_group": false,
+        "text": "from any other good of subheading 2707.99"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [
+       "provided that the good resulting from such change is the product of a chemical reaction"
+      ],
+      "raw_source": "any other subheading or from any other good of subheading 2707.99"
+     },
+     "target": {
+      "ranges": [
+       "2707.99"
+      ],
+      "description": "phenols of",
+      "excluding_description": null
+     },
+     "text": "A change to phenols of subheading 2707.99 from any other subheading or from any other good of subheading 2707.99, provided that the good resulting from such change is the product of a chemical reaction",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "subheading",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "any other subheading"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [
+       "provided that the good resulting from such change is the product of a chemical reaction"
+      ],
+      "raw_source": "any other subheading"
+     },
+     "target": {
+      "ranges": [
+       "2707.99",
+       "2707.99"
+      ],
+      "description": "any other good of",
+      "excluding_description": null
+     },
+     "text": "A change to any other good of subheading 2707.99 from phenols of subheading 2707.99 or from any other subheading, provided that the good resulting from such change is the product of a chemical reaction",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "subheading",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "any other subheading, including any subheading within that group"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [
+       "provided that the good resulting from such change is the product of a chemical reaction"
+      ],
+      "raw_source": "any other subheading, including any subheading within that group"
+     },
+     "target": {
+      "ranges": [
+       "2707.10-2707.99"
+      ],
+      "description": null,
+      "excluding_description": null
+     },
+     "text": "A change to subheading 2707.10 through 2707.99 from any other subheading, including any subheading within that group, provided that the good resulting from such change is the product of a chemical reaction",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    }
+   ],
+   "section": "102.20 (overlay)",
+   "text": "A change to subheading 2707.10 through 2707.99 from any other heading; or A change to phenols of subheading 2707.99 from any other subheading or from any other good of subheading 2707.99, provided that the good resulting from such change is the product of a chemical reaction; or A change to any other good of subheading 2707.99 from phenols of subheading 2707.99 or from any other subheading, provided that the good resulting from such change is the product of a chemical reaction; or A change to subheading 2707.10 through 2707.99 from any other subheading, including any subheading within that group, provided that the good resulting from such change is the product of a chemical reaction.",
+   "vintage": "HTSUS-2026",
+   "source_url": "87 FR 68340 (CBP Dec. 22-25, 15 Nov 2022)"
+  },
+  {
+   "rule_id": "102.20/6812.99",
+   "regime": "US",
+   "htsus": "6812.99",
+   "scope": [
+    "6812.99"
+   ],
+   "alternatives": [
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "same_position",
+        "level": "subheading",
+        "ranges": [
+         "6812.99"
+        ],
+        "outside_that_group": false,
+        "text": "any other subheading including from any other good of subheading 6812.99"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [],
+      "raw_source": "any other subheading including from any other good of subheading 6812.99"
+     },
+     "target": {
+      "ranges": [
+       "6812.99"
+      ],
+      "description": "yarn or thread of",
+      "excluding_description": null
+     },
+     "text": "A change to yarn or thread of subheading 6812.99 from any other subheading including from any other good of subheading 6812.99",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "subheading",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "any other subheading"
+       },
+       {
+        "kind": "same_position",
+        "level": "subheading",
+        "ranges": [
+         "6812.99"
+        ],
+        "outside_that_group": false,
+        "text": "from any other good of subheading 6812.99"
+       }
+      ],
+      "excluded": [
+       "6812.99"
+      ],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [],
+      "raw_source": "any other subheading or from any other good of subheading 6812.99, except from yarn or thread of subheading 6812.99"
+     },
+     "target": {
+      "ranges": [
+       "6812.99"
+      ],
+      "description": "cords or string, whether or not plaited of",
+      "excluding_description": null
+     },
+     "text": "A change to cords or string, whether or not plaited of subheading 6812.99 from any other subheading or from any other good of subheading 6812.99, except from yarn or thread of subheading 6812.99",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "same_position",
+        "level": "subheading",
+        "ranges": [
+         "6812.99"
+        ],
+        "outside_that_group": false,
+        "text": "any other subheading including from any other good of subheading 6812.99"
+       }
+      ],
+      "excluded": [],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [],
+      "raw_source": "any other subheading including from any other good of subheading 6812.99"
+     },
+     "target": {
+      "ranges": [
+       "6812.99"
+      ],
+      "description": "woven or knitted fabric of",
+      "excluding_description": null
+     },
+     "text": "A change to woven or knitted fabric of subheading 6812.99 from any other subheading including from any other good of subheading 6812.99",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    },
+    {
+     "kind": "tariff_shift",
+     "shift": {
+      "sources": [
+       {
+        "kind": "any_other",
+        "level": "heading",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "any other heading"
+       },
+       {
+        "kind": "any_other",
+        "level": "subheading",
+        "ranges": [],
+        "outside_that_group": false,
+        "text": "from any subheading"
+       }
+      ],
+      "excluded": [
+       "6812.80",
+       "6812.99"
+      ],
+      "excluded_when": [],
+      "excluded_descriptions": [],
+      "provisos": [],
+      "raw_source": "any other heading or from any subheading, except from subheading 6812.80 and 6812.99"
+     },
+     "target": {
+      "ranges": [
+       "6812.99"
+      ],
+      "description": "paper, millboard, felt, or compressed asbestos fiber jointing, in sheets or rolls, of",
+      "excluding_description": null
+     },
+     "text": "A change to paper, millboard, felt, or compressed asbestos fiber jointing, in sheets or rolls, of subheading 6812.99 from any other heading or from any subheading, except from subheading 6812.80 and 6812.99",
+     "residual": false,
+     "condition": null,
+     "sequence": null,
+     "is_fallback": false,
+     "unparsed_reason": null
+    }
+   ],
+   "section": "102.20 (overlay)",
+   "text": "A change to yarn or thread of subheading 6812.99 from any other subheading including from any other good of subheading 6812.99; or A change to cords or string, whether or not plaited of subheading 6812.99 from any other subheading or from any other good of subheading 6812.99, except from yarn or thread of subheading 6812.99; or A change to woven or knitted fabric of subheading 6812.99 from any other subheading including from any other good of subheading 6812.99; or A change to paper, millboard, felt, or compressed asbestos fiber jointing, in sheets or rolls, of subheading 6812.99 from any other heading or from any subheading, except from subheading 6812.80 and 6812.99.",
+   "vintage": "HTSUS-2026",
+   "source_url": "87 FR 68340 (CBP Dec. 22-25, 15 Nov 2022)"
+  }
+ ]
+}
