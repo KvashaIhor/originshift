@@ -66,9 +66,14 @@
    "uniques": 0
   },
   {
-   "count": 0,
+   "count": 59,
    "timestamp": "2026-08-30T00:00:00Z",
-   "uniques": 0
+   "uniques": 27
+  },
+  {
+   "count": 5,
+   "timestamp": "2026-08-31T00:00:00Z",
+   "uniques": 4
   }
  ]
 }

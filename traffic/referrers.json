@@ -1,3 +1,16 @@
 {
- "snapshots": {}
+ "snapshots": {
+  "2026-09-02": [
+   {
+    "count": 18,
+    "referrer": "github.com",
+    "uniques": 2
+   },
+   {
+    "count": 3,
+    "referrer": "Google",
+    "uniques": 1
+   }
+  ]
+ }
 }

@@ -1,3 +1,66 @@
 {
- "snapshots": {}
+ "snapshots": {
+  "2026-09-02": [
+   {
+    "count": 20,
+    "path": "/KvashaIhor/originshift",
+    "title": "Overview",
+    "uniques": 7
+   },
+   {
+    "count": 5,
+    "path": "/KvashaIhor/originshift/blob/main/docs/scope.md",
+    "title": "/blob/main/docs/scope.md",
+    "uniques": 5
+   },
+   {
+    "count": 4,
+    "path": "/KvashaIhor/originshift/blob/main/docs/scope.md).",
+    "title": "/blob/main/docs/scope.md).",
+    "uniques": 4
+   },
+   {
+    "count": 4,
+    "path": "/KvashaIhor/originshift/issues",
+    "title": "/issues",
+    "uniques": 4
+   },
+   {
+    "count": 3,
+    "path": "/KvashaIhor/originshift/blob/main/docs/validation.md",
+    "title": "/blob/main/docs/validation.md",
+    "uniques": 3
+   },
+   {
+    "count": 3,
+    "path": "/KvashaIhor/originshift/releases",
+    "title": "/releases",
+    "uniques": 3
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/ADOPTERS.md",
+    "title": "/blob/main/ADOPTERS.md",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/src/originshift/grammar.py",
+    "title": "/blob/main/src/originshift/grammar.py",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/branches",
+    "title": "/branches",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/commits/main",
+    "title": "/commits/main",
+    "uniques": 1
+   }
+  ]
+ }
 }
