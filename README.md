@@ -8,6 +8,7 @@ legally from?" and cites the rule it used.
 [![tests](https://github.com/KvashaIhor/originshift/actions/workflows/test.yml/badge.svg)](https://github.com/KvashaIhor/originshift/actions/workflows/test.yml)
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22181363.svg)](https://doi.org/10.5281/zenodo.22181363)
 [![licence](https://img.shields.io/pypi/l/originshift)](LICENSE)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/14427/badge)](https://www.bestpractices.dev/projects/14427)
 
 beta · corpus `HTSUS-2026`, eCFR `2026-08-26`
 
