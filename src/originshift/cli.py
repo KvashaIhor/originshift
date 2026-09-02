@@ -248,7 +248,7 @@ def cmd_resolve(args: argparse.Namespace) -> int:
         missing = {"good"} - set(rows[0])
         if missing:
             print(
-                f"{args.csv} needs a 'good' column; found {list(rows[0])}",
+                f"{args.csv} needs a 'good' column. Found {list(rows[0])}",
                 file=sys.stderr,
             )
             return 1
@@ -512,7 +512,7 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="you have found that 102.21(c)(2) does not determine origin",
     )
-    r.add_argument("--csv", help="a file of entries; needs a 'good' column")
+    r.add_argument("--csv", help="a file of entries. Needs a 'good' column")
     r.add_argument("--out", help="write results here instead of stdout")
     r.set_defaults(func=cmd_resolve)
 

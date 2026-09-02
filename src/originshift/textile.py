@@ -216,6 +216,15 @@ FINISHING_OPERATIONS = (
 )
 
 
+def _or_join(items) -> str:
+    """Join alternatives with "or". A semicolon leaves the relation between
+    them to the reader, and these are branches of one rule."""
+    items = list(items)
+    if len(items) <= 1:
+        return "".join(items)
+    return ", ".join(items[:-1]) + (", or " if len(items) > 2 else " or ") + items[-1]
+
+
 def _e2_ranges() -> list[CodeRange]:
     return [CodeRange.parse(c) for c in E2_GOODS]
 
@@ -356,7 +365,7 @@ def resolve_e2(good: str, country: str, facts: TextileFacts, corpus: Corpus):
     if facts.dyed_and_printed_in and len(accompanying) < 2:
         asks.append(
             f"(e)(2)(i) needs the dyeing and printing accompanied by two or more of "
-            f"{', '.join(FINISHING_OPERATIONS)}; {len(accompanying)} given"
+            f"{', '.join(FINISHING_OPERATIONS)}. {len(accompanying)} given"
         )
     else:
         asks.append("where the fabric was both dyed and printed, and with which "
@@ -623,8 +632,12 @@ def resolve_textile(
             needed=(
                 "102.21(c)(2) turns on a requirement in (e)(1) that no "
                 "classification carries: "
-                + "; ".join(dict.fromkeys(u for u in unmet_conditions if u))
-                + ". Give it, or record that (c)(2) does not settle this good"
+                # These are branches of one rule, so "or" states what a
+                # semicolon left to the reader: establishing any one of them
+                # settles which alternative applies.
+                + _or_join(dict.fromkeys(u for u in unmet_conditions if u))
+                + ". State which holds, or record that (c)(2) does not settle "
+                "this good"
             ),
             vintage=corpus.vintage,
             trace=findings,

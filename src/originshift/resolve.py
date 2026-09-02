@@ -346,16 +346,18 @@ def _de_minimis(
     values = [m.value for m in contributing]
     if good_value is None or any(v is None for v in values) or not values:
         return None, (
-            f"the value of {', '.join(sorted(failed))} as a share of the value of the "
-            f"good — under 102.13 they are disregarded at no more than "
-            f"{limit:.0%}, and the shift would then be met"
+            f"give the value of {', '.join(sorted(failed))} and the value of the "
+            f"good. Under 102.13 a material is disregarded at no more than "
+            f"{limit:.0%} of that value, and the shift would then be met"
         )
 
     share = sum(v for v in values if v is not None) / good_value
     if share <= limit:
         return True, f"disregarded under 102.13 at {share:.1%} of the value of the good"
+    codes = sorted(failed)
+    verb = "come" if len(codes) > 1 else "comes"
     return False, (
-        f"{', '.join(sorted(failed))} come to {share:.1%} of the value of the good, "
+        f"{', '.join(codes)} {verb} to {share:.1%} of the value of the good, "
         f"above the {limit:.0%} allowed by 102.13"
     )
 
@@ -402,7 +404,7 @@ def resolve(
     for m in materials:
         if m.role is not None and m.role not in DISREGARDED_ROLES:
             raise ValueError(
-                f"unknown 102.15 role {m.role!r}; expected one of "
+                f"unknown 102.15 role {m.role!r}. Expected one of "
                 + ", ".join(sorted(DISREGARDED_ROLES))
             )
     kept = [m for m in materials if m.role is None]
@@ -510,7 +512,7 @@ def _resolve(
     if operation is not None:
         if operation not in NON_QUALIFYING:
             raise ValueError(
-                f"unknown operation {operation!r}; expected one of "
+                f"unknown operation {operation!r}. Expected one of "
                 + ", ".join(sorted(NON_QUALIFYING))
             )
         return OriginResult(
@@ -541,7 +543,7 @@ def _resolve(
             why = "textiles and apparel are governed by 102.21, not 102.20"
         else:
             why = (
-                f"no rule in 102.20 targets it under {corpus.vintage}; the code "
+                f"no rule in 102.20 targets it under {corpus.vintage}. The code "
                 f"may belong to an earlier nomenclature vintage"
             )
         base.needed = f"a rule covering {good} — {why}"
@@ -550,9 +552,9 @@ def _resolve(
     if not materials:
         base.reason = "no_input_materials_given"
         base.needed = (
-            "the HS codes of the materials; with none, origin turns on "
-            "102.11(a)(1)-(2), which need a fact about production rather than "
-            "a classification"
+            "the HS codes of the materials. With no materials, origin turns on "
+            "102.11(a)(1)-(2), which need a fact about production, not a "
+            "classification"
         )
         return base
 
@@ -572,7 +574,7 @@ def _resolve(
                 needed=(
                     "a choice between "
                     + ", ".join(sorted(by_rule))
-                    + "; each is satisfied and this corpus does not rank them"
+                    + ". Each is satisfied, and this corpus does not rank them"
                 ),
                 vintage=corpus.vintage,
                 trace=findings,
@@ -632,7 +634,10 @@ def _resolve(
             )
         # The shift itself is settled either way, so the finding stands and the
         # de minimis route is named rather than swallowing the answer.
-        de_minimis_note = f" Unless {detail}." if carried is None else f" {detail.capitalize()}."
+        de_minimis_note = (
+            f" To rule that out, {detail}." if carried is None
+            else f" {detail[0].upper()}{detail[1:]}."
+        )
 
     # Paragraph (a) has produced no answer, so 102.11(b) applies: the country of
     # origin of the single material that imparts the essential character.
