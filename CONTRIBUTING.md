@@ -60,6 +60,15 @@ against a corpus that does not govern the goods it carries.
 If you change a figure, the test that guarded it should fail. If it does not,
 the test was not guarding it.
 
+**New behaviour arrives with a test that fails without it.** Not as a rule about
+coverage — as the only way to tell a feature from an assertion that it works.
+The same goes for a bug fix: write the test that reproduces the bug first, so
+the fix has something to prove.
+
+`ruff check src tests` runs in CI and must be clean. The rule selection in
+`pyproject.toml` is narrow on purpose; if a rule fights the code rather than
+finding a defect in it, say so in the pull request and it can be turned off.
+
 ## What will not be merged
 
 **Anything that repairs the regulation.** Defects in the source are reported and

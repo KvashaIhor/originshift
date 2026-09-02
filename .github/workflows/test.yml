@@ -20,3 +20,14 @@ jobs:
       # The CROSS rulings are not committed, so the validation measures skip.
       # Everything else must pass on a fresh clone, as the README claims.
       - run: pytest -q
+
+  # One run, not one per interpreter: ruff's findings do not vary by version.
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install -e ".[dev]"
+      - run: ruff check src tests

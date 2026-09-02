@@ -12,7 +12,7 @@ from __future__ import annotations
 import argparse
 import json
 from collections import Counter
-from datetime import date
+from datetime import datetime, timezone
 from pathlib import Path
 
 from . import paths
@@ -146,7 +146,7 @@ def build(which: str = "102.20", issue_date: str | None = None) -> dict:
         "vintage": vintage,
         "source_url": snap.url,
         "source_issue_date": snap.issue_date,
-        "built_on": date.today().isoformat(),
+        "built_on": datetime.now(timezone.utc).date().isoformat(),
         "counts": {
             "rules": len(rules),
             "alternatives": len(alts),
@@ -202,7 +202,7 @@ def _build_one(which: str, issue_date: str | None) -> None:
     for reason, n in sorted(c["by_reason"].items(), key=lambda kv: -kv[1]):
         print(f"     {n:>3}  {reason}")
     if corpus["anomalies"]:
-        print(f"\n  defects in the source text, reported not corrected:")
+        print("\n  defects in the source text, reported not corrected:")
         for a in corpus["anomalies"]:
             print(f"     {a.get('rule_id', a['kind'])}: {a['detail'][:150]}")
 

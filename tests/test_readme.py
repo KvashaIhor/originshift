@@ -155,7 +155,7 @@ def test_the_stated_corpus_figures_are_current(corpus, corpus_102_21):
 
 def test_the_stated_validation_numbers_are_current(corpus):
     """Exact figures, not a loose band — three of them had drifted."""
-    from originshift import parse_102_21, validate
+    from originshift import validate
     from originshift.corpus import Corpus
 
     if not validate.rulings_available("102.20"):

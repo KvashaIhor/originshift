@@ -739,7 +739,7 @@ def _resolve(
                 ),
                 satisfied=True,
                 reason=(
-                    f"every material 102.18(b)(1) admits — "
+                    "every material 102.18(b)(1) admits — "
                     + ", ".join(m.code for m in considered)
                     + f" — is of {only}, so which imparts the essential character "
                     f"cannot change the answer"

@@ -5,7 +5,6 @@ import json
 import pytest
 
 from originshift import ingest, parse_102_21
-from originshift.corpus import Corpus
 
 #: As the Federal Register prints a rule table: key padded with dots, the rule
 #: wrapped across continuation lines.

@@ -26,7 +26,7 @@ import hashlib
 import json
 import re
 from dataclasses import asdict, dataclass
-from datetime import date
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Literal
 
@@ -87,7 +87,7 @@ class Document:
             provenance=Provenance(
                 method="file",
                 origin=origin,
-                retrieved=date.today().isoformat(),
+                retrieved=datetime.now(timezone.utc).date().isoformat(),
                 sha256=hashlib.sha256(raw).hexdigest(),
                 extractor=extractor,
                 note=note or f"read from {Path(path).name}",

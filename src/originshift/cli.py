@@ -214,7 +214,7 @@ def _row_out(row: dict, result: OriginResult, corpus: Corpus) -> dict:
 
 def _resolve_row(row: dict, corpora: dict[str, Corpus]) -> tuple[OriginResult, Corpus]:
     which = (row.get("corpus") or "").strip() or None
-    corpus = corpora[which] if which in corpora else None
+    corpus = corpora.get(which)
     if corpus is None:
         # No corpus named: try each, and prefer one that finds a rule at all.
         for candidate in corpora.values():
@@ -241,7 +241,8 @@ def cmd_resolve(args: argparse.Namespace) -> int:
     corpora = _corpora(["102.20", "102.21"])
 
     if args.csv:
-        rows = list(csv.DictReader(Path(args.csv).open(encoding="utf-8-sig")))
+        with Path(args.csv).open(encoding="utf-8-sig") as fh:
+            rows = list(csv.DictReader(fh))
         if not rows:
             print(f"{args.csv} has no rows", file=sys.stderr)
             return 1

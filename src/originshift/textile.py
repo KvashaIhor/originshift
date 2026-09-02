@@ -539,9 +539,9 @@ def resolve_textile(
             continue
         if holds is None:
             unmet_conditions.append(
-                f"whether the good is of cotton or of wool, or a blend 16 percent "
-                f"or more cotton by weight — which decides whether 102.21(e)(2) "
-                f"takes it instead of (e)(1)"
+                "whether the good is of cotton or of wool, or a blend 16 percent "
+                "or more cotton by weight — which decides whether 102.21(e)(2) "
+                "takes it instead of (e)(1)"
                 if _E2_CROSS_REFERENCE.search(alt.condition or "")
                 else (alt.condition or "")
             )

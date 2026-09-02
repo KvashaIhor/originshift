@@ -673,7 +673,7 @@ def emit(path: Path) -> None:
     if decided:
         w(f"- agreement with CBP: **{len(agreed)}/{len(decided)}**")
     if scored:
-        w(f"- cases stating both the materials' origins and the country CBP held,")
+        w("- cases stating both the materials' origins and the country CBP held,")
         w(f"  so the whole hierarchy can be scored: **{len(scored)}**, of which")
         w(f"  **{len(right)}/{len(scored)}** reached CBP's country")
     right_t = [c for c in tex if c.country_agrees]
@@ -958,7 +958,7 @@ def report_agreement(cases: list[AgreementCase]) -> None:
     if scored:
         right = [c for c in scored if c.our_country == c.cbp_country]
         print()
-        print(f"of those, cases stating the materials' origins and the country")
+        print("of those, cases stating the materials' origins and the country")
         print(f"CBP held, so the whole hierarchy can be scored : {len(scored)}")
         print(f"   reached CBP's country                      : {len(right)}/{len(scored)}")
         for c in scored:

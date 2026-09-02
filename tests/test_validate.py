@@ -79,7 +79,6 @@ def test_a_code_outside_the_corpus_is_reported_as_absent(corpus):
 
 @pytest.fixture(scope="module")
 def report(corpus):
-    from originshift import sources
 
     if not validate.rulings_available("102.20"):
         pytest.skip("CROSS rulings not fetched; run validate --fetch")
@@ -109,7 +108,7 @@ def test_agreement_is_strongest_on_rulings_of_the_corpus_own_era(report):
 
 @pytest.fixture(scope="module")
 def report_21(corpus_102_21):
-    from originshift import parse_102_21, sources
+    from originshift import parse_102_21
 
     if not validate.rulings_available("102.21"):
         pytest.skip("CROSS rulings not fetched; run validate --fetch")

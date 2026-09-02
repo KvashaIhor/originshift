@@ -5,7 +5,6 @@
 it, which for a tool whose claim is defensibility is worse than saying nothing.
 """
 
-import pytest
 
 from originshift.resolve import Material, resolve
 from originshift.textile import TextileFacts
@@ -180,7 +179,6 @@ def test_a_process_rule_is_findable(corpus_102_21):
 
 def test_no_covered_good_is_left_without_a_rule(corpus_102_21):
     """Sampled across the coverage, every good should find something."""
-    import re
 
     for rule in corpus_102_21.rules:
         for scope in rule.scope:
