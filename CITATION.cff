@@ -1,0 +1,44 @@
+cff-version: 1.2.0
+title: "originshift: US non-preferential rules of origin, compiled from the eCFR"
+message: >-
+  If you use this corpus or the determinations it produces, please cite it. The
+  concept DOI below always resolves to the latest version; cite the version DOI
+  when you need to pin what you answered under.
+type: software
+authors:
+  - family-names: Kvasha
+    given-names: Ihor
+    orcid: "https://orcid.org/0009-0004-4814-0827"
+    affiliation: Independent
+repository-code: "https://github.com/KvashaIhor/originshift"
+url: "https://pypi.org/project/originshift/"
+abstract: >-
+  Compiles 19 CFR 102.20 and 102.21 out of the eCFR into a machine-readable
+  corpus, answers which country a good is legally from, and cites the rule it
+  used. Every record carries the source URL, the eCFR issue date and the
+  nomenclature vintage it answers under, so a rule can be re-derived after the
+  source is amended. Defects found in the source text are reported rather than
+  corrected. Scored against CBP's own HQ rulings, with the denominators, the
+  exclusions and every disagreement published.
+keywords:
+  - rules of origin
+  - non-preferential origin
+  - customs
+  - trade compliance
+  - 19 CFR 102
+  - country of origin
+  - textiles and apparel
+  - HTSUS
+  - USMCA
+  - rules as code
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-08-30"
+doi: 10.5281/zenodo.22181363
+identifiers:
+  - type: doi
+    value: 10.5281/zenodo.22181363
+    description: Concept DOI, resolving to the latest version
+  - type: doi
+    value: 10.5281/zenodo.22181364
+    description: Version DOI for v0.1.0

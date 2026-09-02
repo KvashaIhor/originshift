@@ -3,7 +3,13 @@
 **Non-preferential rules of origin, as data.** Answers "what country is this good
 legally from?" and cites the rule it used.
 
-`0.1.0` · alpha · Python ≥3.11 · Apache-2.0 · corpus `HTSUS-2026`, eCFR `2026-08-26`
+[![PyPI](https://img.shields.io/pypi/v/originshift)](https://pypi.org/project/originshift/)
+[![Python](https://img.shields.io/pypi/pyversions/originshift)](https://pypi.org/project/originshift/)
+[![tests](https://github.com/KvashaIhor/originshift/actions/workflows/test.yml/badge.svg)](https://github.com/KvashaIhor/originshift/actions/workflows/test.yml)
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22181363.svg)](https://doi.org/10.5281/zenodo.22181363)
+[![licence](https://img.shields.io/pypi/l/originshift)](LICENSE)
+
+alpha · corpus `HTSUS-2026`, eCFR `2026-08-26`
 
 **Part 102 only.** For non-textile goods it does not decide Section 301 or 232
 origin, and it never decides AD/CVD scope. [Scope, precisely](#scope-precisely).
@@ -543,6 +549,35 @@ scope, deliberately: `US9177286B2` runs to 2034 over bill-of-materials origin
 traversal with certificate output, and the EU already ships ROSA for free.
 Compiling rules and resolving a good against one is not the claimed invention.
 
+## One maintainer
+
+That is a risk and you should price it. What limits it:
+
+**The corpus outlives the code.** Each corpus is a standalone JSON file carrying
+the source URL, the eCFR issue date and the nomenclature vintage on every
+record. It is readable without this package and states what it answers under. If
+this project stops, the data does not become unreadable.
+
+**The build is reproducible from primary sources.** `python -m
+originshift.build_corpus` re-derives both corpora from the eCFR at a pinned
+issue date. Nothing here is a hand-maintained table you would have to inherit.
+
+**The licence permits you to carry on without me.** Apache-2.0, code and corpus
+both.
+
+**It will not be relicensed.** Not to BSL, SSPL, FSL, or any other
+source-available licence. If you build on this, that decision is not waiting to
+be reversed.
+
+**Support is what one person can keep.** Issues are triaged within five business
+days. There is no response-time guarantee. Commercial support and maintained
+corpus updates are available on request — ask in an issue.
+
+**SOC 2 is out of scope, and that is the answer to the questionnaire.** The
+package runs in your process, stores nothing between calls, and makes no network
+request while resolving. There is no service to audit. Fetching sources and
+rebuilding the corpus are separate commands you run deliberately.
+
 ## Sources
 
 | Source | Licence |
@@ -616,6 +651,16 @@ The package reports nothing about its use, and never will. That leaves
 [ADOPTERS.md](ADOPTERS.md) as the only record, kept by hand. If you rely on a
 corpus here, say so in an issue or by email, publicly or privately — knowing
 which rules are carried into real filings is what decides where the care goes.
+
+## Contributing, and reporting a defect
+
+The highest-value contribution is **checking a rule against the eCFR and opening
+an issue when the corpus disagrees** — see [CONTRIBUTING.md](CONTRIBUTING.md),
+which also covers reviewing an ingested rule under your own attestation.
+
+A wrong determination is a correctness bug: open an ordinary issue, in the open.
+A vulnerability goes to [SECURITY.md](SECURITY.md), which explains what is in
+scope for a tool that runs in your process and stores nothing.
 
 ## Development
 
