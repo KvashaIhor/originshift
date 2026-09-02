@@ -1,0 +1,40 @@
+# OpenSSF Scorecard. It scores the repository's security practices and publishes
+# the result, so the number is checkable rather than claimed.
+#
+# Two checks cannot pass here and are not meant to: Code-Review and Contributors
+# both measure whether someone other than the author reviewed the work, and this
+# project has one maintainer. That is stated in the README rather than hidden.
+name: scorecard
+
+on:
+  branch_protection_rule:
+  schedule:
+    - cron: "17 4 * * 1"   # Mondays, offset off the hour
+  push:
+    branches: [main]
+
+permissions: read-all
+
+jobs:
+  analysis:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write   # upload the SARIF to the Security tab
+      id-token: write          # publish the result so the badge can read it
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ossf/scorecard-action@v2.4.0
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          publish_results: true
+      - uses: actions/upload-artifact@v4
+        with:
+          name: scorecard-results
+          path: results.sarif
+          retention-days: 5
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: results.sarif
