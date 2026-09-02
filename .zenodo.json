@@ -1,7 +1,7 @@
 {
   "upload_type": "software",
   "title": "originshift: US non-preferential rules of origin, compiled from the eCFR",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "access_right": "open",
   "license": "Apache-2.0",
   "creators": [
