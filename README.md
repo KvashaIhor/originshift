@@ -387,9 +387,13 @@ find questions.
 
 Four questions carry most of it. Staple fibre or filament, two or more component
 parts, wool or fine animal hair, and knit to shape settle **73.8%** of the
-conditioned alternatives in 102.21; adding the fibre question that decides
-between (e)(1) and (e)(2) brings it to **76.6%**. The remaining 25 predicates
-appear once each and are asked in the regulation's own words.
+conditioned alternatives in 102.21 — four questions covering seven predicate
+forms, since the fibre-type and component wordings each vary. Adding the fibre
+question that decides between (e)(1) and (e)(2) brings it to **76.6%**. That
+fifth one is worth a caution: what you ask about is the fibre, but the predicate
+never says so. It reads *"provided for in paragraph (e)(2) of this section"*, so
+searching the conditions for a fibre word finds nothing. The remaining 25
+predicates appear once each and are asked in the regulation's own words.
 
 A condition is stated in the wording the rule uses:
 
