@@ -9,7 +9,7 @@ legally from?" and cites the rule it used.
 [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.22181363.svg)](https://doi.org/10.5281/zenodo.22181363)
 [![licence](https://img.shields.io/pypi/l/originshift)](LICENSE)
 
-alpha · corpus `HTSUS-2026`, eCFR `2026-08-26`
+beta · corpus `HTSUS-2026`, eCFR `2026-08-26`
 
 **Part 102 only.** For non-textile goods it does not decide Section 301 or 232
 origin, and it never decides AD/CVD scope. [Scope, precisely](#scope-precisely).
@@ -588,7 +588,7 @@ rebuilding the corpus are separate commands you run deliberately.
 
 ## Scope, precisely
 
-Stated in full, with the use statement, in [docs/scope.md](https://github.com/KvashaIhor/originshift/blob/main/docs/scope.md).
+[docs/scope.md](https://github.com/KvashaIhor/originshift/blob/main/docs/scope.md) states this in full, together with the use statement.
 
 **19 CFR 102.0** confines Part 102 to USMCA and NAFTA country-of-origin
 **marking**, plus the "new or different article of commerce" test of the Morocco
