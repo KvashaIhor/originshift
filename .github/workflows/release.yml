@@ -29,14 +29,17 @@ jobs:
           /tmp/v/bin/originshift resolve --good 8708.29 \
             --inputs 7208.10,8708.99 --country VN
       # An SBOM is a procurement line item, and with one runtime dependency
-      # it costs one step.
+      # it costs one step. It has to read the venv the wheel was installed
+      # into: pointed at the runner instead, it silently describes the build
+      # tooling, which is a plausible-looking file about the wrong software.
       - name: Generate a CycloneDX SBOM
         run: |
           python -m pip install cyclonedx-bom
-          python -m cyclonedx_py environment --output-format json \
-            --outfile "sbom-$GITHUB_REF_NAME.cdx.json" || \
-          cyclonedx-py environment --output-format json \
-            --outfile "sbom-$GITHUB_REF_NAME.cdx.json"
+          cyclonedx-py environment /tmp/v/bin/python \
+            --output-format JSON \
+            --output-file "sbom-$GITHUB_REF_NAME.cdx.json"
+          grep -q '"name": "originshift"' "sbom-$GITHUB_REF_NAME.cdx.json" \
+            || { echo "SBOM does not name originshift"; exit 1; }
       - uses: softprops/action-gh-release@v2
         with:
           files: sbom-*.cdx.json
