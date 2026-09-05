@@ -695,8 +695,14 @@ def emit(path: Path) -> None:
     for verdict, n in report.by_verdict.most_common():
         w(f"| `{verdict}` | {n} |")
     w("")
+    decided = [c for c in report.cases if c.verdict != "unparsed"]
+    placed = sum(c.verdict in ("equivalent", "differs") for c in report.cases)
+    absent = sum(c.verdict == "target_absent" for c in report.cases)
+    equivalent = sum(c.verdict == "equivalent" for c in report.cases)
     w(f"**Coverage {report.coverage:.1%}** — quoted rules the corpus places at all.  ")
-    w(f"**Rule fidelity {report.fidelity:.1%}** — placed rules it holds as CBP stated them.")
+    w(f"**Rule fidelity {report.fidelity:.1%}** — of the {len(decided)} quotations that could be scored, the share held as")
+    w(f"CBP stated them; the {absent} whose rule the corpus does not place count against it.  ")
+    w(f"**Of the rules it does place, it holds {equivalent} of {placed} ({equivalent / placed:.1%}).**")
     w("")
     w("By era of the ruling. The corpus answers under one nomenclature vintage, so")
     w("agreement with older rulings falls away, and does:")
@@ -815,7 +821,8 @@ def main() -> None:
         print(f"  {n:>4}  {verdict}")
     print()
     print(f"coverage      : {report.coverage:.1%}  (quoted rules the corpus places)")
-    print(f"rule fidelity : {report.fidelity:.1%}  (placed rules matching CBP's text)")
+    print(f"rule fidelity : {report.fidelity:.1%}  (scored quotations matching CBP's text; "
+          "an unplaced rule counts against it)")
 
     print("\nby era of the ruling (the corpus answers under HTSUS 2026):")
     for era, (n, cov, fid) in report.stratify().items():
