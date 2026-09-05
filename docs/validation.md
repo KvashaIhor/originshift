@@ -33,7 +33,9 @@ the authority whose rules this corpus compiles.
 | `unparsed` | 6 |
 
 **Coverage 85.5%** — quoted rules the corpus places at all.  
-**Rule fidelity 70.8%** — placed rules it holds as CBP stated them.
+**Rule fidelity 70.8%** — of the 236 quotations that could be scored, the share held as
+CBP stated them; the 29 whose rule the corpus does not place count against it.  
+**Of the rules it does place, it holds 167 of 207 (80.7%).**
 
 By era of the ruling. The corpus answers under one nomenclature vintage, so
 agreement with older rulings falls away, and does:

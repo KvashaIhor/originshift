@@ -1,6 +1,6 @@
 [project]
 name = "originshift"
-version = "0.2.1"
+version = "0.2.2"
 description = "Non-preferential rules of origin, as data. Answers which country a good is legally from, and cites the rule."
 readme = "README.md"
 requires-python = ">=3.11"

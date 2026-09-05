@@ -65,6 +65,13 @@ on the common-law substantial transformation test. That test is case law. It has
 no rule table, and nothing here compiles one. Commerce decides AD/CVD scope.
 [Scope, precisely](#scope-precisely) sets out the limits.
 
+## Using originshift?
+
+If you run originshift on real entries — in production, in research, or once out of curiosity —
+say so in [Who is using originshift?](https://github.com/KvashaIhor/originshift/discussions/1)
+or write to ihor@kvashaihor.com. Disagreements are as valuable as successes: every validation
+mismatch is published, and user reports are how the corpus improves.
+
 ## What is here
 
 | Component | State |
