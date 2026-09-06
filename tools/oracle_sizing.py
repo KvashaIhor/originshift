@@ -18,7 +18,6 @@ Rulings are cached under data/cache/cross, so a second run costs no requests.
 from __future__ import annotations
 
 import argparse
-import json
 import random
 import re
 import sys
