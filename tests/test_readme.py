@@ -263,3 +263,48 @@ def test_a_rebuilt_corpus_is_preferred_over_the_shipped_one():
     from originshift import paths
 
     assert CORPUS_DIRS == (paths.CORPUS_OUT, CORPUS_DIR)
+
+
+def test_the_readme_terms_figures_match_the_shipped_corpora():
+    """The README prints the defined-term counts. They are held here for the same
+    reason every other figure is: a number in the README that no longer matches
+    the corpus is a claim the project cannot support."""
+    import json
+
+    from originshift import paths
+
+    text = README.read_text(encoding="utf-8")
+    corpus_dir = paths.PACKAGE_DATA / "corpus"
+    c134 = json.loads(sorted(corpus_dir.glob("134-*.json"))[-1].read_text(encoding="utf-8"))
+    c323 = json.loads(sorted(corpus_dir.glob("323-*.json"))[-1].read_text(encoding="utf-8"))
+    graph = json.loads(
+        sorted(corpus_dir.glob("terms-graph-*.json"))[-1].read_text(encoding="utf-8")
+    )
+
+    row134 = f"| `134-<issue-date>.json` | {c134['counts']['sections']} | " \
+             f"{c134['counts']['defined_terms']} | {c134['counts']['use_sites']} |"
+    row323 = f"| `323-<issue-date>.json` | {c323['counts']['sections']} | " \
+             f"{c323['counts']['defined_terms']} | {c323['counts']['use_sites']} |"
+    assert row134 in text, f"README's 134 row is stale; corpus says {row134}"
+    assert row323 in text, f"README's 323 row is stale; corpus says {row323}"
+
+    counts = graph["counts"]
+    assert f"{sum(counts.values())} resolved edges" in text
+    assert f"in_part {counts['in_part']}" in text
+    assert f"unsigned {counts['unsigned']}" in text
+    # cross_part = 0 is a finding the README states; if it ever moves, the
+    # sentence explaining it is wrong and must be rewritten rather than updated.
+    assert counts["cross_part"] == 0
+    assert "`cross_part` is **0**" in text
+
+
+def test_the_readme_states_the_finding_it_is_now_scoped_to():
+    """The package widened to two parts that label origin. A README that says so
+    in the tagline and nowhere else has not actually widened."""
+    text = README.read_text(encoding="utf-8")
+    assert "## Terms a regulation uses and never defines" in text
+    assert "originshift terms --unsigned" in text
+    assert "substantial transformation" in text
+    assert "62 FR 63756" in text
+    # and the validation figures for it
+    assert "57.6%" in text and "29.1%" in text

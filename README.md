@@ -3,10 +3,11 @@
 **Non-preferential rules of origin, as data.** Answers "what country is this good
 legally from?" and cites the rule it used.
 
-Since 0.3.0 it also reads two parts that *label* origin rather than decide it —
-19 CFR 134 (marking) and 16 CFR 323 (Made in USA) — to answer a different
-question: for a term a regulation turns on, where is it defined, and where is it
-used by a part that never defines it and never says where to look.
+It also reads two parts that *label* origin rather than decide it — 19 CFR 134
+(marking) and 16 CFR 323 (Made in USA) — to answer a different question: for a
+term a regulation turns on, where is it defined, and where is it used by a part
+that never defines it and never says where to look. See
+[Terms a regulation uses and never defines](#terms-a-regulation-uses-and-never-defines).
 
 [![PyPI](https://img.shields.io/pypi/v/originshift)](https://pypi.org/project/originshift/)
 [![Python](https://img.shields.io/pypi/pyversions/originshift)](https://pypi.org/project/originshift/)
@@ -109,6 +110,20 @@ the eCFR issue date it was built from. Pass `--corpus` to build just one.
 |---|---|---|---|---|
 | `102.20-<issue-date>.json` | 1,032 | 1,464 | 1,445 (98.7%) | 1,023 (69.9%) |
 | `102.21-<issue-date>.json` | 101 | 176 | 56 (31.8%) | 21 (11.9%) |
+
+Two more corpora hold a different unit. 19 CFR 134 and 16 CFR 323 are prose, not
+rule tables, so what is compiled from them is what each part defines and where it
+uses what it defined:
+
+```
+python -m originshift.build_terms
+```
+
+| File | Sections | Defined terms | Use sites |
+|---|---|---|---|
+| `134-<issue-date>.json` | 33 | 12 | 198 |
+| `323-<issue-date>.json` | 6 | 3 | 14 |
+| `terms-graph-<issue-date>.json` | — | — | 155 resolved edges |
 
 Everything the parser could not settle is recorded with the reason it could not,
 whether that was a source naming a good instead of a code, a condition on the
@@ -290,6 +305,7 @@ originshift resolve --csv entries.csv --out results.csv
 originshift bom assembly.json
 originshift rule 6203.42 --corpus 102.21
 originshift corpora
+originshift terms --unsigned
 ```
 
 `--csv` takes a file of entries and writes a file of determinations, which is
@@ -422,6 +438,88 @@ originshift resolve --good 6203.42 --inputs 5208.11 --country VN \
 that the good is not of staple fibers and hand back a determination resting on a
 fact nobody stated.
 
+## Terms a regulation uses and never defines
+
+19 CFR 102 decides origin. Two other parts *label* it — 19 CFR 134 for marking,
+16 CFR 323 for Made in USA claims — and both turn on terms they do not carry.
+
+```
+originshift terms --unsigned
+```
+
+```
+19-CFR-134
+  [case_law] § 134.1   substantial transformation
+  [case_law] § 134.1   substantial transformation
+
+16-CFR-323
+  [unsigned] § 323.2   final assembly or processing
+  [unsigned] § 323.2   significant processing
+  [unsigned] § 323.2   all or virtually all
+  [unsigned] § 323.2   made and sourced
+  [unsigned] § 323.2   ingredients or components
+
+in_part 147  cross_authority 1  case_law 2  unsigned 5
+```
+
+**§ 134.1(b) defines the part's central term in a term the part does not carry.**
+Country of origin turns on whether further work effects a *substantial
+transformation*. That phrase appears twice in all of Part 134 and is never
+defined — it is common-law case law with no rule table, the same thing 102 does
+not implement for Section 301.
+
+**§ 323.2 states its test in full and defines none of it.** The rule makes an
+unqualified Made in USA claim deceptive unless final assembly or processing is in
+the US, all significant processing is in the US, and all or virtually all
+ingredients or components are made and sourced in the US. § 323.1 defines what
+counts as *making* the claim, never what makes it *true*. And the part does not
+say where to look: `62 FR 63756` and `Enforcement Policy Statement` each appear
+zero times in it.
+
+Five resolutions, not two, because a term resolved by an explicit pointer and a
+term the reader is expected to already know are not the same thing:
+
+| | |
+|---|---|
+| `in_part` | the part defines it |
+| `cross_part` | another corpus here defines it, and the text says so |
+| `cross_authority` | defined outside, and the text names where |
+| `case_law` | resolvable only in decided cases |
+| `unsigned` | used, undefined, and the text does not say where to look |
+
+`cross_part` is **0**, and that is a result rather than a gap: the two
+origin-adjacent parts never reference each other's definitions.
+
+### What is in the inventory, and why
+
+A term is counted if the part defines it, if the part states a substantive test
+and the term is one the test turns on, or if the text marks it as a term by
+quoting it. The third limb is what keeps the count independent of what anyone
+went looking for — it is what found `commerce` in § 323.2, which the same
+sentence resolves against the FTC Act and which the graph therefore records as
+`cross_authority` rather than leaving out.
+
+### Where the missing content actually lives
+
+The FTC's *Enforcement Policy Statement on U.S. Origin Claims*, 62 FR 63756
+(1997), gives "all or virtually all" its content. It ships as a reviewed overlay
+with the document hash and the reader's name, and **it does not resolve the
+edge** — § 323.2 still never mentions it, so the use stays `unsigned` and gains
+a pointer to where the content is.
+
+That statement then makes the last *substantial transformation* a prerequisite,
+"as that term is used by the U.S. Customs Service", citing 19 U.S.C. 1304 — the
+statute Part 134 implements. So both parts bottom out in the same undefined
+phrase:
+
+```
+16 CFR 323.2  "all or virtually all"   unsigned
+  → 62 FR 63756 at 63768               reviewed overlay, not rule text
+    → "substantially transformed", as Customs uses it
+      → 19 U.S.C. 1304 / 19 CFR 134
+        → case law
+```
+
 ## What `unresolved` means
 
 **`unresolved` means the rules do not decide the question on what you gave.**
@@ -474,6 +572,33 @@ against that corpus instead of counted against this one.
 Comparison is structural, because CBP quotes the regulation loosely: it
 pluralises "heading", writes headings in the HS dotted form (`48.17` for
 `4817`), and runs a quotation into its own prose.
+
+The defined-term graph is scored separately, because it makes a different claim
+and needs a different test:
+
+```
+python -m originshift.validate_terms --emit      # docs/terms-validation.md
+```
+
+If § 134.1 really does define its central term in a term the part does not carry,
+practitioners applying it have to reach outside the part, and in a ruling the
+reach is a case citation. 629 of 1,092 HQ rulings citing § 134.1 do, **57.6%**.
+
+That number alone says nothing, so 19 CFR 102.20 is scored the same way as a
+control — a tariff-shift table whose terms *are* given by rule, where nobody has a
+missing definition to go looking for. 93 of 320, **29.1%**. The emitter is written
+to report "that is not evidence" had the gap come in under five points.
+
+Which authority is reached for is the sharper signal, rated per hundred so the
+different population sizes cannot manufacture it: Gibson-Thomsen 4.6×, Koru 22.6×
+— both substantial-transformation authorities — while two categories run *lower*
+in the subject. A uniform lift would look like a population artifact; this does
+not.
+
+It is an upper bound. The count is of rulings reaching outside the part at all,
+not of citations demonstrably *for* the undefined term. Both populations are
+frozen to committed indexes, because the rulings search returns a different set
+over time and a figure computed against a live query cannot be re-derived.
 
 | Era of ruling | n | Coverage | Rule fidelity |
 |---|---|---|---|
@@ -603,8 +728,9 @@ rebuilding the corpus are separate commands you run deliberately.
 | Source | Licence |
 |---|---|
 | 19 CFR 102.20 and 102.21, via the [eCFR API](https://www.ecfr.gov/api/versioner/v1/) | US Government work, public domain (17 U.S.C. §105) |
+| 19 CFR 134 and 16 CFR 323, same API, for the defined-term corpora | US Government work, public domain |
 | CBP CROSS rulings, for validation | US Government work, public domain |
-| Federal Register, for text the CFR did not incorporate | US Government work, public domain |
+| Federal Register, for text the CFR did not incorporate, and for the FTC's 1997 policy statement | US Government work, public domain |
 
 ## Scope, precisely
 
