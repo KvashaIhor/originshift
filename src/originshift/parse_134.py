@@ -16,7 +16,8 @@ from __future__ import annotations
 
 import re
 import xml.etree.ElementTree as ET
-from dataclasses import dataclass, field
+
+from .terms import Section, Term, Use
 
 #: A definition paragraph in § 134.1: "(a) Country. “Country” means ...". The
 #: heading repeats the term before the definition, which is what makes the term
@@ -29,53 +30,6 @@ _DEFINITION = re.compile(r"^\(([a-z])\)\s+([^.]{2,70}?)\.\s+(.+)$", re.S)
 _DEFINING_VERB = re.compile(
     r"\b(means|refers to|is generally|is|are|includes)\b", re.I
 )
-
-
-@dataclass(frozen=True)
-class Section:
-    """One section of the part, as published."""
-
-    section_id: str
-    heading: str
-    text: str
-
-
-@dataclass(frozen=True)
-class Term:
-    """A term the part defines, and the words it defines it in."""
-
-    term: str
-    defined_in: str
-    paragraph: str
-    definition: str
-    verb: str
-
-    def to_dict(self) -> dict:
-        return {
-            "term": self.term,
-            "defined_in": self.defined_in,
-            "paragraph": self.paragraph,
-            "definition": self.definition,
-            "verb": self.verb,
-        }
-
-
-@dataclass(frozen=True)
-class Use:
-    """A place the part uses a term, with the sentence it uses it in."""
-
-    term: str
-    used_in: str
-    quote: str
-    in_definition: bool = field(default=False)
-
-    def to_dict(self) -> dict:
-        return {
-            "term": self.term,
-            "used_in": self.used_in,
-            "quote": self.quote,
-            "in_definition": self.in_definition,
-        }
 
 
 def _clean(node) -> str:
