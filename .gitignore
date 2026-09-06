@@ -9,6 +9,8 @@ build/
 # Source documents are fetched, not committed — except the two that the test
 # suite needs to run at all, which are small and pinned:
 #   data/cache/cfr-19-102-<date>.xml   the regulation the corpora are built from
+#   data/cache/cfr-19-134-<date>.xml   the marking part, for the defined-term corpus
+#   data/cache/cfr-16-323-<date>.xml   the FTC Made in USA rule, same
 #   data/cache/cross-hq-*-index.json   which rulings the validation set is drawn from
 # The rulings themselves are ~12 MB the package never reads; fetch them with
 #   python -m originshift.validate --fetch
