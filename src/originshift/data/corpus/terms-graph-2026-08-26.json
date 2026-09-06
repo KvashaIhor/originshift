@@ -1239,7 +1239,7 @@
    "content_lives_at": {
     "content_lives_at": "62 FR 63756, 63768",
     "origin": "62 FR 63756 (FTC Enforcement Policy Statement on U.S. Origin Claims, 2 Dec 1997)",
-    "reviewed_by": "Ihor Kvasha — read against 62 FR 63756 at 63768, 6 Sep 2026",
+    "reviewed_by": "Ihor Kvasha — read against the official FR PDF at 63768, 6 Sep 2026. The review caught a defect: the first extraction silently dropped the footnote marker after 'significant parts', and footnote 112 is definitional, not decorative. Marker restored and the footnote recorded as its own entry.",
     "is_binding_rule_text": false
    }
   },

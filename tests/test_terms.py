@@ -341,3 +341,69 @@ def test_the_overlay_carries_reviewed_by_provenance():
     assert prov["sha256"] and len(prov["sha256"]) == 64
     assert "reviewed_by" in prov and prov["reviewed_by"].strip()
     assert "does NOT make" in prov["note"], "the note must say what it does not do"
+
+
+def _overlay():
+    import json
+
+    from originshift.corpus import OVERLAY_DIR
+
+    return json.loads(
+        (OVERLAY_DIR / "terms" / "ftc-musa-policy-statement-1997.json").read_text(
+            encoding="utf-8"
+        )
+    )
+
+
+def test_every_overlay_quote_appears_in_the_source_with_its_markers():
+    """The first extraction stripped <SUP>112</SUP> from a quote it then
+    presented as verbatim, and footnote 112 defines "parts" for the whole policy
+    statement. A quote that hides a definitional footnote inside itself is the
+    exactness failure this corpus exists to report in others.
+
+    Checking against the raw cache, markup included, is what makes stripping
+    impossible rather than merely discouraged."""
+    import re
+    from pathlib import Path
+
+    source = Path("data/cache/fr-1997-31531.txt")
+    if not source.exists():
+        import pytest
+
+        pytest.skip("policy statement not cached")
+    flat = re.sub(r"\s+", " ", source.read_text(encoding="utf-8", errors="replace"))
+
+    doc = _overlay()
+    for entry in doc["definitions"]:
+        assert entry["definition"] in flat, (
+            f"{entry['term']!r}: the quoted definition is not in the source as "
+            "quoted — something was normalised away"
+        )
+        onward = entry.get("resolves_onward_to")
+        if onward:
+            assert onward["quote"] in flat, "the chain quote is not verbatim"
+
+
+def test_the_footnote_marker_survived_extraction():
+    entry = next(d for d in _overlay()["definitions"] if d["term"] == "all or virtually all")
+    assert "<SUP>112</SUP>" in entry["definition"], "the marker was stripped again"
+
+
+def test_footnote_112_is_recorded_as_its_own_definition():
+    """It defines "parts" for the whole statement, and sits next to § 323.2's own
+    unsigned "ingredients or components"."""
+    entry = next(d for d in _overlay()["definitions"] if d["term"] == "parts")
+    assert "all physical inputs into a product" in entry["definition"]
+    assert "n.112" in entry["at"]
+
+
+def test_the_chain_bottoms_out_at_the_same_unsigned_term_as_part_134():
+    """The cross-corpus finding: § 323.2's unsigned term is glossed by a document
+    that itself turns on substantial transformation as Customs uses it — the term
+    Part 134 uses twice and never defines."""
+    entry = next(d for d in _overlay()["definitions"] if d["term"] == "all or virtually all")
+    onward = entry["resolves_onward_to"]
+    assert onward["term"] == "substantial transformation"
+    assert onward["resolution"] == terms.CASE_LAW
+    assert "Customs Service" in onward["quote"]
+    assert onward["term"] in terms.CASE_LAW_TERMS

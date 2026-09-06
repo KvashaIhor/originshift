@@ -10,17 +10,32 @@
   "retrieved": "2026-09-06",
   "sha256": "f76ec17a0b79a23632216b675d954f1c336a76c1377058fd585b535e388184d3",
   "extractor": "fr_text",
-  "reviewed_by": "Ihor Kvasha — read against 62 FR 63756 at 63768, 6 Sep 2026",
-  "note": "This overlay does NOT make § 323.2 resolvable. The part states its three-limb test, defines none of the terms, and cites neither this document nor 62 FR 63756 anywhere in its text. The overlay records where the content actually lives so a reader can follow it; the regulation's silence is the finding and the edges stay unsigned."
+  "reviewed_by": "Ihor Kvasha — read against the official FR PDF at 63768, 6 Sep 2026. The review caught a defect: the first extraction silently dropped the footnote marker after 'significant parts', and footnote 112 is definitional, not decorative. Marker restored and the footnote recorded as its own entry.",
+  "note": "This overlay does NOT make § 323.2 resolvable. The part states its three-limb test, defines none of the terms, and cites neither this document nor 62 FR 63756 anywhere in its text. The overlay records where the content actually lives so a reader can follow it; the regulation's silence is the finding and the edges stay unsigned. Footnote markers are preserved in every quoted definition: a quote presented as verbatim that hides a definitional footnote inside itself is the exactness failure this corpus exists to report."
  },
  "definitions": [
   {
    "term": "all or virtually all",
    "used_in": "323.2",
-   "definition": "A product that is all or virtually all made in the United States will ordinarily be one in which all significant parts and processing that go into the product are of U.S. origin. In other words, where a product is labeled or otherwise advertised with an unqualified ``Made in USA'' claim, it should contain only a de minimis, or negligible, amount of foreign content.",
+   "definition": "A product that is all or virtually all made in the United States will ordinarily be one in which all significant parts <SUP>112</SUP> and processing that go into the product are of U.S. origin. In other words, where a product is labeled or otherwise advertised with an unqualified ``Made in USA'' claim, it should contain only a de minimis, or negligible, amount of foreign content.",
    "at": "62 FR 63756, 63768",
    "is_binding_rule_text": false,
-   "character": "enforcement policy, not codified rule text — it states how the Commission will exercise its enforcement discretion"
+   "character": "enforcement policy, not codified rule text — it states how the Commission will exercise its enforcement discretion",
+   "resolves_onward_to": {
+    "term": "substantial transformation",
+    "why": "the statement makes the last substantial transformation a prerequisite, and takes the term as the Customs Service uses it — so the FTC's gloss of an unsigned term bottoms out in the same case-law term Part 134 uses twice and never defines",
+    "quote": "in order to be considered all or virtually all made in the United States, it is a prerequisite that the product have been last ``substantially transformed'' in the United States, as that term is used by the U.S. Customs Service `` i.e., the product should not be required to be marked ``made in [foreign country]'' under 19 U.S.C. 1304.<SUP>113</SUP>",
+    "at": "62 FR 63756, 63768",
+    "resolution": "case_law"
+   }
+  },
+  {
+   "term": "parts",
+   "used_in": "323.2",
+   "definition": "The word ``parts'' is used in its general sense throughout this enforcement policy statement to refer to all physical inputs into a product, including but not limited to subassemblies, components, parts, or materials.",
+   "at": "62 FR 63756, 63768 n.112",
+   "is_binding_rule_text": false,
+   "character": "footnote 112, definitional for the whole policy statement. It sits inside the sentence that glosses 'all or virtually all', next to § 323.2's own unsigned 'ingredients or components'"
   }
  ]
 }
