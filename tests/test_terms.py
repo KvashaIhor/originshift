@@ -188,26 +188,44 @@ def test_the_ftc_corpus_records_where_the_missing_content_lives():
     assert "62 FR 63756" in note["content_lives_at"]
 
 
+def test_every_shipped_corpus_states_the_issue_date_it_is_pinned_to():
+    """The pin belongs in the artifact, not only in the code that made it.
+    Someone holding the file can then see what it is pinned to without reading
+    the builder — which is the whole provenance argument."""
+    import json
+
+    from originshift import paths
+
+    built = sorted((paths.PACKAGE_DATA / "corpus").glob("*.json"))
+    corpora = [p for p in built if not p.name.startswith("terms-graph")]
+    assert corpora
+    for path in corpora:
+        corpus = json.loads(path.read_text(encoding="utf-8"))
+        assert corpus["pinned_issue_date"] == corpus["source_issue_date"], (
+            f"{path.name} was built off its pin"
+        )
+
+
 def test_a_rebuild_from_cache_writes_nothing(tmp_path):
     """Defect 1. `built_on` is the day the file was generated, so embedding it
     made every rebuild dirty the tree with identical inputs. Comparison ignores
     that field, so an unchanged corpus is not rewritten."""
     import json
 
-    from originshift import build_terms
+    from originshift import paths
 
     corpus = {"corpus": "X", "built_on": "2026-01-01", "terms": [], "uses": []}
     path = tmp_path / "x.json"
 
-    assert build_terms._write_if_changed(path, corpus) is True
+    assert paths.write_if_changed(path, corpus) is True
     before = path.read_bytes()
 
     later = {**corpus, "built_on": "2026-12-31"}
-    assert build_terms._write_if_changed(path, later) is False
+    assert paths.write_if_changed(path, later) is False
     assert path.read_bytes() == before, "a later build date rewrote the file"
 
     changed = {**corpus, "terms": [{"term": "new"}]}
-    assert build_terms._write_if_changed(path, changed) is True
+    assert paths.write_if_changed(path, changed) is True
     assert json.loads(path.read_text())["terms"] == [{"term": "new"}]
 
 

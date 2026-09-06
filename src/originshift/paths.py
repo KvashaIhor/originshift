@@ -54,3 +54,24 @@ CACHE = writable("cache")
 STAGING = writable("staging")
 #: Curated validation cases. These ship with the package.
 VALIDATION = PACKAGE_DATA / "validation"
+
+
+def write_if_changed(path, corpus: dict, ignore: str = "built_on") -> bool:
+    """Write a corpus only when something other than the build date differs.
+
+    `built_on` records the day the artifact was generated, which makes every
+    rebuild dirty the tree even when the source, the parser and every record are
+    identical. Comparing without that field keeps it honest and keeps a rebuild
+    from producing a diff nobody made.
+    """
+    import json
+
+    body = json.dumps(corpus, indent=1, ensure_ascii=False)
+    if path.exists():
+        old = json.loads(path.read_text(encoding="utf-8"))
+        if {k: v for k, v in old.items() if k != ignore} == {
+            k: v for k, v in corpus.items() if k != ignore
+        }:
+            return False
+    path.write_text(body, encoding="utf-8")
+    return True

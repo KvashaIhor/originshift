@@ -6,6 +6,7 @@
  "applies_to": "Governs how an imported article must be marked with its country of origin under 19 U.S.C. 1304. It defines country of origin for its own purposes in § 134.1(b), and that definition turns on a term the part does not carry.",
  "licence": "US Government work, public domain (17 U.S.C. 105)",
  "unit": "defined terms and their use sites, not rules",
+ "pinned_issue_date": "2026-08-26",
  "inclusion_rule": "A term enters the inventory if any of three things is true: the part defines it; the part states a substantive test and the term is one the test turns on; or the part marks it as a term by quoting it. The third limb is what makes the count independent of what the author went looking for.",
  "vintage": "eCFR-2026-08-26",
  "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-26/title-19.xml?part=134",

@@ -10,7 +10,6 @@ of that document, and which nomenclature vintage it answers under (spec 7).
 from __future__ import annotations
 
 import argparse
-import json
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -27,6 +26,11 @@ OUT = paths.PACKAGE_DATA / "corpus" if paths._IN_CHECKOUT else paths.CORPUS_OUT
 #: 102.20 is written against the HTSUS, which tracks an HS edition. Stated
 #: explicitly so a consumer can tell whether the corpus matches their codes.
 NOMENCLATURE = {"hs_edition": "HS 2022", "htsus_year": 2026}
+
+#: The eCFR issue these corpora are built from. Pinned rather than "latest":
+#: titles advance independently, and a build that follows eCFR silently changes
+#: what the shipped corpus answers under. Moving it is a deliberate edit.
+PINNED_ISSUE_DATE = "2026-08-26"
 
 
 #: A target reaching this many headings further than its own HTSUS key is a
@@ -129,7 +133,7 @@ CORPORA = {
 
 def build(which: str = "102.20", issue_date: str | None = None) -> dict:
     spec = CORPORA[which]
-    snap = sources.cfr_part(19, 102, issue_date)
+    snap = sources.cfr_part(19, 102, issue_date or PINNED_ISSUE_DATE)
     vintage = f"HTSUS-{NOMENCLATURE['htsus_year']}"
     rules = spec["parser"].parse(snap.text, vintage=vintage, source_url=snap.url)
 
@@ -146,6 +150,7 @@ def build(which: str = "102.20", issue_date: str | None = None) -> dict:
         "vintage": vintage,
         "source_url": snap.url,
         "source_issue_date": snap.issue_date,
+        "pinned_issue_date": PINNED_ISSUE_DATE,
         "built_on": datetime.now(timezone.utc).date().isoformat(),
         "counts": {
             "rules": len(rules),
@@ -176,7 +181,9 @@ def build(which: str = "102.20", issue_date: str | None = None) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--issue-date", help="eCFR issue date; defaults to current")
+    ap.add_argument(
+        "--issue-date", help=f"eCFR issue date; defaults to the pin, {PINNED_ISSUE_DATE}"
+    )
     ap.add_argument(
         "--corpus", choices=sorted(CORPORA), default=None, help="default: both"
     )
@@ -190,11 +197,13 @@ def _build_one(which: str, issue_date: str | None) -> None:
     corpus = build(which, issue_date)
     OUT.mkdir(parents=True, exist_ok=True)
     path = OUT / f"{which}-{corpus['source_issue_date']}.json"
-    path.write_text(json.dumps(corpus, indent=1, ensure_ascii=False), encoding="utf-8")
+    changed = paths.write_if_changed(path, corpus)
 
     c = corpus["counts"]
     pct = c["fully_structured"] / c["alternatives"]
-    print(f"wrote {path.relative_to(Path(__file__).resolve().parents[1])}  ({path.stat().st_size / 1024:.0f} KB)")
+    print(f"{'wrote' if changed else 'unchanged'} "
+          f"{path.relative_to(Path(__file__).resolve().parents[1])}  "
+          f"({path.stat().st_size / 1024:.0f} KB)")
     print(f"  source     : {corpus['source_url']}")
     print(f"  issue date : {corpus['source_issue_date']}   vintage: {corpus['vintage']}")
     print(f"  rules      : {c['rules']}")

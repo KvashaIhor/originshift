@@ -16,7 +16,6 @@ the section it claims to come from is exactly what that looks like on disk.
 from __future__ import annotations
 
 import argparse
-import json
 from datetime import datetime, timezone
 
 from . import parse_134, parse_323, paths, sources, terms
@@ -137,6 +136,7 @@ def build(which: str, issue_date: str | None = None) -> dict:
         "applies_to": spec["scope"],
         "licence": "US Government work, public domain (17 U.S.C. 105)",
         "unit": "defined terms and their use sites, not rules",
+        "pinned_issue_date": spec["pinned_issue_date"],
         "inclusion_rule": terms.INCLUSION_RULE,
         "vintage": f"eCFR-{snap.issue_date}",
         "source_url": snap.url,
@@ -172,24 +172,6 @@ def build(which: str, issue_date: str | None = None) -> dict:
     return corpus
 
 
-def _write_if_changed(path, corpus: dict) -> bool:
-    """Write only when something other than the build date differs.
-
-    `built_on` is the day the file was generated, so embedding it makes every
-    rebuild dirty the tree with identical inputs. Comparing without it keeps the
-    field honest and the tree byte-stable.
-    """
-    body = json.dumps(corpus, indent=1, ensure_ascii=False)
-    if path.exists():
-        old = json.loads(path.read_text(encoding="utf-8"))
-        if {k: v for k, v in old.items() if k != "built_on"} == {
-            k: v for k, v in corpus.items() if k != "built_on"
-        }:
-            return False
-    path.write_text(body, encoding="utf-8")
-    return True
-
-
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument(
@@ -213,7 +195,7 @@ def main() -> None:
             wanted = sources.latest_issue_date(CORPORA[which]["title"])
         corpus = build(which, wanted)
         path = OUT / f"{which}-{corpus['source_issue_date']}.json"
-        changed = _write_if_changed(path, corpus)
+        changed = paths.write_if_changed(path, corpus)
         built.append(corpus)
         c, chk = corpus["counts"], corpus["self_check"]
         print(f"{'wrote' if changed else 'unchanged'} {path.name}  "
@@ -241,7 +223,7 @@ def main() -> None:
                     "built_on": datetime.now(timezone.utc).date().isoformat(),
                     **graph,
         }
-        changed = _write_if_changed(path, graph_doc)
+        changed = paths.write_if_changed(path, graph_doc)
         print(f"\n{'wrote' if changed else 'unchanged'} {path.name}")
         for res, n in graph["counts"].items():
             print(f"  {res:<16} {n}")

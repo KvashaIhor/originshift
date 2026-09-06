@@ -12,7 +12,8 @@
  "vintage": "HTSUS-2026",
  "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-26/title-19.xml?part=102",
  "source_issue_date": "2026-08-26",
- "built_on": "2026-08-30",
+ "pinned_issue_date": "2026-08-26",
+ "built_on": "2026-09-06",
  "counts": {
   "rules": 1032,
   "alternatives": 1464,
