@@ -10,9 +10,12 @@ outside the part to finish the sentence. This counts that.
 
 § 134.1(b) defines country of origin in terms of substantial transformation, which Part 134 never defines.
 
+**Basis.** HQ-tier CROSS rulings whose text matches the search "19 CFR 134.1", as the index stood on 2026-09-06.
+
 | | |
 |---|---|
 | in population | 1092 |
+| population frozen on | 2026-09-06 |
 | scored | 1092 |
 | excluded, no text | 0 |
 | excluded, not retrieved | 0 |
@@ -34,9 +37,12 @@ outside the part to finish the sentence. This counts that.
 
 a tariff-shift table whose terms are given by rule; a practitioner applying it has no missing definition to go outside for.
 
+**Basis.** HQ-tier CROSS rulings whose text matches the search "19 CFR 102.20", as the index stood on 2026-09-06.
+
 | | |
 |---|---|
 | in population | 320 |
+| population frozen on | 2026-09-06 |
 | scored | 320 |
 | excluded, no text | 0 |
 | excluded, not retrieved | 0 |
@@ -72,6 +78,20 @@ Rulings applying § 134.1 reach outside the part more often than rulings applyin
 | National Hand Tool | 86 (7.9/100) | 17 (5.3/100) | 1.5x |
 | Ferrostaal | 32 (2.9/100) | 2 (0.6/100) | 4.7x |
 | Energizer | 9 (0.8/100) | 8 (2.5/100) | 0.3x |
+
+## Why this does not match the stage-1 scorecard
+
+`docs/validation.md` reports **312** HQ rulings citing 102.20; the
+control here is **320**. Two different bases, not a discrepancy:
+
+- the scorecard searches `102.20`; this searches `19 CFR 102.20`
+- the scorecard's index was frozen on 2026-08-30; these were frozen later
+
+Both matter. The CROSS search returns a different **set** over time, not
+only a different order — the scorecard's `102.20` index holds 312 where
+the same query returns 429 today. That is why each population is frozen
+to a committed index and named by the date it was frozen: a figure
+computed against a live search cannot be re-derived by a reader.
 
 ## What this does not measure
 

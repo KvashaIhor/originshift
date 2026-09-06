@@ -16,6 +16,8 @@ def _result(role, query, scored, reached, by=None):
         "query": query,
         "why": "because",
         "in_population": scored,
+        "frozen_on": "2026-09-06",
+        "basis": f'HQ-tier CROSS rulings matching "{query}", as of 2026-09-06',
         "considered": scored,
         "scored": scored,
         "excluded_no_text": 0,
@@ -96,3 +98,38 @@ def test_the_named_authority_wins_over_the_backstop():
 def test_the_populations_declare_a_subject_and_a_control():
     roles = {v["role"] for v in validate_terms.POPULATIONS.values()}
     assert roles == {"subject", "control"}
+
+
+def test_the_population_is_frozen_not_queried_live():
+    """A live search is not a reproducible population: CROSS returns a different
+    SET over time, not merely a different order. Stage 1's `102.20` index holds
+    312 where the same query returns 429 today, so a figure computed against a
+    live search cannot be re-derived by a reader."""
+    import json
+
+    from originshift import paths
+
+    for key in validate_terms.POPULATIONS:
+        index = paths.CACHE / f"terms-pop-{key}-index.json"
+        assert index.exists(), f"{key} population is not frozen"
+        doc = json.loads(index.read_text(encoding="utf-8"))
+        assert doc["frozen_on"]
+        assert doc["query"] == validate_terms.POPULATIONS[key]["query"]
+        assert doc["ruling_numbers"] == sorted(doc["ruling_numbers"])
+
+
+def test_each_population_states_its_basis(tmp_path):
+    """"In population: 1,092" means nothing without saying what defines it."""
+    out = tmp_path / "v.md"
+    validate_terms.emit(
+        out,
+        [
+            _result("subject", "19 CFR 134.1", 100, 60),
+            _result("control", "19 CFR 102.20", 100, 30),
+        ],
+    )
+    text = out.read_text()
+    assert "**Basis.**" in text
+    assert "population frozen on" in text
+    # and the two-document reconciliation, so 312 vs 320 is a footnote not a finding
+    assert "312" in text and "429" in text

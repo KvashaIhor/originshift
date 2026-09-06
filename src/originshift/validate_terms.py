@@ -78,20 +78,40 @@ def _reach(text: str) -> list[str]:
     return hits
 
 
-def population(key: str) -> list[str]:
-    """Ruling numbers citing the section, sorted so a sample is reproducible.
+def population(key: str, refresh: bool = False) -> tuple[list[str], str]:
+    """Ruling numbers citing the section, from a frozen index, with its date.
 
-    The rulings API returns the same set in a different order on every call, so
-    sorting is what makes any subset of this stable rather than the seed.
+    A live query is not a reproducible population. The CROSS search returns the
+    same set in a different ORDER on every call — which sorting fixes — but it
+    also returns a different SET over time: the index stage 1 froze on 30 Aug
+    holds 312 rulings for "102.20" where the same query returns 429 today. A
+    figure computed against a live query cannot be re-derived by a reader, so
+    the population is frozen to a file and committed, exactly as stage 1 does.
     """
     spec = POPULATIONS[key]
-    rows = sources.cross_search(spec["query"], collection="hq", page_size=100)
-    return sorted({str(r["rulingNumber"]) for r in rows})
+    index = paths.CACHE / f"terms-pop-{key}-index.json"
+    if refresh or not index.exists():
+        rows = sources.cross_search(spec["query"], collection="hq", page_size=100)
+        index.parent.mkdir(parents=True, exist_ok=True)
+        index.write_text(
+            json.dumps(
+                {
+                    "query": spec["query"],
+                    "collection": "hq",
+                    "frozen_on": datetime.now(timezone.utc).date().isoformat(),
+                    "ruling_numbers": sorted({str(r["rulingNumber"]) for r in rows}),
+                },
+                indent=1,
+            ),
+            encoding="utf-8",
+        )
+    doc = json.loads(index.read_text(encoding="utf-8"))
+    return doc["ruling_numbers"], doc["frozen_on"]
 
 
 def score(key: str, limit: int | None = None, cached_only: bool = False) -> dict:
     """Score one population. Every exclusion is counted and reported."""
-    numbers = population(key)
+    numbers, frozen_on = population(key)
     considered = numbers[:limit] if limit else numbers
     cache = paths.CACHE / "cross"
 
@@ -124,6 +144,11 @@ def score(key: str, limit: int | None = None, cached_only: bool = False) -> dict
         "why": POPULATIONS[key]["why"],
         "query": POPULATIONS[key]["query"],
         "in_population": len(numbers),
+        "frozen_on": frozen_on,
+        "basis": (
+            f'HQ-tier CROSS rulings whose text matches the search "{POPULATIONS[key]["query"]}", '
+            f"as the index stood on {frozen_on}"
+        ),
         "considered": len(considered),
         "scored": scored,
         "excluded_no_text": no_text,
@@ -153,9 +178,12 @@ def emit(path: Path, results: list[dict]) -> None:
         w.append("")
         w.append(f"{r['why']}.")
         w.append("")
+        w.append(f"**Basis.** {r['basis']}.")
+        w.append("")
         w.append("| | |")
         w.append("|---|---|")
         w.append(f"| in population | {r['in_population']} |")
+        w.append(f"| population frozen on | {r['frozen_on']} |")
         w.append(f"| scored | {r['scored']} |")
         w.append(f"| excluded, no text | {r['excluded_no_text']} |")
         w.append(f"| excluded, not retrieved | {r['excluded_unfetched']} |")
@@ -219,6 +247,20 @@ def emit(path: Path, results: list[dict]) -> None:
     else:
         w.append("The control did not score, so no comparison is available.")
     w.append("")
+    w.append("## Why this does not match the stage-1 scorecard")
+    w.append("")
+    w.append("`docs/validation.md` reports **312** HQ rulings citing 102.20; the")
+    w.append("control here is **320**. Two different bases, not a discrepancy:")
+    w.append("")
+    w.append("- the scorecard searches `102.20`; this searches `19 CFR 102.20`")
+    w.append("- the scorecard's index was frozen on 2026-08-30; these were frozen later")
+    w.append("")
+    w.append("Both matter. The CROSS search returns a different **set** over time, not")
+    w.append("only a different order — the scorecard's `102.20` index holds 312 where")
+    w.append("the same query returns 429 today. That is why each population is frozen")
+    w.append("to a committed index and named by the date it was frozen: a figure")
+    w.append("computed against a live search cannot be re-derived by a reader.")
+    w.append("")
     w.append("## What this does not measure")
     w.append("")
     w.append("Whether each citation is *for* the undefined term. The count is of")
@@ -241,9 +283,17 @@ def main() -> None:
         action="store_true",
         help="score only rulings already on disk, and report the rest as excluded",
     )
+    ap.add_argument(
+        "--refresh-population",
+        action="store_true",
+        help="re-freeze the population indexes from a live search, changing the basis",
+    )
     ap.add_argument("--emit", action="store_true", help="write docs/terms-validation.md")
     args = ap.parse_args()
 
+    if args.refresh_population:
+        for k in POPULATIONS:
+            population(k, refresh=True)
     results = [score(k, args.limit, args.cached_only) for k in POPULATIONS]
     for r in results:
         share = f"{r['share']:.1%}" if r["share"] is not None else "n/a"

@@ -21,3 +21,6 @@ originshift.md
 
 # Promotion research, not part of the package.
 research/
+
+# pytest-cov artifact
+.coverage
