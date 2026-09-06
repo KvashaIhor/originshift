@@ -1,0 +1,26 @@
+{
+ "overlay": "ftc-musa-policy-statement-1997",
+ "extends": "16-CFR-323",
+ "authority": "16 CFR 323",
+ "supplies": "definitions the part uses and does not carry",
+ "provenance": {
+  "method": "file",
+  "origin": "62 FR 63756 (FTC Enforcement Policy Statement on U.S. Origin Claims, 2 Dec 1997)",
+  "document_number": "97-31531",
+  "retrieved": "2026-09-06",
+  "sha256": "f76ec17a0b79a23632216b675d954f1c336a76c1377058fd585b535e388184d3",
+  "extractor": "fr_text",
+  "reviewed_by": "Ihor Kvasha — read against 62 FR 63756 at 63768, 6 Sep 2026",
+  "note": "This overlay does NOT make § 323.2 resolvable. The part states its three-limb test, defines none of the terms, and cites neither this document nor 62 FR 63756 anywhere in its text. The overlay records where the content actually lives so a reader can follow it; the regulation's silence is the finding and the edges stay unsigned."
+ },
+ "definitions": [
+  {
+   "term": "all or virtually all",
+   "used_in": "323.2",
+   "definition": "A product that is all or virtually all made in the United States will ordinarily be one in which all significant parts and processing that go into the product are of U.S. origin. In other words, where a product is labeled or otherwise advertised with an unqualified ``Made in USA'' claim, it should contain only a de minimis, or negligible, amount of foreign content.",
+   "at": "62 FR 63756, 63768",
+   "is_binding_rule_text": false,
+   "character": "enforcement policy, not codified rule text — it states how the Commission will exercise its enforcement discretion"
+  }
+ ]
+}

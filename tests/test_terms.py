@@ -295,3 +295,49 @@ def test_a_plural_of_a_defined_term_is_not_unsigned():
         terms.classify("ultimate purchasers", "used here", {"ultimate purchaser"}, {})[0]
         == terms.IN_PART
     )
+
+
+def test_the_ftc_overlay_annotates_without_resolving():
+    """The regulation's silence is the finding. An overlay that supplied the
+    missing definition and let the edge resolve would delete what is being
+    reported, so it annotates and the edge stays unsigned."""
+    import json
+
+    from originshift import paths
+
+    graph = json.loads(
+        sorted((paths.PACKAGE_DATA / "corpus").glob("terms-graph-*.json"))[-1].read_text(
+            encoding="utf-8"
+        )
+    )
+    annotated = [e for e in graph["edges"] if "content_lives_at" in e]
+    assert annotated, "the FTC overlay supplied nothing"
+
+    edge = next(e for e in annotated if e["term"].lower() == "all or virtually all")
+    assert edge["resolution"] == terms.UNSIGNED, (
+        "the overlay resolved the edge; the finding has been deleted"
+    )
+    supplied = edge["content_lives_at"]
+    assert "62 FR 63756" in supplied["content_lives_at"]
+    assert supplied["reviewed_by"]
+    assert supplied["is_binding_rule_text"] is False, (
+        "enforcement policy is not rule text and must not be presented as it"
+    )
+    # and the count is untouched
+    assert graph["counts"][terms.UNSIGNED] == 5
+
+
+def test_the_overlay_carries_reviewed_by_provenance():
+    """An overlay is a hand-fed document. It states who read it against what,
+    like every other overlay in this package."""
+    import json
+
+    from originshift.corpus import OVERLAY_DIR
+
+    path = OVERLAY_DIR / "terms" / "ftc-musa-policy-statement-1997.json"
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    prov = doc["provenance"]
+    assert prov["origin"].startswith("62 FR 63756")
+    assert prov["sha256"] and len(prov["sha256"]) == 64
+    assert "reviewed_by" in prov and prov["reviewed_by"].strip()
+    assert "does NOT make" in prov["note"], "the note must say what it does not do"

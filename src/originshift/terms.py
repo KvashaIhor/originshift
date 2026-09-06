@@ -199,7 +199,40 @@ def classify(
     return UNSIGNED, None
 
 
-def build(corpora: list[dict]) -> dict:
+def overlay_definitions(overlay_dir=None) -> dict[tuple[str, str], dict]:
+    """Definitions supplied by a reviewed document the part itself does not cite.
+
+    Keyed by (corpus, term). These annotate an edge; they never resolve it. The
+    FTC policy statement gives "all or virtually all" its content, and 16 CFR 323
+    still does not mention the policy statement, so a use of that term in § 323.2
+    remains unsigned — the regulation's silence is the finding, and an overlay
+    that quietly turned it into a resolution would delete the thing being
+    reported.
+    """
+    import json
+    from pathlib import Path
+
+    from .corpus import OVERLAY_DIR
+
+    default = OVERLAY_DIR / "terms"
+
+    out: dict[tuple[str, str], dict] = {}
+    for directory in [Path(overlay_dir)] if overlay_dir else [default]:
+        if not directory.exists():
+            continue
+        for path in sorted(directory.glob("*.json")):
+            doc = json.loads(path.read_text(encoding="utf-8"))
+            for entry in doc.get("definitions", []):
+                out[(doc["extends"], entry["term"].lower())] = {
+                    "content_lives_at": entry["at"],
+                    "origin": doc["provenance"]["origin"],
+                    "reviewed_by": doc["provenance"]["reviewed_by"],
+                    "is_binding_rule_text": entry.get("is_binding_rule_text", False),
+                }
+    return out
+
+
+def build(corpora: list[dict], overlay_dir=None) -> dict:
     """The resolution graph over one or more compiled defined-term corpora.
 
     Each corpus is a dict with `corpus`, `terms` and `uses` as emitted by a
@@ -207,6 +240,7 @@ def build(corpora: list[dict]) -> dict:
     same term can be signed in one section and unsigned in another, and folding
     that into a term-level attribute hides the variation worth reporting.
     """
+    supplements = overlay_definitions(overlay_dir)
     defined_elsewhere: dict[str, str] = {}
     for c in corpora:
         for t in c["terms"]:
@@ -220,16 +254,21 @@ def build(corpora: list[dict]) -> dict:
             if u.get("in_definition"):
                 continue
             resolution, points_at = classify(u["term"], u["quote"], here, others)
-            edges.append(
-                {
-                    "corpus": c["corpus"],
-                    "term": u["term"],
-                    "used_in": u["used_in"],
-                    "resolution": resolution,
-                    "points_at": points_at,
-                    "quote": u["quote"],
-                }
-            )
+            edge = {
+                "corpus": c["corpus"],
+                "term": u["term"],
+                "used_in": u["used_in"],
+                "resolution": resolution,
+                "points_at": points_at,
+                "quote": u["quote"],
+            }
+            supplied = supplements.get((c["corpus"], u["term"].lower()))
+            if supplied:
+                # Annotation, not resolution. The edge keeps whatever the
+                # regulation earned; this only records where a reader can find
+                # the content the regulation withheld.
+                edge["content_lives_at"] = supplied
+            edges.append(edge)
 
     counts: dict[str, int] = {r: 0 for r in RESOLUTIONS}
     for e in edges:
@@ -237,5 +276,6 @@ def build(corpora: list[dict]) -> dict:
     return {
         "corpora": [c["corpus"] for c in corpora],
         "counts": counts,
+        "annotated_by_overlay": sum(1 for e in edges if "content_lives_at" in e),
         "edges": edges,
     }

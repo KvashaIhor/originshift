@@ -17,6 +17,9 @@ from originshift.corpus import OVERLAY_DIR, Corpus
 
 @pytest.fixture(scope="module")
 def overlays():
+    # Rule overlays only. Defined-term overlays extend a terms corpus and
+    # live in overlays/terms/, because a rule loader that globbed them would
+    # skip them silently — which is what this file exists to prevent.
     files = sorted(OVERLAY_DIR.glob("*.json"))
     assert files, "no overlays ship with the package"
     return [json.loads(f.read_text(encoding="utf-8")) for f in files]

@@ -19,6 +19,7 @@
   "case_law": 2,
   "unsigned": 5
  },
+ "annotated_by_overlay": 1,
  "edges": [
   {
    "corpus": "19-CFR-134",
@@ -1234,7 +1235,13 @@
    "used_in": "323.2",
    "resolution": "unsigned",
    "points_at": null,
-   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
+   "content_lives_at": {
+    "content_lives_at": "62 FR 63756, 63768",
+    "origin": "62 FR 63756 (FTC Enforcement Policy Statement on U.S. Origin Claims, 2 Dec 1997)",
+    "reviewed_by": "Ihor Kvasha — read against 62 FR 63756 at 63768, 6 Sep 2026",
+    "is_binding_rule_text": false
+   }
   },
   {
    "corpus": "16-CFR-323",
