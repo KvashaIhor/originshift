@@ -176,7 +176,7 @@ def emit(path: Path, results: list[dict]) -> None:
         diff = subject["share"] - control["share"]
         w.append(
             f"Subject {subject['share']:.1%} against control {control['share']:.1%}, "
-            f"a difference of {diff:+.1f} percentage points."
+            f"a difference of {diff * 100:+.1f} percentage points."
         )
         w.append("")
         if diff <= 0.05:
@@ -194,6 +194,28 @@ def emit(path: Path, results: list[dict]) -> None:
                 "consistent with the graph's claim and is not proof of it: a ruling "
                 "may cite a case for reasons unrelated to the undefined term."
             )
+            w.append("")
+            w.append(
+                "**Which authority is reached for is the sharper signal.** The rate "
+                "counts any citation; these are the specific cases, and the "
+                "substantial-transformation authorities concentrate in the subject "
+                "population rather than merely appearing more often:"
+            )
+            w.append("")
+            w.append("| authority | subject | control | ratio |")
+            w.append("|---|---|---|---|")
+            for name in sorted(
+                set(subject["by_authority"]) | set(control["by_authority"]),
+                key=lambda n: -subject["by_authority"].get(n, 0),
+            ):
+                s = subject["by_authority"].get(name, 0)
+                c = control["by_authority"].get(name, 0)
+                # per-100 rulings, so the different population sizes do not
+                # manufacture the contrast on their own
+                sr = s / subject["scored"] * 100
+                cr = c / control["scored"] * 100
+                ratio = f"{sr / cr:.1f}x" if cr else "—"
+                w.append(f"| {name} | {s} ({sr:.1f}/100) | {c} ({cr:.1f}/100) | {ratio} |")
     else:
         w.append("The control did not score, so no comparison is available.")
     w.append("")
