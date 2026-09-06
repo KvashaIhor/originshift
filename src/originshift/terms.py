@@ -276,6 +276,18 @@ def build(corpora: list[dict], overlay_dir=None) -> dict:
     return {
         "corpora": [c["corpus"] for c in corpora],
         "counts": counts,
+        # A zero here is a result, not a missing feature. The edge set answers
+        # one question — how does this part's OWN text resolve this term — and
+        # neither part references the other's definitions. The only bridge
+        # between them is a 1997 enforcement-policy statement that neither part
+        # cites, which is recorded on the overlay rather than as an edge,
+        # because an edge would have the graph asserting a connection the
+        # regulation never makes.
+        "cross_part_note": (
+            "cross_part counts edges where a part's own text resolves a term "
+            "against another corpus here. Zero means the parts never reference "
+            "each other's definitions."
+        ),
         "annotated_by_overlay": sum(1 for e in edges if "content_lives_at" in e),
         "edges": edges,
     }

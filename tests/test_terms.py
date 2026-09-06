@@ -407,3 +407,21 @@ def test_the_chain_bottoms_out_at_the_same_unsigned_term_as_part_134():
     assert onward["resolution"] == terms.CASE_LAW
     assert "Customs Service" in onward["quote"]
     assert onward["term"] in terms.CASE_LAW_TERMS
+
+
+def test_cross_part_zero_is_documented_as_a_result():
+    """A reader holding only the graph should not read the zero as a gap in the
+    tooling. The two origin-adjacent parts never cite each other's definitions;
+    the only bridge is a 1997 policy statement neither part references, and that
+    lives on the overlay rather than as an edge the regulation never makes."""
+    import json
+
+    from originshift import paths
+
+    graph = json.loads(
+        sorted((paths.PACKAGE_DATA / "corpus").glob("terms-graph-*.json"))[-1].read_text(
+            encoding="utf-8"
+        )
+    )
+    assert graph["counts"][terms.CROSS_PART] == 0
+    assert "never reference" in graph["cross_part_note"]

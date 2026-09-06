@@ -19,6 +19,7 @@
   "case_law": 2,
   "unsigned": 5
  },
+ "cross_part_note": "cross_part counts edges where a part's own text resolves a term against another corpus here. Zero means the parts never reference each other's definitions.",
  "annotated_by_overlay": 1,
  "edges": [
   {
