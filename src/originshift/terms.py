@@ -107,6 +107,41 @@ CASE_LAW_TERMS = {
 }
 
 
+#: A term the text itself marks as a term by quoting it. This is the third limb
+#: of the inclusion rule (see `INCLUSION_RULE`), and it is what stops the
+#: inventory being whatever the author went looking for: § 323.2 quotes
+#: "commerce" and resolves it against the FTC Act, and an inventory built only
+#: from terms we chose to hunt would have reported cross_authority = 0 while
+#: that resolution sat inside our own quoted spans.
+_QUOTED_TERM = re.compile(r"[“\"]([a-z][a-z \-]{2,45}?)[”\"]")
+
+#: Why a term is in the inventory at all. Stated so a reader can check the
+#: boundary rather than infer it from what happens to be present.
+INCLUSION_RULE = (
+    "A term enters the inventory if any of three things is true: the part "
+    "defines it; the part states a substantive test and the term is one the "
+    "test turns on; or the part marks it as a term by quoting it. The third "
+    "limb is what makes the count independent of what the author went looking "
+    "for."
+)
+
+
+def quoted_terms(sections, already: set[str]) -> list[tuple[str, str, str]]:
+    """Terms the text quotes but `already` does not contain, as (term, section, quote)."""
+    out: list[tuple[str, str, str]] = []
+    seen: set[tuple[str, str]] = set()
+    for sec in sections:
+        for sentence in re.split(r"(?<=[.;])\s+(?=[A-Z(])", sec.text):
+            for m in _QUOTED_TERM.finditer(sentence):
+                term = m.group(1).strip()
+                key = (term.lower(), sec.section_id)
+                if not term or term.lower() in already or key in seen:
+                    continue
+                seen.add(key)
+                out.append((term, sec.section_id, sentence.strip()))
+    return out
+
+
 #: How close a pointer has to sit to the term for it to be that term's pointer.
 #: Wide enough for "X, as defined in 19 CFR 102.1", narrow enough that a pointer
 #: about a different term in the same sentence does not get credited.
@@ -147,12 +182,17 @@ def classify(
     where an explicit pointer would be if there is one.
     """
     low = phrase.lower()
-    if low in defined_here:
+    # A part that defines "ultimate purchaser" and then writes "ultimate
+    # purchasers" has not left the plural undefined, and counting it as unsigned
+    # would inflate the finding with the regulation's own grammar.
+    forms = {low, low.rstrip("s")} if low.endswith("s") else {low, low + "s"}
+    if forms & defined_here:
         return IN_PART, None
     if low in CASE_LAW_TERMS:
         return CASE_LAW, CASE_LAW_TERMS[low]
-    if low in defined_elsewhere:
-        return CROSS_PART, defined_elsewhere[low]
+    for form in forms:
+        if form in defined_elsewhere:
+            return CROSS_PART, defined_elsewhere[form]
     pointer = _bound_pointer(phrase, quote)
     if pointer:
         return CROSS_AUTHORITY, pointer

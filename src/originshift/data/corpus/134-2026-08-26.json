@@ -6,6 +6,7 @@
  "applies_to": "Governs how an imported article must be marked with its country of origin under 19 U.S.C. 1304. It defines country of origin for its own purposes in § 134.1(b), and that definition turns on a term the part does not carry.",
  "licence": "US Government work, public domain (17 U.S.C. 105)",
  "unit": "defined terms and their use sites, not rules",
+ "inclusion_rule": "A term enters the inventory if any of three things is true: the part defines it; the part states a substantive test and the term is one the test turns on; or the part marks it as a term by quoting it. The third limb is what makes the count independent of what the author went looking for.",
  "vintage": "eCFR-2026-08-26",
  "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-26/title-19.xml?part=134",
  "source_issue_date": "2026-08-26",
@@ -13,13 +14,13 @@
  "counts": {
   "sections": 33,
   "defined_terms": 12,
-  "use_sites": 197,
-  "use_sites_outside_definitions": 144
+  "use_sites": 198,
+  "use_sites_outside_definitions": 145
  },
  "self_check": {
   "definitions_checked": 12,
   "definitions_not_found_in_source": [],
-  "quotes_checked": 197,
+  "quotes_checked": 198,
   "quotes_not_found_in_source": [],
   "passed": true
  },
@@ -1457,6 +1458,12 @@
    "term": "substantial transformation",
    "used_in": "134.1",
    "quote": "The following examples may be helpful: (1) If an imported article will be used in manufacture, the manufacturer may be the “ultimate purchaser” if he subjects the imported article to a process which results in a substantial transformation of the article, even though the process may not result in a new or different article, or for a good of a NAFTA or USMCA country, a process which results in one of the changes prescribed in the part 102 Rules as effecting a change in the article's country of origin.",
+   "in_definition": false
+  },
+  {
+   "term": "ultimate purchasers",
+   "used_in": "134.24",
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D).",
    "in_definition": false
   }
  ]

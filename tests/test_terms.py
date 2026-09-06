@@ -186,3 +186,94 @@ def test_the_ftc_corpus_records_where_the_missing_content_lives():
     note = corpus["notes"][0]
     assert note["part_points_at_it"] is False
     assert "62 FR 63756" in note["content_lives_at"]
+
+
+def test_a_rebuild_from_cache_writes_nothing(tmp_path):
+    """Defect 1. `built_on` is the day the file was generated, so embedding it
+    made every rebuild dirty the tree with identical inputs. Comparison ignores
+    that field, so an unchanged corpus is not rewritten."""
+    import json
+
+    from originshift import build_terms
+
+    corpus = {"corpus": "X", "built_on": "2026-01-01", "terms": [], "uses": []}
+    path = tmp_path / "x.json"
+
+    assert build_terms._write_if_changed(path, corpus) is True
+    before = path.read_bytes()
+
+    later = {**corpus, "built_on": "2026-12-31"}
+    assert build_terms._write_if_changed(path, later) is False
+    assert path.read_bytes() == before, "a later build date rewrote the file"
+
+    changed = {**corpus, "terms": [{"term": "new"}]}
+    assert build_terms._write_if_changed(path, changed) is True
+    assert json.loads(path.read_text())["terms"] == [{"term": "new"}]
+
+
+def test_each_corpus_pins_its_issue_date():
+    """Defect 2. eCFR titles move independently — title 16 advanced to
+    2026-08-31 while title 19 stayed at 2026-08-26 — so a build defaulting to
+    latest emits a graph whose filename names one vintage and whose contents
+    name two."""
+    from originshift import build_terms
+
+    for spec in build_terms.CORPORA.values():
+        assert spec["pinned_issue_date"], "a corpus with no pin follows eCFR silently"
+
+
+def test_the_shipped_graph_is_single_vintage():
+    import json
+
+    from originshift import paths
+
+    graph = json.loads(
+        sorted((paths.PACKAGE_DATA / "corpus").glob("terms-graph-*.json"))[-1].read_text(
+            encoding="utf-8"
+        )
+    )
+    dates = set(graph["source_issue_dates"].values())
+    assert len(dates) == 1, f"graph mixes vintages: {graph['source_issue_dates']}"
+
+
+def test_cross_authority_is_populated_from_the_text_not_from_curation():
+    """Defect 3. The inventory used to be only the terms we went looking for, so
+    the graph reported cross_authority = 0 while § 323.2's own resolution of
+    "commerce" sat inside the quoted span of every unsigned edge."""
+    import json
+
+    from originshift import paths
+
+    graph = json.loads(
+        sorted((paths.PACKAGE_DATA / "corpus").glob("terms-graph-*.json"))[-1].read_text(
+            encoding="utf-8"
+        )
+    )
+    cross = [e for e in graph["edges"] if e["resolution"] == terms.CROSS_AUTHORITY]
+    assert cross, "no cross_authority edge; the inventory is curated again"
+    assert any(e["term"].lower() == "commerce" for e in cross)
+    # and the findings must survive the wider inventory
+    assert graph["counts"][terms.UNSIGNED] == 5
+    assert graph["counts"][terms.CASE_LAW] == 2
+
+
+def test_the_inclusion_rule_is_recorded_in_the_corpus():
+    import json
+
+    from originshift import paths
+
+    corpus = json.loads(
+        sorted((paths.PACKAGE_DATA / "corpus").glob("134-*.json"))[-1].read_text(
+            encoding="utf-8"
+        )
+    )
+    assert "quoting it" in corpus["inclusion_rule"]
+
+
+def test_a_plural_of_a_defined_term_is_not_unsigned():
+    """Counting "ultimate purchasers" as undefined because § 134.1 defines the
+    singular would inflate the finding with the regulation's own grammar."""
+    assert (
+        terms.classify("ultimate purchasers", "used here", {"ultimate purchaser"}, {})[0]
+        == terms.IN_PART
+    )

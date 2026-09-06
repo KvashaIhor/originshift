@@ -30,6 +30,7 @@ CORPORA = {
         "corpus": "19-CFR-134",
         "parser": parse_134,
         "authority": "19 CFR 134",
+        "pinned_issue_date": "2026-08-26",
         "name": "Country of origin marking",
         "scope": (
             "Governs how an imported article must be marked with its country of "
@@ -44,6 +45,7 @@ CORPORA = {
         "corpus": "16-CFR-323",
         "parser": parse_323,
         "authority": "16 CFR 323",
+        "pinned_issue_date": "2026-08-26",
         "name": "Made in USA labeling",
         "scope": (
             "Makes an unqualified Made in the United States claim an unfair or "
@@ -82,9 +84,19 @@ def _self_check(secs, defined, used) -> dict:
 
 
 def build(which: str, issue_date: str | None = None) -> dict:
+    """Compile one part. Defaults to the PINNED issue date, never to "latest".
+
+    eCFR titles move independently — title 16 advanced to 2026-08-31 while title
+    19 stayed at 2026-08-26 — so a build that defaults to latest silently mixes
+    vintages and emits a graph whose filename names one issue date and whose
+    contents name two. Pinning is what makes a rebuild reproduce the committed
+    corpus; moving the pin is a deliberate edit.
+    """
     spec = CORPORA[which]
     mod = spec["parser"]
-    snap = sources.cfr_part(spec["title"], spec["part"], issue_date)
+    snap = sources.cfr_part(
+        spec["title"], spec["part"], issue_date or spec["pinned_issue_date"]
+    )
 
     secs = mod.sections(snap.text)
     defined = mod.defined_terms(snap.text)
@@ -104,6 +116,18 @@ def build(which: str, issue_date: str | None = None) -> dict:
     else:
         extra += mod.operative_uses(snap.text)
 
+    # Third limb of the inclusion rule: terms the text itself marks by quoting
+    # them. Without it the inventory is only what we went looking for, and
+    # § 323.2's own resolution of "commerce" against the FTC Act had no edge —
+    # so the graph reported cross_authority = 0 while the counterexample sat
+    # inside the quoted span of every unsigned edge.
+    already = {d.term.lower() for d in defined} | {u.term.lower() for u in extra}
+    extra += [
+        terms.Use(term=term, used_in=section, quote=quote,
+                  in_definition=section == mod.defined_terms.__defaults__[0])
+        for term, section, quote in terms.quoted_terms(secs, already)
+    ]
+
     check = _self_check(secs, defined, used + extra)
     corpus = {
         "corpus": spec["corpus"],
@@ -113,6 +137,7 @@ def build(which: str, issue_date: str | None = None) -> dict:
         "applies_to": spec["scope"],
         "licence": "US Government work, public domain (17 U.S.C. 105)",
         "unit": "defined terms and their use sites, not rules",
+        "inclusion_rule": terms.INCLUSION_RULE,
         "vintage": f"eCFR-{snap.issue_date}",
         "source_url": snap.url,
         "source_issue_date": snap.issue_date,
@@ -147,21 +172,52 @@ def build(which: str, issue_date: str | None = None) -> dict:
     return corpus
 
 
+def _write_if_changed(path, corpus: dict) -> bool:
+    """Write only when something other than the build date differs.
+
+    `built_on` is the day the file was generated, so embedding it makes every
+    rebuild dirty the tree with identical inputs. Comparing without it keeps the
+    field honest and the tree byte-stable.
+    """
+    body = json.dumps(corpus, indent=1, ensure_ascii=False)
+    if path.exists():
+        old = json.loads(path.read_text(encoding="utf-8"))
+        if {k: v for k, v in old.items() if k != "built_on"} == {
+            k: v for k, v in corpus.items() if k != "built_on"
+        }:
+            return False
+    path.write_text(body, encoding="utf-8")
+    return True
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--issue-date", help="eCFR issue date; defaults to current")
+    ap.add_argument(
+        "--issue-date", help="eCFR issue date; defaults to each corpus's pinned date"
+    )
+    ap.add_argument(
+        "--latest",
+        action="store_true",
+        help="take whatever issue eCFR currently serves, unpinning the corpus",
+    )
     ap.add_argument("--corpus", choices=sorted(CORPORA), default=None)
     args = ap.parse_args()
+    if args.latest and args.issue_date:
+        raise SystemExit("--latest and --issue-date are mutually exclusive")
 
     built = []
     OUT.mkdir(parents=True, exist_ok=True)
     for which in [args.corpus] if args.corpus else sorted(CORPORA):
-        corpus = build(which, args.issue_date)
+        wanted = args.issue_date
+        if args.latest:
+            wanted = sources.latest_issue_date(CORPORA[which]["title"])
+        corpus = build(which, wanted)
         path = OUT / f"{which}-{corpus['source_issue_date']}.json"
-        path.write_text(json.dumps(corpus, indent=1, ensure_ascii=False), encoding="utf-8")
+        changed = _write_if_changed(path, corpus)
         built.append(corpus)
         c, chk = corpus["counts"], corpus["self_check"]
-        print(f"wrote {path.name}  ({path.stat().st_size / 1024:.0f} KB)")
+        print(f"{'wrote' if changed else 'unchanged'} {path.name}  "
+              f"({path.stat().st_size / 1024:.0f} KB)")
         print(f"  source     : {corpus['source_url']}")
         print(f"  issue date : {corpus['source_issue_date']}")
         print(f"  sections {c['sections']}   defined terms {c['defined_terms']}   "
@@ -177,22 +233,16 @@ def main() -> None:
     if len(built) > 1:
         graph = terms.build(built)
         path = OUT / f"terms-graph-{built[0]['source_issue_date']}.json"
-        path.write_text(
-            json.dumps(
-                {
+        graph_doc = {
                     "built_from": [c["corpus"] for c in built],
                     "source_issue_dates": {
                         c["corpus"]: c["source_issue_date"] for c in built
                     },
                     "built_on": datetime.now(timezone.utc).date().isoformat(),
                     **graph,
-                },
-                indent=1,
-                ensure_ascii=False,
-            ),
-            encoding="utf-8",
-        )
-        print(f"\nwrote {path.name}")
+        }
+        changed = _write_if_changed(path, graph_doc)
+        print(f"\n{'wrote' if changed else 'unchanged'} {path.name}")
         for res, n in graph["counts"].items():
             print(f"  {res:<16} {n}")
 

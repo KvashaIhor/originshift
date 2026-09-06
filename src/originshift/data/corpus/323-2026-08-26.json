@@ -6,6 +6,7 @@
  "applies_to": "Makes an unqualified Made in the United States claim an unfair or deceptive act unless a three-limb test in § 323.2 is met. The part states the test and defines none of the terms it turns on.",
  "licence": "US Government work, public domain (17 U.S.C. 105)",
  "unit": "defined terms and their use sites, not rules",
+ "inclusion_rule": "A term enters the inventory if any of three things is true: the part defines it; the part states a substantive test and the term is one the test turns on; or the part marks it as a term by quoting it. The third limb is what makes the count independent of what the author went looking for.",
  "vintage": "eCFR-2026-08-26",
  "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-26/title-16.xml?part=323",
  "source_issue_date": "2026-08-26",
@@ -13,13 +14,13 @@
  "counts": {
   "sections": 6,
   "defined_terms": 3,
-  "use_sites": 12,
-  "use_sites_outside_definitions": 9
+  "use_sites": 14,
+  "use_sites_outside_definitions": 10
  },
  "self_check": {
   "definitions_checked": 3,
   "definitions_not_found_in_source": [],
-  "quotes_checked": 12,
+  "quotes_checked": 14,
   "quotes_not_found_in_source": [],
   "passed": true
  },
@@ -147,6 +148,18 @@
   },
   {
    "term": "ingredients or components",
+   "used_in": "323.2",
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
+   "in_definition": false
+  },
+  {
+   "term": "crafted",
+   "used_in": "323.1",
+   "quote": "As used in this part: (a) The term Made in the United States means any unqualified representation, express or implied, that a product or service, or a specified component thereof, is of U.S. origin, including, but not limited to, a representation that such product or service is “made,” “manufactured,” “built,” “produced,” “created,” or “crafted” in the United States or in America, or any other unqualified U.S.-origin claim.",
+   "in_definition": true
+  },
+  {
+   "term": "commerce",
    "used_in": "323.2",
    "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
    "in_definition": false

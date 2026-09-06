@@ -13,9 +13,9 @@
   "16-CFR-323"
  ],
  "counts": {
-  "in_part": 146,
+  "in_part": 147,
   "cross_part": 0,
-  "cross_authority": 0,
+  "cross_authority": 1,
   "case_law": 2,
   "unsigned": 5
  },
@@ -1173,6 +1173,14 @@
    "quote": "The following examples may be helpful: (1) If an imported article will be used in manufacture, the manufacturer may be the “ultimate purchaser” if he subjects the imported article to a process which results in a substantial transformation of the article, even though the process may not result in a new or different article, or for a good of a NAFTA or USMCA country, a process which results in one of the changes prescribed in the part 102 Rules as effecting a change in the article's country of origin."
   },
   {
+   "corpus": "19-CFR-134",
+   "term": "ultimate purchasers",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D)."
+  },
+  {
    "corpus": "16-CFR-323",
    "term": "Made in the United States",
    "used_in": "323.2",
@@ -1242,6 +1250,14 @@
    "used_in": "323.2",
    "resolution": "unsigned",
    "points_at": null,
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "commerce",
+   "used_in": "323.2",
+   "resolution": "cross_authority",
+   "points_at": "defined in section 4 of the Federal Trade Commission Act",
    "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
   }
  ]
