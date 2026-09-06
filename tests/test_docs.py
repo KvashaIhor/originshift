@@ -5,6 +5,7 @@ is a figure that can disagree with itself. The scorecard is generated for that
 reason; the scope table is not, so it is checked here instead.
 """
 
+import json
 import re
 from pathlib import Path
 
@@ -56,3 +57,22 @@ def test_the_readme_points_at_both_pages():
     text = README.read_text(encoding="utf-8")
     assert "docs/scope.md" in text
     assert "docs/validation.md" in text
+
+
+def test_the_three_version_declarations_agree():
+    """pyproject, CITATION.cff and .zenodo.json each state a version, and Zenodo
+    mints the archive record from the last of them. When 0.2.2 shipped with only
+    pyproject bumped, Zenodo minted a second record labelled 0.2.1, so the archive
+    held two different DOIs claiming the same version."""
+    import tomllib
+
+    pyproject = tomllib.loads((ROOT / "pyproject.toml").read_text())["project"]["version"]
+    cff = next(
+        line.split(":", 1)[1].strip()
+        for line in (ROOT / "CITATION.cff").read_text().splitlines()
+        if line.startswith("version:")
+    )
+    zenodo = json.loads((ROOT / ".zenodo.json").read_text())["version"]
+    assert pyproject == cff == zenodo, (
+        f"version disagrees: pyproject={pyproject} CITATION.cff={cff} .zenodo.json={zenodo}"
+    )
