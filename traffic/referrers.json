@@ -47,6 +47,18 @@
     "referrer": "Google",
     "uniques": 1
    }
+  ],
+  "2026-09-06": [
+   {
+    "count": 35,
+    "referrer": "github.com",
+    "uniques": 2
+   },
+   {
+    "count": 3,
+    "referrer": "Google",
+    "uniques": 1
+   }
   ]
  }
 }
