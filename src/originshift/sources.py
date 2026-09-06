@@ -8,6 +8,7 @@ later even after the source has been amended.
 from __future__ import annotations
 
 from . import paths
+import gzip
 import ssl
 import urllib.request
 from dataclasses import dataclass
@@ -63,9 +64,17 @@ def _ssl_context() -> ssl.SSLContext:
 
 
 def _get(url: str) -> bytes:
-    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    # eCFR answers 406 Not Acceptable to a request that does not offer to take a
+    # compressed response, so this header is a requirement and not a courtesy.
+    # urllib sends no Accept-Encoding of its own and does not decompress.
+    req = urllib.request.Request(
+        url, headers={"User-Agent": USER_AGENT, "Accept-Encoding": "gzip"}
+    )
     with urllib.request.urlopen(req, timeout=180, context=_ssl_context()) as resp:
-        return resp.read()
+        raw = resp.read()
+        if resp.headers.get("Content-Encoding") == "gzip":
+            raw = gzip.decompress(raw)
+        return raw
 
 
 def latest_issue_date(title: int = 19) -> str:
