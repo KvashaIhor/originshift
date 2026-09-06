@@ -122,3 +122,67 @@ def test_the_ftc_part_never_says_where_its_test_is_defined(xml_323):
     """The rule states the test and does not cite the policy statement that gives
     "all or virtually all" content. Checked against the source, not asserted."""
     assert parse_323.points_at_the_policy_statement(xml_323) is False
+
+
+def test_the_emitted_corpora_pass_their_own_self_check():
+    """Layer 1. Every definition and quote in the shipped corpus must be findable
+    in the section it names. A check that has never failed proves nothing, so
+    test_the_self_check_detects_a_fabricated_record holds the other side."""
+    import json
+
+    from originshift import paths
+
+    for name in ("134", "323"):
+        matches = sorted((paths.PACKAGE_DATA / "corpus").glob(f"{name}-*.json"))
+        assert matches, f"{name} corpus not built"
+        corpus = json.loads(matches[-1].read_text(encoding="utf-8"))
+        assert corpus["self_check"]["passed"], corpus["self_check"]
+        assert corpus["source_issue_date"]
+        assert corpus["source_url"].startswith("https://www.ecfr.gov/")
+
+
+def test_the_self_check_detects_a_fabricated_record(xml_134):
+    """The control on layer 1."""
+    from originshift import build_terms
+
+    secs = parse_134.sections(xml_134)
+    defined = parse_134.defined_terms(xml_134)
+    used = parse_134.uses(defined, secs)
+    assert build_terms._self_check(secs, defined, used)["passed"]
+
+    invented = [
+        *defined,
+        terms.Term(
+            term="Invented",
+            defined_in="134.1",
+            paragraph="(z)",
+            definition="This sentence appears nowhere in the CFR.",
+            verb="means",
+        ),
+    ]
+    bad = build_terms._self_check(secs, invented, used)
+    assert bad["passed"] is False
+    assert "Invented" in bad["definitions_not_found_in_source"]
+
+    misquoted = [
+        *used,
+        terms.Use(term="Country", used_in="134.55", quote="Not in that section."),
+    ]
+    bad = build_terms._self_check(secs, defined, misquoted)
+    assert bad["passed"] is False
+    assert "Country@134.55" in bad["quotes_not_found_in_source"]
+
+
+def test_the_ftc_corpus_records_where_the_missing_content_lives():
+    import json
+
+    from originshift import paths
+
+    corpus = json.loads(
+        sorted((paths.PACKAGE_DATA / "corpus").glob("323-*.json"))[-1].read_text(
+            encoding="utf-8"
+        )
+    )
+    note = corpus["notes"][0]
+    assert note["part_points_at_it"] is False
+    assert "62 FR 63756" in note["content_lives_at"]

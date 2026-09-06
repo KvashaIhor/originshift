@@ -1,0 +1,163 @@
+{
+ "corpus": "16-CFR-323",
+ "regime": "US",
+ "title": "Made in USA labeling",
+ "authority": "16 CFR 323",
+ "applies_to": "Makes an unqualified Made in the United States claim an unfair or deceptive act unless a three-limb test in § 323.2 is met. The part states the test and defines none of the terms it turns on.",
+ "licence": "US Government work, public domain (17 U.S.C. 105)",
+ "unit": "defined terms and their use sites, not rules",
+ "vintage": "eCFR-2026-08-26",
+ "source_url": "https://www.ecfr.gov/api/versioner/v1/full/2026-08-26/title-16.xml?part=323",
+ "source_issue_date": "2026-08-26",
+ "built_on": "2026-09-06",
+ "counts": {
+  "sections": 6,
+  "defined_terms": 3,
+  "use_sites": 12,
+  "use_sites_outside_definitions": 9
+ },
+ "self_check": {
+  "definitions_checked": 3,
+  "definitions_not_found_in_source": [],
+  "quotes_checked": 12,
+  "quotes_not_found_in_source": [],
+  "passed": true
+ },
+ "sections": [
+  {
+   "section_id": "323.1",
+   "heading": "§ 323.1 Definitions.",
+   "text": "As used in this part: (a) The term Made in the United States means any unqualified representation, express or implied, that a product or service, or a specified component thereof, is of U.S. origin, including, but not limited to, a representation that such product or service is “made,” “manufactured,” “built,” “produced,” “created,” or “crafted” in the United States or in America, or any other unqualified U.S.-origin claim. (b) The terms mail order catalog and mail order promotional material mean any materials, used in the direct sale or direct offering for sale of any product or service, that are disseminated in print or by electronic means, and that solicit the purchase of such product or service by mail, telephone, electronic mail, or some other method without examining the actual product purchased."
+  },
+  {
+   "section_id": "323.2",
+   "heading": "§ 323.2 Prohibited acts.",
+   "text": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+  },
+  {
+   "section_id": "323.3",
+   "heading": "§ 323.3 Applicability to mail order advertising.",
+   "text": "To the extent that any mail order catalog or mail order promotional material includes a seal, mark, tag, or stamp labeling a product Made in the United States, such label must comply with § 323.2."
+  },
+  {
+   "section_id": "323.4",
+   "heading": "§ 323.4 Enforcement.",
+   "text": "Any violation of this part shall be treated as a violation of a rule under section 18 of the Federal Trade Commission Act, 15 U.S.C. 57a, regarding unfair or deceptive acts or practices."
+  },
+  {
+   "section_id": "323.5",
+   "heading": "§ 323.5 Relation to Federal and State laws.",
+   "text": "(a) In general. This part shall not be construed as superseding, altering, or affecting the application of any other federal law or regulation relating to country-of-origin labeling requirements, including but not limited to the Federal Meat Inspection Act, 21 U.S.C. 601 et seq., the Poultry Products Inspection Act, 21 U.S.C. 451 et seq., and the Egg Products Inspection Act, 21 U.S.C. 1031 et seq. In addition, this part shall not be construed as superseding, altering, or affecting any other State statute, regulation, order, or interpretation relating to country-of-origin labeling requirements, except to the extent that such statute, regulation, order, or interpretation is inconsistent with the provisions of this part, and then only to the extent of the inconsistency. (b) Greater protection under State law. For purposes of this section, a State statute, regulation, order, or interpretation is not inconsistent with the provisions of this part if the protection such statute, regulation, order, or interpretation affords any consumer is greater than the protection provided under this part, as determined by the Commission on its own motion or upon the petition of any interested party."
+  },
+  {
+   "section_id": "323.6",
+   "heading": "§ 323.6 Exemptions.",
+   "text": "Any person to whom this rule applies may petition the Commission for a partial or full exemption. The Commission may, in response to petitions or on its own authority, issue partial or full exemptions from this part if the Commission finds application of the rule's requirements is not necessary to prevent the acts or practices to which the rule relates. The Commission shall resolve petitions using the procedures provided in § 1.31 of this chapter. If appropriate, the Commission may condition such exemptions on compliance with alternative standards or requirements to be prescribed by the Commission."
+  }
+ ],
+ "terms": [
+  {
+   "term": "Made in the United States",
+   "defined_in": "323.1",
+   "paragraph": "(a)",
+   "definition": "any unqualified representation, express or implied, that a product or service, or a specified component thereof, is of U.S. origin, including, but not limited to, a representation that such product or service is “made,” “manufactured,” “built,” “produced,” “created,” or “crafted” in the United States or in America, or any other unqualified U.S.-origin claim.",
+   "verb": "means"
+  },
+  {
+   "term": "mail order catalog",
+   "defined_in": "323.1",
+   "paragraph": "(b)",
+   "definition": "any materials, used in the direct sale or direct offering for sale of any product or service, that are disseminated in print or by electronic means, and that solicit the purchase of such product or service by mail, telephone, electronic mail, or some other method without examining the actual product purchased.",
+   "verb": "means"
+  },
+  {
+   "term": "mail order promotional material",
+   "defined_in": "323.1",
+   "paragraph": "(b)",
+   "definition": "any materials, used in the direct sale or direct offering for sale of any product or service, that are disseminated in print or by electronic means, and that solicit the purchase of such product or service by mail, telephone, electronic mail, or some other method without examining the actual product purchased.",
+   "verb": "means"
+  }
+ ],
+ "uses": [
+  {
+   "term": "Made in the United States",
+   "used_in": "323.1",
+   "quote": "As used in this part: (a) The term Made in the United States means any unqualified representation, express or implied, that a product or service, or a specified component thereof, is of U.S. origin, including, but not limited to, a representation that such product or service is “made,” “manufactured,” “built,” “produced,” “created,” or “crafted” in the United States or in America, or any other unqualified U.S.-origin claim.",
+   "in_definition": true
+  },
+  {
+   "term": "mail order promotional material",
+   "used_in": "323.1",
+   "quote": "(b) The terms mail order catalog and mail order promotional material mean any materials, used in the direct sale or direct offering for sale of any product or service, that are disseminated in print or by electronic means, and that solicit the purchase of such product or service by mail, telephone, electronic mail, or some other method without examining the actual product purchased.",
+   "in_definition": true
+  },
+  {
+   "term": "mail order catalog",
+   "used_in": "323.1",
+   "quote": "(b) The terms mail order catalog and mail order promotional material mean any materials, used in the direct sale or direct offering for sale of any product or service, that are disseminated in print or by electronic means, and that solicit the purchase of such product or service by mail, telephone, electronic mail, or some other method without examining the actual product purchased.",
+   "in_definition": true
+  },
+  {
+   "term": "Made in the United States",
+   "used_in": "323.2",
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
+   "in_definition": false
+  },
+  {
+   "term": "mail order promotional material",
+   "used_in": "323.3",
+   "quote": "To the extent that any mail order catalog or mail order promotional material includes a seal, mark, tag, or stamp labeling a product Made in the United States, such label must comply with § 323.2.",
+   "in_definition": false
+  },
+  {
+   "term": "Made in the United States",
+   "used_in": "323.3",
+   "quote": "To the extent that any mail order catalog or mail order promotional material includes a seal, mark, tag, or stamp labeling a product Made in the United States, such label must comply with § 323.2.",
+   "in_definition": false
+  },
+  {
+   "term": "mail order catalog",
+   "used_in": "323.3",
+   "quote": "To the extent that any mail order catalog or mail order promotional material includes a seal, mark, tag, or stamp labeling a product Made in the United States, such label must comply with § 323.2.",
+   "in_definition": false
+  },
+  {
+   "term": "final assembly or processing",
+   "used_in": "323.2",
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
+   "in_definition": false
+  },
+  {
+   "term": "significant processing",
+   "used_in": "323.2",
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
+   "in_definition": false
+  },
+  {
+   "term": "all or virtually all",
+   "used_in": "323.2",
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
+   "in_definition": false
+  },
+  {
+   "term": "made and sourced",
+   "used_in": "323.2",
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
+   "in_definition": false
+  },
+  {
+   "term": "ingredients or components",
+   "used_in": "323.2",
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States.",
+   "in_definition": false
+  }
+ ],
+ "notes": [
+  {
+   "kind": "test_stated_terms_undefined",
+   "detail": "§ 323.2 states the three-limb test and § 323.1 defines none of the terms it turns on. The part does not cite the Enforcement Policy Statement where 'all or virtually all' acquires content.",
+   "content_lives_at": "FTC Enforcement Policy Statement on U.S. Origin Claims, 62 FR 63756 (Dec. 1, 1997)",
+   "part_points_at_it": false
+  }
+ ]
+}

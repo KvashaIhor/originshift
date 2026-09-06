@@ -1,0 +1,1248 @@
+{
+ "built_from": [
+  "19-CFR-134",
+  "16-CFR-323"
+ ],
+ "source_issue_dates": {
+  "19-CFR-134": "2026-08-26",
+  "16-CFR-323": "2026-08-26"
+ },
+ "built_on": "2026-09-06",
+ "corpora": [
+  "19-CFR-134",
+  "16-CFR-323"
+ ],
+ "counts": {
+  "in_part": 146,
+  "cross_part": 0,
+  "cross_authority": 0,
+  "case_law": 2,
+  "unsigned": 5
+ },
+ "edges": [
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.0",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "This part sets forth regulations implementing the country of origin marking requirements and exceptions of section 304 of the Tariff Act of 1930, as amended (19 U.S.C. 1304), together with certain marking provisions of the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.0",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "This part sets forth regulations implementing the country of origin marking requirements and exceptions of section 304 of the Tariff Act of 1930, as amended (19 U.S.C. 1304), together with certain marking provisions of the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.2",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The 10 percent additional duty is assessable for failure either to mark the article (or container) to indicate the English name of the country of origin of the article or to include words or symbols required to prevent deception or mistake."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.3",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(a) Any imported article (or its container) held in CBP custody for inspection, examination, or appraisement will not be delivered until marked with its country of origin, or until estimated duties payable under 19 U.S.C. 1304(f), or adequate security for those duties (see § 134.53(a)(2)), are deposited."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.3",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(b) An authorized CBP official may demand redelivery to CBP custody of any article (or its container) previously released which is found to be not marked legally with its country of origin for the purpose of requiring the article (or its container) to be properly marked."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.4",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Any intentional removal, defacement, destruction, or alteration of a marking of the country of origin required by section 304, Tariff Act of 1930, as amended (19 U.S.C. 1304), and this part in order to conceal this information may result in criminal penalties of up to $5,000 and/or imprisonment for 1 year, as provided in 19 U.S.C. 1304(h)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Customs territory of the United States",
+   "used_in": "134.11",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Unless excepted by law, section 304, Tariff Act of 1930, as amended (19 U.S.C. 1304), requires that every article of foreign origin (or its container) imported into the United States shall be marked in a conspicuous place as legibly, indelibly, and permanently as the nature of the article (or container) will permit, in such manner as to indicate to an ultimate purchaser in the United States the English name of the country of origin of the article, at the time of importation into the Customs territory of the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.11",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Unless excepted by law, section 304, Tariff Act of 1930, as amended (19 U.S.C. 1304), requires that every article of foreign origin (or its container) imported into the United States shall be marked in a conspicuous place as legibly, indelibly, and permanently as the nature of the article (or container) will permit, in such manner as to indicate to an ultimate purchaser in the United States the English name of the country of origin of the article, at the time of importation into the Customs territory of the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.11",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Unless excepted by law, section 304, Tariff Act of 1930, as amended (19 U.S.C. 1304), requires that every article of foreign origin (or its container) imported into the United States shall be marked in a conspicuous place as legibly, indelibly, and permanently as the nature of the article (or container) will permit, in such manner as to indicate to an ultimate purchaser in the United States the English name of the country of origin of the article, at the time of importation into the Customs territory of the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Foreign origin",
+   "used_in": "134.11",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Unless excepted by law, section 304, Tariff Act of 1930, as amended (19 U.S.C. 1304), requires that every article of foreign origin (or its container) imported into the United States shall be marked in a conspicuous place as legibly, indelibly, and permanently as the nature of the article (or container) will permit, in such manner as to indicate to an ultimate purchaser in the United States the English name of the country of origin of the article, at the time of importation into the Customs territory of the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.11",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Unless excepted by law, section 304, Tariff Act of 1930, as amended (19 U.S.C. 1304), requires that every article of foreign origin (or its container) imported into the United States shall be marked in a conspicuous place as legibly, indelibly, and permanently as the nature of the article (or container) will permit, in such manner as to indicate to an ultimate purchaser in the United States the English name of the country of origin of the article, at the time of importation into the Customs territory of the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Conspicuous",
+   "used_in": "134.11",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Unless excepted by law, section 304, Tariff Act of 1930, as amended (19 U.S.C. 1304), requires that every article of foreign origin (or its container) imported into the United States shall be marked in a conspicuous place as legibly, indelibly, and permanently as the nature of the article (or container) will permit, in such manner as to indicate to an ultimate purchaser in the United States the English name of the country of origin of the article, at the time of importation into the Customs territory of the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.11",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Containers of articles excepted from marking shall be marked with the name of the country of origin of the article unless the container is also excepted from marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Foreign origin",
+   "used_in": "134.12",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Articles of foreign origin imported into any possession of the United States outside its Customs territory and reshipped to the United States are subject to all marking requirements applicable to like articles of foreign origin imported directly from a foreign country to the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.12",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Articles of foreign origin imported into any possession of the United States outside its Customs territory and reshipped to the United States are subject to all marking requirements applicable to like articles of foreign origin imported directly from a foreign country to the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.12",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Articles of foreign origin imported into any possession of the United States outside its Customs territory and reshipped to the United States are subject to all marking requirements applicable to like articles of foreign origin imported directly from a foreign country to the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.13",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "An article within the provisions of this section shall be marked with the name of the country of origin at the time the article is withdrawn for consumption unless the article and its container are exempted from marking under provisions of subpart D of this part at the time of importation."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.14",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When an imported article is of a kind which is usually combined with another article after importation but before delivery to an ultimate purchaser and the name indicating the country of origin of the article appears in a place on the article so that the name will be visible after such combining, the marking shall include, in addition to the name of the country of origin, words or symbols which shall clearly show that the origin indicated is that of the imported article only and not that of any other article with which the imported article may be combined after importation."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.14",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When an imported article is of a kind which is usually combined with another article after importation but before delivery to an ultimate purchaser and the name indicating the country of origin of the article appears in a place on the article so that the name will be visible after such combining, the marking shall include, in addition to the name of the country of origin, words or symbols which shall clearly show that the origin indicated is that of the imported article only and not that of any other article with which the imported article may be combined after importation."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.14",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When an imported article is of a kind which is usually combined with another article after importation but before delivery to an ultimate purchaser and the name indicating the country of origin of the article appears in a place on the article so that the name will be visible after such combining, the marking shall include, in addition to the name of the country of origin, words or symbols which shall clearly show that the origin indicated is that of the imported article only and not that of any other article with which the imported article may be combined after importation."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.14",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Labels and similar articles so marked that the name of the country of origin of the label or article is visible after it is affixed to another article in this country shall be marked with additional descriptive words such as “Label made (or printed) in (name of country)” or words of similar meaning."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.14",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Labels and similar articles so marked that the name of the country of origin of the label or article is visible after it is affixed to another article in this country shall be marked with additional descriptive words such as “Label made (or printed) in (name of country)” or words of similar meaning."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.14",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "This section shall not apply to articles of a kind which are ordinarily so substantially changed in the United States that the articles in their changed condition become products of the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.21",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "This subpart includes only country of origin marking requirements and exceptions under section 304(b), Tariff Act of 1930, as amended (19 U.S.C. 1304(b)), for containers or holders."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When an article is excepted from the marking requirements by subpart D of this part, the outermost container or holder in which the article ordinarily reaches the ultimate purchaser shall be marked to indicate the country of origin of the article whether or not the article is marked to indicate its country of origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When an article is excepted from the marking requirements by subpart D of this part, the outermost container or holder in which the article ordinarily reaches the ultimate purchaser shall be marked to indicate the country of origin of the article whether or not the article is marked to indicate its country of origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When an article is excepted from the marking requirements by subpart D of this part, the outermost container or holder in which the article ordinarily reaches the ultimate purchaser shall be marked to indicate the country of origin of the article whether or not the article is marked to indicate its country of origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Containers or holders for imported merchandise which are subject to treatment as imported articles under the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202), shall be marked to indicate clearly the country of their own origin in addition to any marking which may be required to show the country of origin of their contents; however, no marking is required for any good of a NAFTA or USMCA country which is a usual container."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Containers or holders for imported merchandise which are subject to treatment as imported articles under the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202), shall be marked to indicate clearly the country of their own origin in addition to any marking which may be required to show the country of origin of their contents; however, no marking is required for any good of a NAFTA or USMCA country which is a usual container."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Containers or holders for imported merchandise which are subject to treatment as imported articles under the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202), shall be marked to indicate clearly the country of their own origin in addition to any marking which may be required to show the country of origin of their contents; however, no marking is required for any good of a NAFTA or USMCA country which is a usual container."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Containers or holders for imported merchandise which are subject to treatment as imported articles under the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202), shall be marked to indicate clearly the country of their own origin in addition to any marking which may be required to show the country of origin of their contents; however, no marking is required for any good of a NAFTA or USMCA country which is a usual container."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Containers or holders of imported merchandise bearing the name and address of an importer, distributor, or other person or company in the United States shall be marked in close proximity to the U.S. address to indicate clearly the country of origin of the contents with a marking such as “Contents made in France” or “Contents Product of Spain.” (d) Usual containers—(1) “Usual container” defined."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Containers or holders of imported merchandise bearing the name and address of an importer, distributor, or other person or company in the United States shall be marked in close proximity to the U.S. address to indicate clearly the country of origin of the contents with a marking such as “Contents made in France” or “Contents Product of Spain.” (d) Usual containers—(1) “Usual container” defined."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "For purposes of this subpart, a usual container means the container in which a good will ordinarily reach its ultimate purchaser."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(2) A good of a NAFTA or USMCA country which is a usual container."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "A good of a NAFTA or USMCA country which is a usual container, whether or not disposable and whether or not imported empty or filled, is not required to be marked with its own country of origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "A good of a NAFTA or USMCA country which is a usual container, whether or not disposable and whether or not imported empty or filled, is not required to be marked with its own country of origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If imported empty, the importer must be able to provide satisfactory evidence to Customs at the time of importation that it will be used only as a usual container (that it is to be filled with goods after importation and that such container is of a type in which these goods ordinarily reach the ultimate purchaser)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.22",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "They are containers or holders of articles within the exceptions set forth in paragraph (f), (g), or (h) in § 134.32 or they are containers of a good of a NAFTA or USMCA country within the exceptions set forth in paragraph (e), (f), (g), (h), (i), (p) or (q) of § 134.32."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA or USMCA country",
+   "used_in": "134.23",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Except for goods of a NAFTA or USMCA country which are usual containers, containers or holders designed for or capable of reuse after the contents have been consumed, whether imported full or empty, must be individually marked to indicate the country of their own origin with a marking such as, “Container Made in (name of country).” Examples of the containers or holders contemplated are heavy duty steel drums, tanks, and other similar shipping, storage, transportation containers or holders capable of reuse."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.23",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Except for goods of a NAFTA or USMCA country which are usual containers, containers or holders designed for or capable of reuse after the contents have been consumed, whether imported full or empty, must be individually marked to indicate the country of their own origin with a marking such as, “Container Made in (name of country).” Examples of the containers or holders contemplated are heavy duty steel drums, tanks, and other similar shipping, storage, transportation containers or holders capable of reuse."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.23",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "These containers or holders are subject to the treatment specified in General Rule of Interpretation 5(b), Harmonized Tariff Schedule of the United States (19 U.S.C. 1202)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.23",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Containers or holders which give the whole importation its essential character, as described in General Rule of Interpretation 5(a) (19 U.S.C. 1202), must be individually marked to clearly indicate their own origin with a marking such as, “Container made in (name of country).” Examples of the containers contemplated are mustard jars reusable as beer mugs; shaving soap containers reusable as shaving mugs; fancy cologne bottles reusable as flower vases, and other containers which have a lasting value or decorative use."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Disposable containers or holders imported for distribution or sale are subject to treatment as imported articles in accordance with the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202), and shall be marked to indicate clearly the country of their own origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Disposable containers or holders imported for distribution or sale are subject to treatment as imported articles in accordance with the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202), and shall be marked to indicate clearly the country of their own origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "However, when the containers are packed and sold in multiple units (dozens, gross, etc.), this requirement ordinarily may be met by marking the outermost container which reaches the ultimate purchaser."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA or USMCA country",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "USMCA",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The outside wrappings or packages containing the containers shall be clearly marked to indicate the country of origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA or USMCA country",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If the disposable containers or holders or the usual containers which are goods of a NAFTA or USMCA country are marked with the country of origin at the time of importation and the marking will be visible after they are filled, the marking shall clearly indicate that the container only and not the contents were made in the named country."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If the disposable containers or holders or the usual containers which are goods of a NAFTA or USMCA country are marked with the country of origin at the time of importation and the marking will be visible after they are filled, the marking shall clearly indicate that the container only and not the contents were made in the named country."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If the disposable containers or holders or the usual containers which are goods of a NAFTA or USMCA country are marked with the country of origin at the time of importation and the marking will be visible after they are filled, the marking shall clearly indicate that the container only and not the contents were made in the named country."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "For example, bottles, drums, or other containers imported empty, to be filled in the United States, shall be marked with such words as “Bottle (or container) made in (name of country).” (d) Imported full—(1) When contents are excepted from marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "For example, bottles, drums, or other containers imported empty, to be filled in the United States, shall be marked with such words as “Bottle (or container) made in (name of country).” (d) Imported full—(1) When contents are excepted from marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Usual disposable containers in use as such at the time of importation shall not be required to be marked to show the country of their own origin, but shall be marked to indicate the origin of their contents regardless of the fact that the contents are excepted from marking requirements; however, such marking is not required if the contents are excepted from marking requirements under paragraph (f), (g), or (h) of § 134.32 or, in the case of a good of a NAFTA or USMCA country, under paragraph (e), (f), (g), (h), (i), (p) or (q) of that section."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Usual disposable containers in use as such at the time of importation shall not be required to be marked to show the country of their own origin, but shall be marked to indicate the origin of their contents regardless of the fact that the contents are excepted from marking requirements; however, such marking is not required if the contents are excepted from marking requirements under paragraph (f), (g), or (h) of § 134.32 or, in the case of a good of a NAFTA or USMCA country, under paragraph (e), (f), (g), (h), (i), (p) or (q) of that section."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Disposable containers or holders of imported merchandise, which are sold without normally being opened by the ultimate purchaser (e.g., individually wrapped soap bars or tennis balls in a vacuum sealed can), shall be marked to indicate the country of origin of their contents."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Disposable containers or holders of imported merchandise, which are sold without normally being opened by the ultimate purchaser (e.g., individually wrapped soap bars or tennis balls in a vacuum sealed can), shall be marked to indicate the country of origin of their contents."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Unsealed disposable containers of imported merchandise normally unopened by the ultimate purchaser, may be excepted from marking if the article is so marked that the country of origin is clearly visible without unpacking the container."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Unsealed disposable containers of imported merchandise normally unopened by the ultimate purchaser, may be excepted from marking if the article is so marked that the country of origin is clearly visible without unpacking the container."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "However, if the container is normally opened by the ultimate purchaser prior to purchase, only the article need be marked."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.25",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If an article subject to these requirements is intended to be repacked in new containers for sale to an ultimate purchaser after its release from Customs custody, or if the Center director has reason to believe such article will be repacked after its release, the importer shall certify to the Center director that: (1) If the importer does the repacking, the new container shall be marked to indicate the country of origin of the article in accordance with the requirements of this part; or (2) if the article is intended to be sold or transferred to a subsequent purchaser or repacker, the importer shall notify such purchaser or transferee, in writing, at the time of sale or transfer, that any repacking of the article must conform to these requirements."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.25",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If an article subject to these requirements is intended to be repacked in new containers for sale to an ultimate purchaser after its release from Customs custody, or if the Center director has reason to believe such article will be repacked after its release, the importer shall certify to the Center director that: (1) If the importer does the repacking, the new container shall be marked to indicate the country of origin of the article in accordance with the requirements of this part; or (2) if the article is intended to be sold or transferred to a subsequent purchaser or repacker, the importer shall notify such purchaser or transferee, in writing, at the time of sale or transfer, that any repacking of the article must conform to these requirements."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.26",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If an article subject to these requirements is intended to be repacked in retail containers (e.g., blister packs) after its release from Customs custody, or if the Center director has reason to believe such article will be repacked after its release, the importer shall certify to the Center director that: (1) If the importer does the repacking, he shall not obscure or conceal the country of origin marking appearing on the article, or else the new container shall be marked to indicate the country of origin of the article in accordance with the requirements of this part; or (2) if the article is intended to be sold or transferred to a subsequent purchaser or repacker, the importer shall notify such purchaser or transferee, in writing, at the time of sale or transfer, that any repacking of the article must conform to these requirements."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.26",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If an article subject to these requirements is intended to be repacked in retail containers (e.g., blister packs) after its release from Customs custody, or if the Center director has reason to believe such article will be repacked after its release, the importer shall certify to the Center director that: (1) If the importer does the repacking, he shall not obscure or conceal the country of origin marking appearing on the article, or else the new container shall be marked to indicate the country of origin of the article in accordance with the requirements of this part; or (2) if the article is intended to be sold or transferred to a subsequent purchaser or repacker, the importer shall notify such purchaser or transferee, in writing, at the time of sale or transfer, that any repacking of the article must conform to these requirements."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.26",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The requirements of this section do not apply to repackaging in a container that can readily be opened for inspection by the ultimate purchaser in the United States, unless such container bears a U.S. address or other potentially misleading marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.26",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The requirements of this section do not apply to repackaging in a container that can readily be opened for inspection by the ultimate purchaser in the United States, unless such container bears a U.S. address or other potentially misleading marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(b) Articles that cannot be marked prior to shipment to the United States without injury;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(c) Articles that cannot be marked prior to shipment to the United States except at an expense economically prohibitive of its importation;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(g) Articles to be processed in the United States by the importer or for his account otherwise than for the purpose of concealing the origin of such articles and in such manner that any mark contemplated by this part would necessarily be obliterated, destroyed, or permanently concealed;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(h) Articles for which the ultimate purchaser must necessarily know, or in the case of a good of a NAFTA or USMCA country, must reasonably know, the country of origin by reason of the circumstances of their importation or by reason of the character of the articles even though they are not marked to indicate their origin;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(h) Articles for which the ultimate purchaser must necessarily know, or in the case of a good of a NAFTA or USMCA country, must reasonably know, the country of origin by reason of the circumstances of their importation or by reason of the character of the articles even though they are not marked to indicate their origin;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(h) Articles for which the ultimate purchaser must necessarily know, or in the case of a good of a NAFTA or USMCA country, must reasonably know, the country of origin by reason of the circumstances of their importation or by reason of the character of the articles even though they are not marked to indicate their origin;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(i) Articles which were produced more than 20 years prior to their importation into the United States;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(l) Products of possessions of the United States;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(m) Products of the United States exported and returned;"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA or USMCA country",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(p) Goods of a NAFTA or USMCA country which are original works of art; and (q) Goods of a NAFTA or USMCA country which are provided for in subheading 6904.10 or heading 8541 or 8542 of the Harmonized Tariff Schedule of the United States (HTSUS) (19 U.S.C. 1202)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(p) Goods of a NAFTA or USMCA country which are original works of art; and (q) Goods of a NAFTA or USMCA country which are provided for in subheading 6904.10 or heading 8541 or 8542 of the Harmonized Tariff Schedule of the United States (HTSUS) (19 U.S.C. 1202)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(p) Goods of a NAFTA or USMCA country which are original works of art; and (q) Goods of a NAFTA or USMCA country which are provided for in subheading 6904.10 or heading 8541 or 8542 of the Harmonized Tariff Schedule of the United States (HTSUS) (19 U.S.C. 1202)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(p) Goods of a NAFTA or USMCA country which are original works of art; and (q) Goods of a NAFTA or USMCA country which are provided for in subheading 6904.10 or heading 8541 or 8542 of the Harmonized Tariff Schedule of the United States (HTSUS) (19 U.S.C. 1202)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "USMCA",
+   "used_in": "134.32",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(p) Goods of a NAFTA or USMCA country which are original works of art; and (q) Goods of a NAFTA or USMCA country which are provided for in subheading 6904.10 or heading 8541 or 8542 of the Harmonized Tariff Schedule of the United States (HTSUS) (19 U.S.C. 1202)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.33",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Articles of a class or kind listed below are excepted from the requirements of country of origin marking in accordance with the provisions of section 304(a)(3)(J), Tariff Act of 1930, as amended (19 U.S.C. 1304(a)(3)(J))."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.33",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "However, in the case of any article described in this list which is imported in a container, the outermost container in which the article ordinarily reaches the ultimate purchaser is required to be marked to indicate the origin of its contents in accordance with the requirements of subpart C of this part."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.34",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "An exception under § 134.32(d) may be authorized in the discretion of the Center director for imported articles which are to be repacked after release from Customs custody under the following conditions: (1) The containers in which the articles are repacked will indicate the origin of the articles to an ultimate purchaser in the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.34",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "An exception under § 134.32(d) may be authorized in the discretion of the Center director for imported articles which are to be repacked after release from Customs custody under the following conditions: (1) The containers in which the articles are repacked will indicate the origin of the articles to an ultimate purchaser in the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA or USMCA country",
+   "used_in": "134.35",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(a) Articles other than goods of a NAFTA or USMCA country."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.35",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "An article used in the United States in manufacture which results in an article having a name, character, or use differing from that of the imported article, will be within the principle of the decision in the case of United States v."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.35",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Under this principle, the manufacturer or processor in the United States who converts or combines the imported article into the different article will be considered the “ultimate purchaser” of the imported article within the contemplation of section 304(a), Tariff Act of 1930, as amended (19 U.S.C. 1304(a)), and the article shall be excepted from marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.35",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Under this principle, the manufacturer or processor in the United States who converts or combines the imported article into the different article will be considered the “ultimate purchaser” of the imported article within the contemplation of section 304(a), Tariff Act of 1930, as amended (19 U.S.C. 1304(a)), and the article shall be excepted from marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA or USMCA country",
+   "used_in": "134.35",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(b) Goods of a NAFTA or USMCA country."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.35",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "A good of a NAFTA or USMCA country which is to be processed in the United States in a manner that would result in the good becoming a good of the United States under the part 102 Rules is excepted from marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Part 102 Rules",
+   "used_in": "134.35",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "A good of a NAFTA or USMCA country which is to be processed in the United States in a manner that would result in the good becoming a good of the United States under the part 102 Rules is excepted from marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.35",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "A good of a NAFTA or USMCA country which is to be processed in the United States in a manner that would result in the good becoming a good of the United States under the part 102 Rules is excepted from marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.36",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "An article which is to be processed in the United States by the importer or for his account shall not be considered to be within the specifications of section 304(a)(3)(G), of the Tariff Act of 1930, as amended (19 U.S.C. 1304(a)(3)(G)), if there is a reasonable method of marking which will not be obliterated, destroyed, or permanently concealed by such processing."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.41",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Section 304 of the Tariff Act of 1930, as amended (19 U.S.C. 1304), requires that the marking of the country of origin be legible, indelible, and permanent."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.41",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "For example, it is suggested that the country of origin on metal articles be die sunk, molded in or etched; on earthenware or chinaware be glazed on in the process of firing; and on paper articles be imprinted."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.41",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The degree of permanence should be at least sufficient to insure that in any reasonably foreseeable circumstance, the marking shall remain on the article (or its container) until it reaches the ultimate purchaser unless it is deliberately removed."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.41",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The ultimate purchaser in the United States must be able to find the marking easily and read it without strain."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.41",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The ultimate purchaser in the United States must be able to find the marking easily and read it without strain."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA or USMCA country",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Except for goods of a NAFTA or USMCA country, articles of a class or kind listed below shall be marked legibly and conspicuously by die stamping, cast-in-the-mold lettering, etching (acid or electrolytic), engraving, or by means of metal plates which bear the prescribed marking and which are securely attached to the article in a conspicuous place by welding, screws, or rivets: knives, forks, steels, cleavers, clippers, shears, scissors, safety razors, blades for safety razors, surgical instruments, dental instruments, scientific and laboratory instruments, pliers, pincers, nippers and hinged hand tools for holding and splicing wire, vacuum containers, and parts of the above articles."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Conspicuous",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Except for goods of a NAFTA or USMCA country, articles of a class or kind listed below shall be marked legibly and conspicuously by die stamping, cast-in-the-mold lettering, etching (acid or electrolytic), engraving, or by means of metal plates which bear the prescribed marking and which are securely attached to the article in a conspicuous place by welding, screws, or rivets: knives, forks, steels, cleavers, clippers, shears, scissors, safety razors, blades for safety razors, surgical instruments, dental instruments, scientific and laboratory instruments, pliers, pincers, nippers and hinged hand tools for holding and splicing wire, vacuum containers, and parts of the above articles."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "NAFTA or USMCA country",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Goods of a NAFTA or USMCA country shall be marked by any reasonable method which is legible, conspicuous and permanent as otherwise provided in this part."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Conspicuous",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Goods of a NAFTA or USMCA country shall be marked by any reasonable method which is legible, conspicuous and permanent as otherwise provided in this part."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The country of origin marking requirements on watches, clocks, and timing apparatus are intensive and require special methods."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Note 4, Harmonized Tariff Schedule of the United States (19 U.S.C. 1202))."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Except as provided in 19 U.S.C. 1304(a)(3) and in paragraph (c)(3) of this section, Native American-style jewelry must be indelibly marked with the country of origin by cutting, die-sinking, engraving, stamping, or some other permanent method."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The indelible marking must appear legibly on the clasp or in some other conspicuous location, or alternatively, on a metal or plastic tag indelibly marked with the country of origin and permanently attached to the article."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Conspicuous",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The indelible marking must appear legibly on the clasp or in some other conspicuous location, or alternatively, on a metal or plastic tag indelibly marked with the country of origin and permanently attached to the article."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If it is technically or commercially infeasible to mark in the manner specified in paragraph (c)(2) of this section, or in the case of a good of a NAFTA or USMCA country, the article may be marked by means of a string tag or adhesive label securely affixed, or some other similar method."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Except as provided for in 19 U.S.C. 1304(a)(3) and § 134.32 of this part, Native American-style arts and crafts must be indelibly marked with the country of origin by means of cutting, die-sinking, engraving, stamping, or some other equally permanent method."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Where it is technically or commercially infeasible to mark in the manner specified in paragraph (d)(2) of this section, or in the case of a good of a NAFTA or USMCA country, the article may be marked by means of a string tag or adhesive label securely affixed, or some other similar method."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Where an article is produced as a result of an assembly operation and the country of origin of such article is determined under this chapter to be the country in which the article was finally assembled, such article may be marked, as appropriate, in a manner such as the following: (1) Assembled in (country of final assembly);"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Where an article is produced as a result of an assembly operation and the country of origin of such article is determined under this chapter to be the country in which the article was finally assembled, such article may be marked, as appropriate, in a manner such as the following: (1) Assembled in (country of final assembly);"
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.43",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(2) Assembled in (country of final assembly) from components of (name of country or countries of origin of all components); or (3) Made in, or product of, (country of final assembly)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.44",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Except for articles described in § 134.43 of this part or the subject of a ruling by the Commissioner of Customs, any method of marking at any location insuring that country of origin will conspicuously appear on the article shall be acceptable."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.44",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Such marking must be legible and sufficiently permanent so that it will remain on the article (or its container when the container and not the article is required to be marked) until it reaches the ultimate purchaser unless deliberately removed."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.44",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If paper sticker or pressure sensitive labels are used, they must be affixed in a conspicuous place and so securely that unless deliberately removed they will remain on the article while it is in storage or on display and until it is delivered to the ultimate purchaser."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Conspicuous",
+   "used_in": "134.44",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If paper sticker or pressure sensitive labels are used, they must be affixed in a conspicuous place and so securely that unless deliberately removed they will remain on the article while it is in storage or on display and until it is delivered to the ultimate purchaser."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.44",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When tags are used, they must be attached in a conspicuous place and in a manner which assures that unless deliberately removed they will remain on the article until it reaches the ultimate purchaser."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Conspicuous",
+   "used_in": "134.44",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When tags are used, they must be attached in a conspicuous place and in a manner which assures that unless deliberately removed they will remain on the article until it reaches the ultimate purchaser."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(1) Except as otherwise provided in paragraph (a)(2) of this section, the markings required by this part shall include the full English name of the country of origin, unless another marking to indicate the English name of the country of origin is specifically authorized by the Commissioner of Customs."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(1) Except as otherwise provided in paragraph (a)(2) of this section, the markings required by this part shall include the full English name of the country of origin, unless another marking to indicate the English name of the country of origin is specifically authorized by the Commissioner of Customs."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Notice of acceptable markings other than the full English name of the country of origin shall be published in the Federal Register and the Customs Bulletin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Good of a NAFTA or USMCA country",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(2) A good of a NAFTA or USMCA country may be marked with the name of the country of origin in English, French or Spanish."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "(2) A good of a NAFTA or USMCA country may be marked with the name of the country of origin in English, French or Spanish."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Abbreviations which unmistakably indicate the name of a country, such as “Gt."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Variant spellings which clearly indicate the English name of the country of origin, such as “Brasil” for “Brazil” and “Italie” for “Italy,” are acceptable."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The adjectival form of the name of a country shall be accepted as a proper indication of the name of the country of origin of imported merchandise provided the adjectival form of the name does not appear with other words so as to refer to a kind or species of product."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The adjectival form of the name of a country shall be accepted as a proper indication of the name of the country of origin of imported merchandise provided the adjectival form of the name does not appear with other words so as to refer to a kind or species of product."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "The name of a colony, possession, or protectorate outside the boundaries of the mother country shall usually be considered acceptable marking."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When the Commissioner of Customs finds that the name is not sufficiently well known to insure that the ultimate purchasers will be fully informed of the country of origin, or where the name appearing alone may cause confusion, deception, or mistake, clarifying words shall be required."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.46",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "In any case in which the words “United States,” or “American,” the letters “U.S.A.,” any variation of such words or letters, or the name of any city or location in the United States, or the name of any foreign country or locality other than the country or locality in which the article was manufactured or produced appear on an imported article or its container, and those words, letters or names may mislead or deceive the ultimate purchaser as to the actual country of origin of the article, there shall appear legibly and permanently in close proximity to such words, letters or name, and in at least a comparable size, the name of the country of origin preceded by “Made in,” “Product of,” or other words of similar meaning."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.46",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "In any case in which the words “United States,” or “American,” the letters “U.S.A.,” any variation of such words or letters, or the name of any city or location in the United States, or the name of any foreign country or locality other than the country or locality in which the article was manufactured or produced appear on an imported article or its container, and those words, letters or names may mislead or deceive the ultimate purchaser as to the actual country of origin of the article, there shall appear legibly and permanently in close proximity to such words, letters or name, and in at least a comparable size, the name of the country of origin preceded by “Made in,” “Product of,” or other words of similar meaning."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.46",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "In any case in which the words “United States,” or “American,” the letters “U.S.A.,” any variation of such words or letters, or the name of any city or location in the United States, or the name of any foreign country or locality other than the country or locality in which the article was manufactured or produced appear on an imported article or its container, and those words, letters or names may mislead or deceive the ultimate purchaser as to the actual country of origin of the article, there shall appear legibly and permanently in close proximity to such words, letters or name, and in at least a comparable size, the name of the country of origin preceded by “Made in,” “Product of,” or other words of similar meaning."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country",
+   "used_in": "134.46",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "In any case in which the words “United States,” or “American,” the letters “U.S.A.,” any variation of such words or letters, or the name of any city or location in the United States, or the name of any foreign country or locality other than the country or locality in which the article was manufactured or produced appear on an imported article or its container, and those words, letters or names may mislead or deceive the ultimate purchaser as to the actual country of origin of the article, there shall appear legibly and permanently in close proximity to such words, letters or name, and in at least a comparable size, the name of the country of origin preceded by “Made in,” “Product of,” or other words of similar meaning."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.47",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When as part of a trademark or trade name or as part of a souvenir marking, the name of a location in the United States or “United States” or “America” appear, the article shall be legibly, conspicuously, and permanently marked to indicate the name of the country of origin of the article preceded by “Made in,” “Product of,” or other similar words, in close proximity or in some other conspicuous location."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.47",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When as part of a trademark or trade name or as part of a souvenir marking, the name of a location in the United States or “United States” or “America” appear, the article shall be legibly, conspicuously, and permanently marked to indicate the name of the country of origin of the article preceded by “Made in,” “Product of,” or other similar words, in close proximity or in some other conspicuous location."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Conspicuous",
+   "used_in": "134.47",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When as part of a trademark or trade name or as part of a souvenir marking, the name of a location in the United States or “United States” or “America” appear, the article shall be legibly, conspicuously, and permanently marked to indicate the name of the country of origin of the article preceded by “Made in,” “Product of,” or other similar words, in close proximity or in some other conspicuous location."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Country of origin",
+   "used_in": "134.52",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Center directors may accept certificates of marking supported by samples of articles required to be marked, for which Customs Form 4647, or its electronic equivalent, was issued, from importers or from actual owners complying with the provision of § 141.20 of this chapter, to certify that marking of the country of origin on imported articles as required by this part has been accomplished."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "United States",
+   "used_in": "134.52",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "In addition, in cases involving, willful deceit, a criminal case report may be made charging a violation of section 1001, title 18, United States Code, which provides for a fine up to $10,000 and/or imprisonment up to 5 years for anyone who willfully conceals a material fact or uses any document knowing the same to contain any false or fraudulent statement in connection with any matter within the jurisdiction of an agency of the United States."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "substantial transformation",
+   "used_in": "134.1",
+   "resolution": "case_law",
+   "points_at": "common-law test with no rule table; 19 CFR 102 does not implement it for Section 301 or 232 either",
+   "quote": "Further work or material added to an article in another country must effect a substantial transformation in order to render such other country the “country of origin” within the meaning of this part; however, for a good of a NAFTA or USMCA country, the marking rules set forth in part 102 of this chapter (hereinafter referred to as the part 102 Rules) will determine the country of origin."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "substantial transformation",
+   "used_in": "134.1",
+   "resolution": "case_law",
+   "points_at": "common-law test with no rule table; 19 CFR 102 does not implement it for Section 301 or 232 either",
+   "quote": "The following examples may be helpful: (1) If an imported article will be used in manufacture, the manufacturer may be the “ultimate purchaser” if he subjects the imported article to a process which results in a substantial transformation of the article, even though the process may not result in a new or different article, or for a good of a NAFTA or USMCA country, a process which results in one of the changes prescribed in the part 102 Rules as effecting a change in the article's country of origin."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "Made in the United States",
+   "used_in": "323.2",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "mail order promotional material",
+   "used_in": "323.3",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "To the extent that any mail order catalog or mail order promotional material includes a seal, mark, tag, or stamp labeling a product Made in the United States, such label must comply with § 323.2."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "Made in the United States",
+   "used_in": "323.3",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "To the extent that any mail order catalog or mail order promotional material includes a seal, mark, tag, or stamp labeling a product Made in the United States, such label must comply with § 323.2."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "mail order catalog",
+   "used_in": "323.3",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "To the extent that any mail order catalog or mail order promotional material includes a seal, mark, tag, or stamp labeling a product Made in the United States, such label must comply with § 323.2."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "final assembly or processing",
+   "used_in": "323.2",
+   "resolution": "unsigned",
+   "points_at": null,
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "significant processing",
+   "used_in": "323.2",
+   "resolution": "unsigned",
+   "points_at": null,
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "all or virtually all",
+   "used_in": "323.2",
+   "resolution": "unsigned",
+   "points_at": null,
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "made and sourced",
+   "used_in": "323.2",
+   "resolution": "unsigned",
+   "points_at": null,
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+  },
+  {
+   "corpus": "16-CFR-323",
+   "term": "ingredients or components",
+   "used_in": "323.2",
+   "resolution": "unsigned",
+   "points_at": null,
+   "quote": "In connection with promoting or offering for sale any good or service, in or affecting commerce as “commerce” is defined in section 4 of the Federal Trade Commission Act, 15 U.S.C. 44, it is an unfair or deceptive act or practice within the meaning of section 5(a)(1) of the Federal Trade Commission Act, 15 U.S.C. 45(a)(1), to label any product as Made in the United States unless the final assembly or processing of the product occurs in the United States, all significant processing that goes into the product occurs in the United States, and all or virtually all ingredients or components of the product are made and sourced in the United States."
+  }
+ ]
+}

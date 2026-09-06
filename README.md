@@ -3,6 +3,11 @@
 **Non-preferential rules of origin, as data.** Answers "what country is this good
 legally from?" and cites the rule it used.
 
+Since 0.3.0 it also reads two parts that *label* origin rather than decide it —
+19 CFR 134 (marking) and 16 CFR 323 (Made in USA) — to answer a different
+question: for a term a regulation turns on, where is it defined, and where is it
+used by a part that never defines it and never says where to look.
+
 [![PyPI](https://img.shields.io/pypi/v/originshift)](https://pypi.org/project/originshift/)
 [![Python](https://img.shields.io/pypi/pyversions/originshift)](https://pypi.org/project/originshift/)
 [![tests](https://github.com/KvashaIhor/originshift/actions/workflows/test.yml/badge.svg)](https://github.com/KvashaIhor/originshift/actions/workflows/test.yml)
@@ -80,6 +85,9 @@ mismatch is published, and user reports are how the corpus improves.
 | `grammar.py` | The type system rules compile into — ranges, shifts, exceptions |
 | `parse_102.py` | Compiles 19 CFR 102.20 into that grammar |
 | `parse_102_21.py` | Compiles 19 CFR 102.21(e)(1) — textiles and apparel |
+| `parse_134.py` | Compiles 19 CFR 134 into defined terms and their use sites |
+| `parse_323.py` | Compiles 16 CFR 323, the FTC Made in USA rule, the same way |
+| `terms.py` | Resolves a term across parts, and says when it resolves nowhere |
 | `ingest.py` | Brings in rules from sources that cannot be fetched and parsed |
 | `build_corpus.py` | Emits the versioned corpus |
 | `resolve.py` | Walks 102.11, applies the corpus, and cites what it used |

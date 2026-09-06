@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import argparse
 import csv
+import json
 import sys
 from pathlib import Path
 
@@ -472,6 +473,58 @@ def cmd_corpora(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_terms(args: argparse.Namespace) -> int:
+    """Where a term is defined, where it is used, and where it resolves nowhere."""
+    from . import terms as terms_mod
+    from .paths import CORPUS_OUT, PACKAGE_DATA
+
+    loaded = []
+    for base in (PACKAGE_DATA / "corpus", CORPUS_OUT):
+        for path in sorted(base.glob("[13][32][43]-*.json")) if base.exists() else []:
+            loaded.append(json.loads(path.read_text(encoding="utf-8")))
+        if loaded:
+            break
+    if not loaded:
+        print(
+            "no defined-term corpus is built. Run:\n"
+            "  python -m originshift.build_terms",
+            file=sys.stderr,
+        )
+        return 1
+
+    graph = terms_mod.build(loaded)
+    edges = graph["edges"]
+    if args.term:
+        needle = args.term.lower()
+        edges = [e for e in edges if needle in e["term"].lower()]
+    if args.unsigned:
+        edges = [
+            e
+            for e in edges
+            if e["resolution"] in (terms_mod.UNSIGNED, terms_mod.CASE_LAW)
+        ]
+
+    if not edges:
+        print("no use sites match", file=sys.stderr)
+        return 2
+
+    for corpus in dict.fromkeys(e["corpus"] for e in edges):
+        print(f"\n{corpus}")
+        for e in [x for x in edges if x["corpus"] == corpus]:
+            at = f"  -> {e['points_at']}" if e["points_at"] else ""
+            print(f"  [{e['resolution']:<15}] § {e['used_in']:<9} {e['term']}{at}")
+            if args.quote:
+                print(f"      {e['quote'][:160]}")
+
+    print("\n" + "  ".join(f"{k} {v}" for k, v in graph["counts"].items() if v))
+    print(
+        "\nunsigned means the part uses the term, does not define it, and does not"
+        "\nsay where it is defined. It is a finding about the regulation, not a gap"
+        "\nin the corpus."
+    )
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     ap = argparse.ArgumentParser(prog="originshift", description=__doc__)
     sub = ap.add_subparsers(dest="command", required=True)
@@ -553,6 +606,19 @@ def build_parser() -> argparse.ArgumentParser:
 
     c = sub.add_parser("corpora", help="what is built, and where it came from")
     c.set_defaults(func=cmd_corpora)
+
+    t = sub.add_parser(
+        "terms",
+        help="where a defined term resolves, and where it resolves nowhere",
+    )
+    t.add_argument("--term", help="only this term (substring match)")
+    t.add_argument(
+        "--unsigned",
+        action="store_true",
+        help="only terms used without a definition or a pointer to one",
+    )
+    t.add_argument("--quote", action="store_true", help="show the sentence")
+    t.set_defaults(func=cmd_terms)
     return ap
 
 
