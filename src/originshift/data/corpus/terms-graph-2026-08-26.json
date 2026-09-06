@@ -13,7 +13,7 @@
   "16-CFR-323"
  ],
  "counts": {
-  "in_part": 147,
+  "in_part": 151,
   "cross_part": 0,
   "cross_authority": 1,
   "case_law": 2,
@@ -344,6 +344,14 @@
   },
   {
    "corpus": "19-CFR-134",
+   "term": "Usual container",
+   "used_in": "134.23",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "Except for goods of a NAFTA or USMCA country which are usual containers, containers or holders designed for or capable of reuse after the contents have been consumed, whether imported full or empty, must be individually marked to indicate the country of their own origin with a marking such as, “Container Made in (name of country).” Examples of the containers or holders contemplated are heavy duty steel drums, tanks, and other similar shipping, storage, transportation containers or holders capable of reuse."
+  },
+  {
+   "corpus": "19-CFR-134",
    "term": "Country",
    "used_in": "134.23",
    "resolution": "in_part",
@@ -400,6 +408,22 @@
   },
   {
    "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D)."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Usual container",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D)."
+  },
+  {
+   "corpus": "19-CFR-134",
    "term": "Country",
    "used_in": "134.24",
    "resolution": "in_part",
@@ -441,6 +465,14 @@
   {
    "corpus": "19-CFR-134",
    "term": "Country of origin",
+   "used_in": "134.24",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "If the disposable containers or holders or the usual containers which are goods of a NAFTA or USMCA country are marked with the country of origin at the time of importation and the marking will be visible after they are filled, the marking shall clearly indicate that the container only and not the contents were made in the named country."
+  },
+  {
+   "corpus": "19-CFR-134",
+   "term": "Usual container",
    "used_in": "134.24",
    "resolution": "in_part",
    "points_at": null,
@@ -1080,6 +1112,14 @@
   },
   {
    "corpus": "19-CFR-134",
+   "term": "Ultimate purchaser",
+   "used_in": "134.45",
+   "resolution": "in_part",
+   "points_at": null,
+   "quote": "When the Commissioner of Customs finds that the name is not sufficiently well known to insure that the ultimate purchasers will be fully informed of the country of origin, or where the name appearing alone may cause confusion, deception, or mistake, clarifying words shall be required."
+  },
+  {
+   "corpus": "19-CFR-134",
    "term": "Country of origin",
    "used_in": "134.45",
    "resolution": "in_part",
@@ -1173,14 +1213,6 @@
    "resolution": "case_law",
    "points_at": "common-law test with no rule table; 19 CFR 102 does not implement it for Section 301 or 232 either",
    "quote": "The following examples may be helpful: (1) If an imported article will be used in manufacture, the manufacturer may be the “ultimate purchaser” if he subjects the imported article to a process which results in a substantial transformation of the article, even though the process may not result in a new or different article, or for a good of a NAFTA or USMCA country, a process which results in one of the changes prescribed in the part 102 Rules as effecting a change in the article's country of origin."
-  },
-  {
-   "corpus": "19-CFR-134",
-   "term": "ultimate purchasers",
-   "used_in": "134.24",
-   "resolution": "in_part",
-   "points_at": null,
-   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D)."
   },
   {
    "corpus": "16-CFR-323",

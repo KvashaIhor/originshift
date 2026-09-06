@@ -17,13 +17,15 @@ def test_every_section_of_the_part_is_read(xml_134):
     assert ids[0] == "134.0" and "134.1" in ids and ids[-1] == "134.55"
 
 
-def test_all_twelve_defined_terms_are_found_with_their_paragraph(xml_134):
+def test_every_defined_term_is_found_with_its_paragraph(xml_134):
     terms = {t.term: t.paragraph for t in parse_134.defined_terms(xml_134)}
-    assert len(terms) == 12
+    assert len(terms) == 13
     assert terms["Country of origin"] == "(b)"
     assert terms["Ultimate purchaser"] == "(d)"
     assert terms["Part 102 Rules"] == "(j)"
     assert terms["USMCA"] == "(l)"
+    # stated outside § 134.1, in the section that uses it
+    assert terms["Usual container"] == "(d)(1)"
 
 
 def test_definitions_are_not_all_stated_with_means(xml_134):
@@ -91,3 +93,50 @@ def test_the_control_terms_are_reported_as_defined(xml_134):
         "conspicuous": True,
         "country of origin": True,
     }
+
+
+def test_a_definition_stated_outside_the_definitions_section_is_found(xml_134):
+    """§ 134.22(d)(1) defines "Usual container" in the section that uses it, not
+    in § 134.1. Limb 1 of the inclusion rule is "the part defines it", and
+    reading § 134.1 alone was a narrower rule than the one recorded — it lost a
+    term the part defines and then uses in two later sections."""
+    terms = {t.term: t for t in parse_134.defined_terms(xml_134)}
+    usual = terms["Usual container"]
+    assert usual.defined_in == "134.22"
+    assert usual.paragraph == "(d)(1)"
+    assert usual.verb == "means"
+    assert "ordinarily reach its ultimate purchaser" in usual.definition
+
+
+def test_a_term_used_only_in_its_plural_is_still_a_use(xml_134):
+    """§§ 134.23 and 134.24 use "usual containers", never the singular. Matching
+    the defined form alone found none of them, so a term defined in one section
+    and used in the next looked unused."""
+    secs = parse_134.sections(xml_134)
+    defined = parse_134.defined_terms(xml_134)
+    uses = parse_134.uses(defined, secs)
+
+    outside = [
+        u for u in uses if u.term == "Usual container" and not u.in_definition
+    ]
+    assert outside, "the plural uses are invisible again"
+    assert {u.used_in for u in outside} == {"134.23", "134.24"}
+    assert all("usual container" in u.quote.lower() for u in outside)
+
+
+def test_the_plural_fold_is_not_applied_to_a_term_that_already_ends_in_s():
+    """A term ending in "s" gets no optional suffix at all.
+
+    Written first as "must not match 'United State'", which passed under both
+    implementations and therefore guarded nothing — appending "s?" to "States"
+    yields "Statess?", which never matches the singular either. The hazard is
+    not the match, it is the suffix, so the suffix is what this asserts.
+    """
+    plural = parse_134._use_pattern("Usual container").pattern
+    already = parse_134._use_pattern("United States").pattern
+
+    assert plural.endswith(r"s?\b[”\"']?"), "the fold is gone; plural uses go missing"
+    assert not already.endswith(r"s?\b[”\"']?"), (
+        "a term already ending in s was given an optional suffix"
+    )
+    assert parse_134._use_pattern("United States").search("goods of the United States")

@@ -31,6 +31,27 @@ _DEFINING_VERB = re.compile(
     r"\b(means|refers to|is generally|is|are|includes)\b", re.I
 )
 
+#: A definition the part states OUTSIDE its definitions section, marked the way
+#: the drafter marks one: the term in quotation marks, the word "defined", then
+#: the definition. § 134.22(d)(1) is the only one in either part — "(d) Usual
+#: containers—(1) “Usual container” defined. For purposes of this subpart, a
+#: usual container means ..." — and limb 1 read § 134.1 alone until this was
+#: added, so the inventory missed a term the part defines and then uses four
+#: times in two later sections.
+#:
+#: Harvesting the marker rather than the quotation is deliberate. Limb 3 scans
+#: for quoted terms and could in principle have caught this one; widening it to
+#: do so admits eleven quoted spans in § 134.45 and § 134.47 that are examples
+#: of permitted country markings, not terms — "Great Britain", "Brasil",
+#: "English walnuts". The word "defined" plus a defining verb is what separates
+#: a stated definition from a quoted example, and it is what this matches.
+_INLINE_DEFINITION = re.compile(
+    r"^\((?P<outer>[a-z])\)\s*[^.“”]{0,80}?—\((?P<inner>\d+)\)\s*"
+    r"[“\"](?P<term>[A-Za-z][A-Za-z \-]{2,45}?)[”\"]\s+defined\.\s+"
+    r"(?P<body>.+)$",
+    re.S,
+)
+
 
 def _clean(node) -> str:
     return re.sub(r"\s+", " ", "".join(node.itertext())).strip()
@@ -52,32 +73,62 @@ def sections(xml_text: str) -> list[Section]:
     return out
 
 
+def _term_from(term: str, section: str, paragraph: str, body: str) -> Term:
+    verb = _DEFINING_VERB.search(body)
+    return Term(
+        term=term,
+        defined_in=section,
+        paragraph=paragraph,
+        definition=body,
+        # A definition whose verb we cannot name is still recorded; the corpus
+        # reports what it found rather than dropping it.
+        verb=verb.group(1).lower() if verb else "unstated",
+    )
+
+
 def defined_terms(xml_text: str, definitions_section: str = "134.1") -> list[Term]:
-    """The terms the part defines, read from its definitions section."""
+    """Every term the part defines — in its definitions section, and outside it.
+
+    The inclusion rule's first limb is "the part defines it", not "the part's
+    definitions section defines it". Reading § 134.1 alone was a narrower rule
+    than the one recorded, and it lost § 134.22(d)(1)'s "Usual container".
+
+    `defined_in` stays the section id so that a record remains checkable against
+    the section text the self-check looks it up by; the subdivision that carries
+    the definition is in `paragraph`, so § 134.22(d)(1) is recoverable in full.
+    """
     root = ET.fromstring(xml_text)
     out: list[Term] = []
     for div in root.iter("DIV8"):
-        if div.attrib.get("N") != definitions_section:
+        section = div.attrib.get("N")
+        if not section:
             continue
         for p in div:
             if p.tag != "P":
                 continue
-            m = _DEFINITION.match(_clean(p))
-            if not m:
+            text = _clean(p)
+            if section == definitions_section:
+                m = _DEFINITION.match(text)
+                if m:
+                    out.append(
+                        _term_from(
+                            m.group(2).strip(),
+                            definitions_section,
+                            f"({m.group(1)})",
+                            m.group(3).strip(),
+                        )
+                    )
                 continue
-            para, term, body = m.group(1), m.group(2).strip(), m.group(3).strip()
-            verb = _DEFINING_VERB.search(body)
-            out.append(
-                Term(
-                    term=term,
-                    defined_in=definitions_section,
-                    paragraph=f"({para})",
-                    definition=body,
-                    # A definition whose verb we cannot name is still recorded;
-                    # the corpus reports what it found rather than dropping it.
-                    verb=verb.group(1).lower() if verb else "unstated",
+            m = _INLINE_DEFINITION.match(text)
+            if m:
+                out.append(
+                    _term_from(
+                        m.group("term").strip(),
+                        section,
+                        f"({m.group('outer')})({m.group('inner')})",
+                        m.group("body").strip(),
+                    )
                 )
-            )
     return out
 
 
@@ -86,6 +137,23 @@ def _sentences(text: str) -> list[str]:
     # section numbers is its own project, and a use site only needs enough
     # context to be readable and checkable against the source.
     return [s.strip() for s in re.split(r"(?<=[.;])\s+(?=[A-Z(])", text) if s.strip()]
+
+
+def _use_pattern(term: str) -> re.Pattern[str]:
+    """Match a term where the regulation uses it, including its own plural.
+
+    § 134.22(d)(1) defines "Usual container" and §§ 134.23 and 134.24 then use
+    "usual containers" four times. Matching the singular alone found none of
+    them, so a term defined in one section and used in the next appeared unused.
+    `classify` already folded plurals; the site scan did not, so the plural use
+    was never generated as a record for it to fold.
+
+    A term that already ends in "s" is left alone — "United States" must not
+    also match "United State".
+    """
+    stem = re.escape(term)
+    plural = "" if term.lower().endswith("s") else "s?"
+    return re.compile(r"[“\"']?\b" + stem + plural + r"\b[”\"']?", re.I)
 
 
 def uses(terms: list[Term], secs: list[Section]) -> list[Use]:
@@ -99,10 +167,7 @@ def uses(terms: list[Term], secs: list[Section]) -> list[Use]:
     term is not offered to a shorter one.
     """
     ordered = sorted(terms, key=lambda t: len(t.term), reverse=True)
-    patterns = [
-        (t, re.compile(r"[“\"']?\b" + re.escape(t.term) + r"\b[”\"']?", re.I))
-        for t in ordered
-    ]
+    patterns = [(t, _use_pattern(t.term)) for t in ordered]
     out: list[Use] = []
     for sec in secs:
         for sentence in _sentences(sec.text):

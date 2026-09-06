@@ -14,14 +14,14 @@
  "built_on": "2026-09-06",
  "counts": {
   "sections": 33,
-  "defined_terms": 12,
-  "use_sites": 198,
-  "use_sites_outside_definitions": 145
+  "defined_terms": 13,
+  "use_sites": 211,
+  "use_sites_outside_definitions": 149
  },
  "self_check": {
-  "definitions_checked": 12,
+  "definitions_checked": 13,
   "definitions_not_found_in_source": [],
-  "quotes_checked": 198,
+  "quotes_checked": 211,
   "quotes_not_found_in_source": [],
   "passed": true
  },
@@ -275,6 +275,13 @@
    "defined_in": "134.1",
    "paragraph": "(l)",
    "definition": "“USMCA” means the Agreement Between the United States of America, the United Mexican States, and Canada (USMCA), entered into force by the United States, Canada and Mexico on July 1, 2020.",
+   "verb": "means"
+  },
+  {
+   "term": "Usual container",
+   "defined_in": "134.22",
+   "paragraph": "(d)(1)",
+   "definition": "For purposes of this subpart, a usual container means the container in which a good will ordinarily reach its ultimate purchaser. Containers which are not included in the price of the goods with which they are sold, or which impart the essential character to the whole, or which have significant uses, or lasting value independent of the contents, will generally not be regarded as usual containers. However, the fact that a container is sturdy and capable of repeated use with its contents does not preclude it from being considered a usual container so long as it is the type of container in which its contents are ordinarily sold. A usual container may be any type of container, including one which is specially shaped or fitted to contain a specific good or set of goods such as a camera case or an eyeglass case, or packing, storage and transportation materials.",
    "verb": "means"
   }
  ],
@@ -772,6 +779,12 @@
    "in_definition": false
   },
   {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "Containers or holders for imported merchandise which are subject to treatment as imported articles under the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202), shall be marked to indicate clearly the country of their own origin in addition to any marking which may be required to show the country of origin of their contents; however, no marking is required for any good of a NAFTA or USMCA country which is a usual container.",
+   "in_definition": true
+  },
+  {
    "term": "United States",
    "used_in": "134.22",
    "quote": "Containers or holders for imported merchandise which are subject to treatment as imported articles under the Harmonized Tariff Schedule of the United States (19 U.S.C. 1202), shall be marked to indicate clearly the country of their own origin in addition to any marking which may be required to show the country of origin of their contents; however, no marking is required for any good of a NAFTA or USMCA country which is a usual container.",
@@ -790,6 +803,12 @@
    "in_definition": false
   },
   {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "Containers or holders of imported merchandise bearing the name and address of an importer, distributor, or other person or company in the United States shall be marked in close proximity to the U.S. address to indicate clearly the country of origin of the contents with a marking such as “Contents made in France” or “Contents Product of Spain.” (d) Usual containers—(1) “Usual container” defined.",
+   "in_definition": true
+  },
+  {
    "term": "United States",
    "used_in": "134.22",
    "quote": "Containers or holders of imported merchandise bearing the name and address of an importer, distributor, or other person or company in the United States shall be marked in close proximity to the U.S. address to indicate clearly the country of origin of the contents with a marking such as “Contents made in France” or “Contents Product of Spain.” (d) Usual containers—(1) “Usual container” defined.",
@@ -802,10 +821,40 @@
    "in_definition": false
   },
   {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "For purposes of this subpart, a usual container means the container in which a good will ordinarily reach its ultimate purchaser.",
+   "in_definition": true
+  },
+  {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "Containers which are not included in the price of the goods with which they are sold, or which impart the essential character to the whole, or which have significant uses, or lasting value independent of the contents, will generally not be regarded as usual containers.",
+   "in_definition": true
+  },
+  {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "However, the fact that a container is sturdy and capable of repeated use with its contents does not preclude it from being considered a usual container so long as it is the type of container in which its contents are ordinarily sold.",
+   "in_definition": true
+  },
+  {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "A usual container may be any type of container, including one which is specially shaped or fitted to contain a specific good or set of goods such as a camera case or an eyeglass case, or packing, storage and transportation materials.",
+   "in_definition": true
+  },
+  {
    "term": "Good of a NAFTA or USMCA country",
    "used_in": "134.22",
    "quote": "(2) A good of a NAFTA or USMCA country which is a usual container.",
    "in_definition": false
+  },
+  {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "(2) A good of a NAFTA or USMCA country which is a usual container.",
+   "in_definition": true
   },
   {
    "term": "Good of a NAFTA or USMCA country",
@@ -820,10 +869,22 @@
    "in_definition": false
   },
   {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "A good of a NAFTA or USMCA country which is a usual container, whether or not disposable and whether or not imported empty or filled, is not required to be marked with its own country of origin.",
+   "in_definition": true
+  },
+  {
    "term": "Ultimate purchaser",
    "used_in": "134.22",
    "quote": "If imported empty, the importer must be able to provide satisfactory evidence to Customs at the time of importation that it will be used only as a usual container (that it is to be filled with goods after importation and that such container is of a type in which these goods ordinarily reach the ultimate purchaser).",
    "in_definition": false
+  },
+  {
+   "term": "Usual container",
+   "used_in": "134.22",
+   "quote": "If imported empty, the importer must be able to provide satisfactory evidence to Customs at the time of importation that it will be used only as a usual container (that it is to be filled with goods after importation and that such container is of a type in which these goods ordinarily reach the ultimate purchaser).",
+   "in_definition": true
   },
   {
    "term": "Good of a NAFTA or USMCA country",
@@ -833,6 +894,12 @@
   },
   {
    "term": "NAFTA or USMCA country",
+   "used_in": "134.23",
+   "quote": "Except for goods of a NAFTA or USMCA country which are usual containers, containers or holders designed for or capable of reuse after the contents have been consumed, whether imported full or empty, must be individually marked to indicate the country of their own origin with a marking such as, “Container Made in (name of country).” Examples of the containers or holders contemplated are heavy duty steel drums, tanks, and other similar shipping, storage, transportation containers or holders capable of reuse.",
+   "in_definition": false
+  },
+  {
+   "term": "Usual container",
    "used_in": "134.23",
    "quote": "Except for goods of a NAFTA or USMCA country which are usual containers, containers or holders designed for or capable of reuse after the contents have been consumed, whether imported full or empty, must be individually marked to indicate the country of their own origin with a marking such as, “Container Made in (name of country).” Examples of the containers or holders contemplated are heavy duty steel drums, tanks, and other similar shipping, storage, transportation containers or holders capable of reuse.",
    "in_definition": false
@@ -880,6 +947,18 @@
    "in_definition": false
   },
   {
+   "term": "Ultimate purchaser",
+   "used_in": "134.24",
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D).",
+   "in_definition": false
+  },
+  {
+   "term": "Usual container",
+   "used_in": "134.24",
+   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D).",
+   "in_definition": false
+  },
+  {
    "term": "Country",
    "used_in": "134.24",
    "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D).",
@@ -911,6 +990,12 @@
   },
   {
    "term": "Country of origin",
+   "used_in": "134.24",
+   "quote": "If the disposable containers or holders or the usual containers which are goods of a NAFTA or USMCA country are marked with the country of origin at the time of importation and the marking will be visible after they are filled, the marking shall clearly indicate that the container only and not the contents were made in the named country.",
+   "in_definition": false
+  },
+  {
+   "term": "Usual container",
    "used_in": "134.24",
    "quote": "If the disposable containers or holders or the usual containers which are goods of a NAFTA or USMCA country are marked with the country of origin at the time of importation and the marking will be visible after they are filled, the marking shall clearly indicate that the container only and not the contents were made in the named country.",
    "in_definition": false
@@ -1390,6 +1475,12 @@
    "in_definition": false
   },
   {
+   "term": "Ultimate purchaser",
+   "used_in": "134.45",
+   "quote": "When the Commissioner of Customs finds that the name is not sufficiently well known to insure that the ultimate purchasers will be fully informed of the country of origin, or where the name appearing alone may cause confusion, deception, or mistake, clarifying words shall be required.",
+   "in_definition": false
+  },
+  {
    "term": "Country of origin",
    "used_in": "134.45",
    "quote": "When the Commissioner of Customs finds that the name is not sufficiently well known to insure that the ultimate purchasers will be fully informed of the country of origin, or where the name appearing alone may cause confusion, deception, or mistake, clarifying words shall be required.",
@@ -1459,12 +1550,6 @@
    "term": "substantial transformation",
    "used_in": "134.1",
    "quote": "The following examples may be helpful: (1) If an imported article will be used in manufacture, the manufacturer may be the “ultimate purchaser” if he subjects the imported article to a process which results in a substantial transformation of the article, even though the process may not result in a new or different article, or for a good of a NAFTA or USMCA country, a process which results in one of the changes prescribed in the part 102 Rules as effecting a change in the article's country of origin.",
-   "in_definition": false
-  },
-  {
-   "term": "ultimate purchasers",
-   "used_in": "134.24",
-   "quote": "When disposable containers or holders or usual containers which are goods of a NAFTA or USMCA country are imported by persons or firms who fill or package them with various products which they sell, these persons or firms are the “ultimate purchasers” of these containers or holders or usual containers which are goods of a NAFTA or USMCA country and they may be excepted from individual marking pursuant to 19 U.S.C. 1304(a)(3)(D).",
    "in_definition": false
   }
  ]

@@ -134,8 +134,14 @@ def quoted_terms(sections, already: set[str]) -> list[tuple[str, str, str]]:
         for sentence in re.split(r"(?<=[.;])\s+(?=[A-Z(])", sec.text):
             for m in _QUOTED_TERM.finditer(sentence):
                 term = m.group(1).strip()
-                key = (term.lower(), sec.section_id)
-                if not term or term.lower() in already or key in seen:
+                low = term.lower()
+                key = (low, sec.section_id)
+                # A plural of a term the part already defines is that term, not a
+                # new one. Limb 1 folds plurals when it scans use sites, so
+                # admitting "ultimate purchasers" here as well counted one
+                # textual use twice under two different names.
+                forms = {low, low.rstrip("s")} if low.endswith("s") else {low, low + "s"}
+                if not term or forms & already or key in seen:
                     continue
                 seen.add(key)
                 out.append((term, sec.section_id, sentence.strip()))

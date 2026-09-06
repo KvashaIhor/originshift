@@ -121,9 +121,9 @@ python -m originshift.build_terms
 
 | File | Sections | Defined terms | Use sites |
 |---|---|---|---|
-| `134-<issue-date>.json` | 33 | 12 | 198 |
+| `134-<issue-date>.json` | 33 | 13 | 211 |
 | `323-<issue-date>.json` | 6 | 3 | 14 |
-| `terms-graph-<issue-date>.json` | — | — | 155 resolved edges |
+| `terms-graph-<issue-date>.json` | — | — | 159 resolved edges |
 
 Everything the parser could not settle is recorded with the reason it could not,
 whether that was a source naming a good instead of a code, a condition on the
@@ -459,7 +459,7 @@ originshift terms --unsigned
   [unsigned] § 323.2   made and sourced
   [unsigned] § 323.2   ingredients or components
 
-in_part 147  cross_authority 1  case_law 2  unsigned 5
+in_part 151  cross_authority 1  case_law 2  unsigned 5
 ```
 
 **§ 134.1(b) defines the part's central term in a term the part does not carry.**
