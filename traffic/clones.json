@@ -99,6 +99,16 @@
    "count": 27,
    "timestamp": "2026-09-05T00:00:00Z",
    "uniques": 13
+  },
+  {
+   "count": 216,
+   "timestamp": "2026-09-06T00:00:00Z",
+   "uniques": 42
+  },
+  {
+   "count": 8,
+   "timestamp": "2026-09-07T00:00:00Z",
+   "uniques": 4
   }
  ]
 }
