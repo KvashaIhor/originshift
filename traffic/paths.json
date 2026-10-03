@@ -1891,6 +1891,26 @@
     "title": "/tree/main/traffic",
     "uniques": 1
    }
+  ],
+  "2026-10-03": [
+   {
+    "count": 6,
+    "path": "/KvashaIhor/originshift",
+    "title": "Overview",
+    "uniques": 5
+   },
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift/discussions",
+    "title": "/discussions",
+    "uniques": 2
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/issues",
+    "title": "/issues",
+    "uniques": 1
+   }
   ]
  }
 }
