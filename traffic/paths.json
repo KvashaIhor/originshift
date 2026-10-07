@@ -1971,6 +1971,26 @@
     "title": "/issues",
     "uniques": 1
    }
+  ],
+  "2026-10-07": [
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift",
+    "title": "Overview",
+    "uniques": 2
+   },
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift/discussions",
+    "title": "/discussions",
+    "uniques": 2
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/issues",
+    "title": "/issues",
+    "uniques": 1
+   }
   ]
  }
 }
