@@ -2111,6 +2111,68 @@
     "title": "/issues",
     "uniques": 1
    }
+  ],
+  "2026-10-14": [
+   {
+    "count": 5,
+    "path": "/KvashaIhor/originshift",
+    "title": "Overview",
+    "uniques": 1
+   },
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift/discussions",
+    "title": "/discussions",
+    "uniques": 2
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/docs/oracle-sizing.md",
+    "title": "/blob/main/docs/oracle-sizing.md",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/docs/scope.md",
+    "title": "/blob/main/docs/scope.md",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/docs/terms-validation.md",
+    "title": "/blob/main/docs/terms-validation.md",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/docs/validation.md",
+    "title": "/blob/main/docs/validation.md",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/examples/apparel.csv",
+    "title": "/blob/main/examples/apparel.csv",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/examples/assembly.json",
+    "title": "/blob/main/examples/assembly.json",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/examples/entries.csv",
+    "title": "/blob/main/examples/entries.csv",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/src/originshift/ingest.py",
+    "title": "/blob/main/src/originshift/ingest.py",
+    "uniques": 1
+   }
   ]
  }
 }
