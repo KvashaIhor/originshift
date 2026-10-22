@@ -319,6 +319,11 @@
    "count": 13,
    "timestamp": "2026-10-19T00:00:00Z",
    "uniques": 9
+  },
+  {
+   "count": 21,
+   "timestamp": "2026-10-20T00:00:00Z",
+   "uniques": 14
   }
  ]
 }
