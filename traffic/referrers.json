@@ -629,6 +629,18 @@
     "referrer": "github.com",
     "uniques": 2
    }
+  ],
+  "2026-11-01": [
+   {
+    "count": 2,
+    "referrer": "aocr.org",
+    "uniques": 2
+   },
+   {
+    "count": 1,
+    "referrer": "github.com",
+    "uniques": 1
+   }
   ]
  }
 }
