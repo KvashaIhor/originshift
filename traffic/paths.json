@@ -3175,6 +3175,26 @@
     "title": "/pulls",
     "uniques": 1
    }
+  ],
+  "2026-11-05": [
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift",
+    "title": "Overview",
+    "uniques": 2
+   },
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift/releases",
+    "title": "/releases",
+    "uniques": 2
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/pulls",
+    "title": "/pulls",
+    "uniques": 1
+   }
   ]
  }
 }
