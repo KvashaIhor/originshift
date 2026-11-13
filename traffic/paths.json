@@ -3359,6 +3359,26 @@
     "title": "/blob/main/docs/validation.md",
     "uniques": 1
    }
+  ],
+  "2026-11-13": [
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift",
+    "title": "Overview",
+    "uniques": 2
+   },
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift/releases",
+    "title": "/releases",
+    "uniques": 2
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/docs/validation.md",
+    "title": "/blob/main/docs/validation.md",
+    "uniques": 1
+   }
   ]
  }
 }
