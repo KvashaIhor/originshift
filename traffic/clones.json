@@ -434,6 +434,11 @@
    "count": 9,
    "timestamp": "2026-11-11T00:00:00Z",
    "uniques": 7
+  },
+  {
+   "count": 7,
+   "timestamp": "2026-11-12T00:00:00Z",
+   "uniques": 6
   }
  ]
 }
