@@ -3425,6 +3425,38 @@
     "title": "/blob/main/src/originshift/sources.py",
     "uniques": 1
    }
+  ],
+  "2026-11-16": [
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift",
+    "title": "Overview",
+    "uniques": 2
+   },
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift/tree/main/data",
+    "title": "/tree/main/data",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/docs/validation.md",
+    "title": "/blob/main/docs/validation.md",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/src/originshift/corpus.py",
+    "title": "/blob/main/src/originshift/corpus.py",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/src/originshift/sources.py",
+    "title": "/blob/main/src/originshift/sources.py",
+    "uniques": 1
+   }
   ]
  }
 }
