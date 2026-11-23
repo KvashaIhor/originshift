@@ -3799,6 +3799,68 @@
     "title": "/discussions/1",
     "uniques": 1
    }
+  ],
+  "2026-11-23": [
+   {
+    "count": 6,
+    "path": "/KvashaIhor/originshift",
+    "title": "Overview",
+    "uniques": 5
+   },
+   {
+    "count": 3,
+    "path": "/KvashaIhor/originshift/tree/main/data",
+    "title": "/tree/main/data",
+    "uniques": 1
+   },
+   {
+    "count": 2,
+    "path": "/KvashaIhor/originshift/blob/main/examples/entries.csv",
+    "title": "/blob/main/examples/entries.csv",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/examples/apparel.csv",
+    "title": "/blob/main/examples/apparel.csv",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/examples/assembly.json",
+    "title": "/blob/main/examples/assembly.json",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/src/originshift/corpus.py",
+    "title": "/blob/main/src/originshift/corpus.py",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/src/originshift/sources.py",
+    "title": "/blob/main/src/originshift/sources.py",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/src/originshift/validate_terms.py",
+    "title": "/blob/main/src/originshift/validate_terms.py",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/blob/main/tools/oracle_sizing.py",
+    "title": "/blob/main/tools/oracle_sizing.py",
+    "uniques": 1
+   },
+   {
+    "count": 1,
+    "path": "/KvashaIhor/originshift/discussions/1",
+    "title": "/discussions/1",
+    "uniques": 1
+   }
   ]
  }
 }
